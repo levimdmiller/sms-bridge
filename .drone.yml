@@ -4,7 +4,7 @@ name: default
 type: docker
 steps:
   - name: build
-    image: 3-jdk-8
+    image: 3.6.2-jdk-8
     commands:
       - mvn clean install
       - mvn formatter:validate
