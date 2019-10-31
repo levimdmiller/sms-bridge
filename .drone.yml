@@ -17,14 +17,13 @@ steps:
   - name: build
     image: maven
     environment:
-      M2_HOME: /drone/.m2
-      MAVEN_HOME: /drone/.m2
+      MAVEN_OPTS: /drone/.m2
     commands:
+      - mvn clean install
+      - mvn checkstyle:check
       - echo $MAVEN_HOME
       - pwd
       - ls
-#      - mvn clean install
-#      - mvn checkstyle:check
 
   # rebuild the cache in case new dependencies were
   # downloaded during your build
