@@ -5,31 +5,25 @@ type: docker
 steps:
   - name: restore-cache
     image: drillster/drone-volume-cache
+    restore: true
+    mount: /drone/.m2
     volumes:
-      - name: cache
-        path: /cache
-    settings:
-      restore: true
-      mount:
-        - /home/user/.m2
+      - /tmp/cache:/cache
 
   - name: build
     image: maven
     commands:
       - mvn clean install
       - mvn checkstyle:check
+    environment:
+      - M2_HOME=/drone/.m2
+      - MAVEN_HOME=/drone/.m2
 
+  # rebuild the cache in case new dependencies were
+  # downloaded during your build
   - name: rebuild-cache
     image: drillster/drone-volume-cache
+    rebuild: true
+    mount: /drone/.m2
     volumes:
-      - name: cache
-        path: /cache
-    settings:
-      rebuild: true
-      mount:
-        - /home/user/.m2
-
-volumes:
-  - name: cache
-    host:
-      path: /tmp/cache
+      - /tmp/cache:/cache
