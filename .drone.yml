@@ -1,0 +1,10 @@
+kind: pipeline
+name: default
+
+type: docker
+steps:
+  - name: build
+    image: maven
+    commands:
+      - mvn clean install
+      - mvn checkstyle:check
