@@ -12,16 +12,13 @@ steps:
     settings:
       restore: true
       mount:
-        - /drone/.m2
+        - /root/.m2
 
   - name: build
     image: maven
     commands:
-#      - mvn clean install
+      - mvn clean install
 #      - mvn checkstyle:check
-      - pwd
-      - ls
-      - echo $HOME
 
   # rebuild the cache in case new dependencies were
   # downloaded during your build
@@ -33,7 +30,7 @@ steps:
     settings:
       rebuild: true
       mount:
-        - /drone/.m2
+        - /root/.m2
 
 volumes:
   - name: cache
