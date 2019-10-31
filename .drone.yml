@@ -20,7 +20,8 @@ steps:
       - mvn clean install
       - mvn checkstyle:check
     volumes:
-      - maven-repo:/root/.m2
+      - name: maven-repo
+        path: /root/.m2
 
 
 #  # rebuild the cache in case new dependencies were
@@ -36,10 +37,9 @@ steps:
 #        - /root/.m2
 
 volumes:
-#  - name: cache
-#    host:
-#      path: /tmp/cache
   - name: maven-repo
     host:
       path: /root/.m2
-
+#  - name: cache
+#    host:
+#      path: /tmp/cache
