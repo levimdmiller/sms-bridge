@@ -19,8 +19,8 @@ steps:
     environment:
       MAVEN_OPTS: -Dmaven.repo.local=/drone/.m2
     commands:
-      - mvn clean install
-      - mvn checkstyle:check
+      - ./mvnw clean install
+      - ./mvnw checkstyle:check
       - pwd
       - ls
 
