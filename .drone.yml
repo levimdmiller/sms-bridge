@@ -7,5 +7,4 @@ steps:
     image: maven
     commands:
       - mvn clean install
-      - mvn formatter:validate
       - mvn checkstyle:check
