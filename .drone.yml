@@ -21,8 +21,7 @@ steps:
 #      - mvn checkstyle:check
       - pwd
       - ls
-      - ls /drone
-      - ls ~/
+      - echo $HOME
 
   # rebuild the cache in case new dependencies were
   # downloaded during your build
