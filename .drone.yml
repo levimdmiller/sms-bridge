@@ -17,11 +17,10 @@ steps:
   - name: build
     image: maven
     environment:
-      MAVEN_OPTS: /drone/.m2
+      MAVEN_OPTS: -Dmaven.repo.local=/drone/.m2
     commands:
       - mvn clean install
       - mvn checkstyle:check
-      - echo $MAVEN_HOME
       - pwd
       - ls
 
