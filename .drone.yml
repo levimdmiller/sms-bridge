@@ -17,12 +17,12 @@ steps:
   - name: build
     image: maven
     commands:
-      - mvn clean install
-      - mvn checkstyle:check
+#      - mvn clean install
+#      - mvn checkstyle:check
       - pwd
       - ls
       - ls /drone
-      - ls /root
+      - ls ~/
 
   # rebuild the cache in case new dependencies were
   # downloaded during your build
