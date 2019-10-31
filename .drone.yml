@@ -11,7 +11,7 @@ steps:
     settings:
       restore: true
       mount:
-        - ~/.m2
+        - /home/user/.m2
 
   - name: build
     image: maven
@@ -27,7 +27,7 @@ steps:
     settings:
       rebuild: true
       mount:
-        - ~/.m2
+        - /home/user/.m2
 
 volumes:
   - name: cache
