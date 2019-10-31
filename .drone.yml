@@ -17,9 +17,8 @@ steps:
   - name: build
     image: maven
     commands:
-      - chmod +x ./mvnw
-      - ./mvnw clean install
-      - ./mvnw checkstyle:check
+      - mvn clean install
+      - mvn checkstyle:check
       - pwd
       - ls
       - ls /drone
