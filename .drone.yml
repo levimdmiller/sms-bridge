@@ -8,3 +8,11 @@ steps:
     commands:
       - mvn clean install
       - mvn checkstyle:check
+    volumes:
+      - name: maven-repo
+        path: /root/.m2
+
+volumes:
+  - name: maven-repo
+    host:
+      path: /root/.m2
