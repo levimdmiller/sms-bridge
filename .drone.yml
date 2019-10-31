@@ -19,10 +19,12 @@ steps:
     environment:
       MAVEN_OPTS: -Dmaven.repo.local=/drone/.m2
     commands:
+      - chmod +x ./mvnw
       - ./mvnw clean install
       - ./mvnw checkstyle:check
       - pwd
       - ls
+      - ls /drone
 
   # rebuild the cache in case new dependencies were
   # downloaded during your build
