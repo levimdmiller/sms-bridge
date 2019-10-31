@@ -17,8 +17,8 @@ steps:
   - name: build
     image: maven
     environment:
-      - M2_HOME=/drone/.m2
-      - MAVEN_HOME=/drone/.m2
+      M2_HOME: /drone/.m2
+      MAVEN_HOME: /drone/.m2
     commands:
       - mvn clean install
       - mvn checkstyle:check
