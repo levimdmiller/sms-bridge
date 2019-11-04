@@ -8,6 +8,10 @@
     <tagDatabase tag="0.0.1_tag"/>
   </changeSet>
 
-  <includeAll path="db/0.0.1"/>
+  <include file="db/0.0.1.xml"/>
+
+  <changeSet id="0.0.2_tag" author="Levi Miller">
+    <tagDatabase tag="0.0.2_tag"/>
+  </changeSet>
 
 </databaseChangeLog>
