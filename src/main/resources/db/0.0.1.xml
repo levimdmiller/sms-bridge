@@ -34,7 +34,7 @@
       <!-- https://en.wikipedia.org/wiki/Telephone_numbering_plan -->
       <!-- max length of 15 -->
       <column name="number" type="nchar(15)">
-        <constraints nullable="false"/>
+        <constraints nullable="false" unique="true"/>
       </column>
       <column name="location_id" type="bigint">
         <constraints
@@ -59,6 +59,9 @@
     <createTable tableName="message">
       <column name="id" autoIncrement="true" type="bigint">
         <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="uuid" type="uuid">
+        <constraints unique="true"/>
       </column>
       <column name="body" type="clob"/>
       <column name="to" type="bigint">
@@ -91,7 +94,7 @@
         <constraints primaryKey="true" nullable="false"/>
       </column>
       <column name="url" type="nvarchar(255)"/>
-      <column name="contentType" type="nvarchar(255)"/>
+      <column name="content_type" type="nvarchar(255)"/>
 
       <!-- boiler plate for tracking columns -->
       <column name="deleted" type="boolean" defaultValue="false">
