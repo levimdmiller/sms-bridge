@@ -1,0 +1,64 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd'>
+
+  <changeSet id="0.0.1-1" author="Levi Miller">
+    <createTable tableName="location">
+      <column name="id" autoIncrement="true" type="bigint">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="city" type="nvarchar(255)"/>
+      <column name="state" type="nvarchar(255)"/>
+      <column name="country" type="nvarchar(255)"/>
+      <column name="zip" type="nvarchar(6)"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="0.0.1-2" author="Levi Miller">
+    <createTable tableName="contact">
+      <column name="id" autoIncrement="true" type="bigint">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <!-- https://en.wikipedia.org/wiki/Telephone_numbering_plan -->
+      <!-- max length of 15 -->
+      <column name="number" type="nchar(15)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="location_id" type="bigint">
+        <constraints
+          foreignKeyName="fk_contact_location"
+          references="location(id)"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="0.0.1-3" author="Levi Miller">
+    <createTable tableName="message">
+      <column name="id" autoIncrement="true" type="bigint">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="body" type="clob"/>
+      <column name="to" type="bigint">
+        <constraints
+          foreignKeyName="fx_message_to_contact"
+          references="contact(id)"/>
+      </column>
+      <column name="from" type="bigint">
+        <constraints
+          foreignKeyName="fx_message_from_contact"
+          references="contact(id)"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="0.0.1-4" author="Levi Miller">
+    <createTable tableName="media">
+      <column name="id" autoIncrement="true" type="bigint">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="url" type="nvarchar(255)"/>
+      <column name="contentType" type="nvarchar(255)"/>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>
