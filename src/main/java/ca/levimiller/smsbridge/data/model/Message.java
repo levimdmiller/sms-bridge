@@ -12,6 +12,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -22,6 +25,8 @@ import org.hibernate.annotations.Where;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "message")
 @SQLDelete(sql = "UPDATE message SET deleted = 1 WHERE id = ?;",
@@ -35,7 +40,9 @@ public class Message extends BaseModel {
   @Column(name = "id", unique = true, nullable = false)
   private Long id;
 
-  private String uuid;
+  @Size(max = 255)
+  @Column(name = "uid", unique = true)
+  private String uid;
 
   @Column(name = "body")
   private String body;

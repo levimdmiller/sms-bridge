@@ -60,7 +60,7 @@
       <column name="id" autoIncrement="true" type="bigint">
         <constraints primaryKey="true" nullable="false"/>
       </column>
-      <column name="uuid" type="uuid">
+      <column name="uid" type="varchar(255)">
         <constraints unique="true"/>
       </column>
       <column name="body" type="clob"/>
