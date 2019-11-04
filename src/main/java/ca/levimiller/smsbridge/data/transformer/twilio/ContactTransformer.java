@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = LocationTransformer.class)
 public interface ContactTransformer {
+
   @To
   @Mapping(source = "to", target = "number")
   @Mapping(source = ".", target = "location", qualifiedBy = To.class)

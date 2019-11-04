@@ -1,6 +1,7 @@
 package ca.levimiller.smsbridge.data.transformer.twilio;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import ca.levimiller.smsbridge.data.dto.TwilioSmsDto;
 import ca.levimiller.smsbridge.data.fixture.Fixture;
 import ca.levimiller.smsbridge.data.model.Media;
