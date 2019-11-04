@@ -12,6 +12,17 @@
       <column name="state" type="nvarchar(255)"/>
       <column name="country" type="nvarchar(255)"/>
       <column name="zip" type="nvarchar(6)"/>
+
+      <!-- boiler plate for tracking columns -->
+      <column name="deleted" type="boolean" defaultValue="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
     </createTable>
   </changeSet>
 
@@ -23,12 +34,23 @@
       <!-- https://en.wikipedia.org/wiki/Telephone_numbering_plan -->
       <!-- max length of 15 -->
       <column name="number" type="nchar(15)">
-        <constraints nullable="false"/>
+        <constraints nullable="false" unique="true"/>
       </column>
       <column name="location_id" type="bigint">
         <constraints
           foreignKeyName="fk_contact_location"
           references="location(id)"/>
+      </column>
+
+      <!-- boiler plate for tracking columns -->
+      <column name="deleted" type="boolean" defaultValue="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
       </column>
     </createTable>
   </changeSet>
@@ -38,16 +60,30 @@
       <column name="id" autoIncrement="true" type="bigint">
         <constraints primaryKey="true" nullable="false"/>
       </column>
+      <column name="uid" type="varchar(255)">
+        <constraints unique="true"/>
+      </column>
       <column name="body" type="clob"/>
       <column name="to" type="bigint">
         <constraints
-          foreignKeyName="fx_message_to_contact"
+          foreignKeyName="fk_message_to_contact"
           references="contact(id)"/>
       </column>
       <column name="from" type="bigint">
         <constraints
-          foreignKeyName="fx_message_from_contact"
+          foreignKeyName="fk_message_from_contact"
           references="contact(id)"/>
+      </column>
+
+      <!-- boiler plate for tracking columns -->
+      <column name="deleted" type="boolean" defaultValue="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
       </column>
     </createTable>
   </changeSet>
@@ -58,7 +94,24 @@
         <constraints primaryKey="true" nullable="false"/>
       </column>
       <column name="url" type="nvarchar(255)"/>
-      <column name="contentType" type="nvarchar(255)"/>
+      <column name="content_type" type="nvarchar(255)"/>
+      <column name="message_id" type="bigint">
+        <constraints
+          foreignKeyName="fk_message_media"
+          references="message(id)"
+          nullable="false"/>
+      </column>
+
+      <!-- boiler plate for tracking columns -->
+      <column name="deleted" type="boolean" defaultValue="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
     </createTable>
   </changeSet>
 </databaseChangeLog>
