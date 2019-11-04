@@ -17,20 +17,20 @@ public class JpaInterceptor extends EmptyInterceptor {
   public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState,
       Object[] previousState, String[] propertyNames, Type[] types) {
 
-    if(entity instanceof BaseModel) {
+    if (entity instanceof BaseModel) {
       List<String> properties = Arrays.asList(propertyNames);
       Instant now = Instant.now();
       currentState[getCreatedIndex(properties)] = now;
       currentState[getModifiedIndex(properties)] = now;
     }
     return true;
-   }
+  }
 
   @Override
   public boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames,
       Type[] types) {
 
-    if(entity instanceof BaseModel) {
+    if (entity instanceof BaseModel) {
       List<String> properties = Arrays.asList(propertyNames);
       Instant now = Instant.now();
       state[getCreatedIndex(properties)] = now;
@@ -41,7 +41,7 @@ public class JpaInterceptor extends EmptyInterceptor {
 
   private int getCreatedIndex(List<String> properties) {
     int idx = properties.indexOf("createdDate");
-    if(idx < 0) {
+    if (idx < 0) {
       throw new HibernateException("Cant find created property.");
     }
     return idx;
@@ -49,7 +49,7 @@ public class JpaInterceptor extends EmptyInterceptor {
 
   private int getModifiedIndex(List<String> properties) {
     int idx = properties.indexOf("modifiedDate");
-    if(idx < 0) {
+    if (idx < 0) {
       throw new HibernateException("Cant find modified property.");
     }
     return idx;
