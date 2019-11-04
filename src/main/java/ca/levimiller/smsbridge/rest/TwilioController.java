@@ -1,6 +1,6 @@
 package ca.levimiller.smsbridge.rest;
 
-import ca.levimiller.smsbridge.data.dto.SmsDto;
+import ca.levimiller.smsbridge.data.dto.TwilioSmsDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -19,5 +19,5 @@ public interface TwilioController {
   @ApiResponses(value = {
       @ApiResponse(code = 201, message = "Created", response = String.class),
       @ApiResponse(code = 400, message = "Request not valid")})
-  void createSms(SmsDto sms);
+  void createSms(TwilioSmsDto sms);
 }

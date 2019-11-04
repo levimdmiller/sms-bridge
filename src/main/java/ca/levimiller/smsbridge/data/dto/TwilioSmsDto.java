@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SmsDto {
+public class TwilioSmsDto {
 
   String messageSid;
   String accountSid;
