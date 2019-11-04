@@ -66,12 +66,12 @@
       <column name="body" type="clob"/>
       <column name="to" type="bigint">
         <constraints
-          foreignKeyName="fx_message_to_contact"
+          foreignKeyName="fk_message_to_contact"
           references="contact(id)"/>
       </column>
       <column name="from" type="bigint">
         <constraints
-          foreignKeyName="fx_message_from_contact"
+          foreignKeyName="fk_message_from_contact"
           references="contact(id)"/>
       </column>
 
@@ -95,6 +95,12 @@
       </column>
       <column name="url" type="nvarchar(255)"/>
       <column name="content_type" type="nvarchar(255)"/>
+      <column name="message_id" type="bigint">
+        <constraints
+          foreignKeyName="fk_message_media"
+          references="message(id)"
+          nullable="false"/>
+      </column>
 
       <!-- boiler plate for tracking columns -->
       <column name="deleted" type="boolean" defaultValue="false">

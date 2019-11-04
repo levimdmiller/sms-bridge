@@ -2,9 +2,12 @@ package ca.levimiller.smsbridge.data.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -38,4 +41,8 @@ public class Media extends BaseModel {
   @Size(max = 255)
   @Column(name = "content_type")
   private String contentType;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "message_id")
+  private Message message;
 }
