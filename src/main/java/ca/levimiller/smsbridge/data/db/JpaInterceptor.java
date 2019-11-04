@@ -8,7 +8,9 @@ import java.util.List;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.HibernateException;
 import org.hibernate.type.Type;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JpaInterceptor extends EmptyInterceptor {
 
   @Override
