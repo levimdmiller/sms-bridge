@@ -20,7 +20,6 @@ public class JpaInterceptor extends EmptyInterceptor {
     if (entity instanceof BaseModel) {
       List<String> properties = Arrays.asList(propertyNames);
       Instant now = Instant.now();
-      currentState[getCreatedIndex(properties)] = now;
       currentState[getModifiedIndex(properties)] = now;
     }
     return true;

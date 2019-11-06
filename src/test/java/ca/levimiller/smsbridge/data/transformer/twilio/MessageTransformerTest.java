@@ -43,7 +43,7 @@ class MessageTransformerTest {
     assertEquals(dto.getBody(), message.getBody());
 
     // to equals
-    Contact to = message.getTo();
+    Contact to = message.getToContact();
     assertEquals(dto.getTo(), to.getNumber());
 
     Location toLocation = to.getLocation();
@@ -54,7 +54,7 @@ class MessageTransformerTest {
     assertEquals(dto.getToZip(), toLocation.getZip());
 
     // from equals
-    Contact from = message.getFrom();
+    Contact from = message.getFromContact();
     assertEquals(dto.getFrom(), from.getNumber());
 
     Location fromLocation = from.getLocation();

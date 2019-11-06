@@ -29,7 +29,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "media")
 @SQLDelete(sql = "UPDATE media SET deleted = 1 WHERE id = ?;",
     check = ResultCheckStyle.COUNT)
-@Where(clause = "deleted <> 1")
+@Where(clause = "deleted = false")
 public class Media extends BaseModel {
 
   @Id

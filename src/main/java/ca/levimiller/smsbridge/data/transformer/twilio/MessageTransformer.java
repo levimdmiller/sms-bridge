@@ -11,8 +11,8 @@ import org.mapstruct.Mapping;
 public interface MessageTransformer {
 
   @Mapping(source = "messageSid", target = "uid")
-  @Mapping(source = ".", target = "to", qualifiedBy = To.class)
-  @Mapping(source = ".", target = "from", qualifiedBy = From.class)
+  @Mapping(source = ".", target = "toContact", qualifiedBy = To.class)
+  @Mapping(source = ".", target = "fromContact", qualifiedBy = From.class)
   @Mapping(source = ".", target = "media")
   Message transform(TwilioSmsDto dto);
 }
