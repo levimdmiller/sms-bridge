@@ -26,7 +26,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "location")
 @SQLDelete(sql = "UPDATE location SET deleted = 1 WHERE id = ?;",
     check = ResultCheckStyle.COUNT)
-@Where(clause = "deleted <> 1")
+@Where(clause = "deleted = false")
 public class Location extends BaseModel {
 
   @Id

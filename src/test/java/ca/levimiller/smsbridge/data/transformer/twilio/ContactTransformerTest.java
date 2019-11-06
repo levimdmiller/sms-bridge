@@ -58,4 +58,16 @@ class ContactTransformerTest {
     assertEquals(dto.getFromCountry(), location.getCountry());
     assertEquals(dto.getFromZip(), location.getZip());
   }
+
+  @Test
+  void testCustomNumberFormat() {
+    dto.setTo("+ (123) - 456 - 7890");
+    dto.setFrom("+ (123)456 ~!@@#$%^&*()(*&^%$#@!- 7890");
+
+    Contact to = transformer.transformTo(dto);
+    assertEquals("+1234567890", to.getNumber());
+
+    Contact from = transformer.transformTo(dto);
+    assertEquals("+1234567890", from.getNumber());
+  }
 }

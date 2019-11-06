@@ -11,4 +11,5 @@ public interface MessageService {
    * @return - updated message
    */
   Message save(Message message);
+
 }

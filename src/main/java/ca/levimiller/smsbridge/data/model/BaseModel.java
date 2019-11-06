@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @MappedSuperclass
 public abstract class BaseModel implements Serializable {
 
-  @Column(name = "deleted")
+  @Column(name = "deleted", nullable = false)
   private Boolean deleted;
 
   @Column(name = "created_date", nullable = false)
@@ -20,4 +21,11 @@ public abstract class BaseModel implements Serializable {
 
   @Column(name = "modified_date", nullable = false)
   private Instant modifiedDate;
+
+  @PrePersist
+  private void setDefaults() {
+    if (deleted == null) {
+      deleted = false;
+    }
+  }
 }

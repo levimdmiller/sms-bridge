@@ -1,6 +1,7 @@
 package ca.levimiller.smsbridge.data.model;
 
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,7 +32,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "message")
 @SQLDelete(sql = "UPDATE message SET deleted = 1 WHERE id = ?;",
     check = ResultCheckStyle.COUNT)
-@Where(clause = "deleted <> 1")
+@Where(clause = "deleted = false")
 public class Message extends BaseModel {
 
   @Id
@@ -47,13 +48,13 @@ public class Message extends BaseModel {
   @Column(name = "body")
   private String body;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "to")
-  private Contact to;
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "to_contact")
+  private Contact toContact;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "from")
-  private Contact from;
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "from_contact")
+  private Contact fromContact;
 
   @OneToMany(fetch = FetchType.LAZY)
   private List<Media> media;
