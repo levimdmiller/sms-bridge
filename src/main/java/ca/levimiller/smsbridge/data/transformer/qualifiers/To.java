@@ -1,4 +1,4 @@
-package ca.levimiller.smsbridge.data.transformer;
+package ca.levimiller.smsbridge.data.transformer.qualifiers;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,6 +9,6 @@ import org.mapstruct.Qualifier;
 @Qualifier
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)
-public @interface From {
+public @interface To {
 
 }

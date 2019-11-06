@@ -16,7 +16,7 @@ public class HibernateConfig {
   public HibernatePropertiesCustomizer hibernatePropertiesCustomizer(Interceptor interceptor) {
     return hibernateProperties -> {
       // https://docs.jboss.org/hibernate/stable/entitymanager/reference/en/html/configuration.html
-      hibernateProperties.put("hibernate.ejb.interceptor", interceptor);
+      hibernateProperties.put("hibernate.session_factory.interceptor", interceptor);
     };
   }
 }
