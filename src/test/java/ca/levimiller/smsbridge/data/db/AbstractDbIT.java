@@ -142,12 +142,12 @@ public abstract class AbstractDbIT<T extends BaseModel> {
   @Test
   void testFindAll_Pageable() {
     T entity1 = saveNewEntity();
+    T entity2 = saveNewEntity();
 
     Page<T> first = repository.findAll(PageRequest.of(0, 1));
     assertEquals(2, first.getTotalPages());
     assertEquals(Collections.singletonList(entity1), first.getContent());
 
-    T entity2 = saveNewEntity();
     Page<T> second = repository.findAll(first.nextPageable());
     assertEquals(2, second.getTotalPages());
     assertEquals(Collections.singletonList(entity2), second.getContent());
