@@ -6,7 +6,7 @@ steps:
   - name: build
     image: maven
     commands:
-      - mvn clean install -DskipTests
+      - mvn clean install
       - mvn checkstyle:check
     volumes:
       - name: maven-repo

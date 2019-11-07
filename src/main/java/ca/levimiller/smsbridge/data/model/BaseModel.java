@@ -3,7 +3,11 @@ package ca.levimiller.smsbridge.data.model;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +16,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @MappedSuperclass
 public abstract class BaseModel implements Serializable {
+
+  @Id
+  @OrderBy
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", unique = true, nullable = false)
+  private Long id;
 
   @Column(name = "deleted", nullable = false)
   private Boolean deleted;

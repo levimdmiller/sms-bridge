@@ -192,7 +192,8 @@
       <property name="allowedAbbreviationLength" value="1"/>
     </module>
     <module name="OverloadMethodsDeclarationOrder"/>
-    <module name="VariableDeclarationUsageDistance"/>
+    <!--    Disabled because this is way too strict, and forcing late variables can cause bugs. -->
+    <!--    <module name="VariableDeclarationUsageDistance"/>-->
     <module name="CustomImportOrder">
       <property name="sortImportsInGroupAlphabetically" value="true"/>
       <property name="separateLineBetweenGroups" value="true"/>

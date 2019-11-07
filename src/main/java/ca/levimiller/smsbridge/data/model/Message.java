@@ -5,13 +5,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -35,12 +31,6 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted = false")
 public class Message extends BaseModel {
 
-  @Id
-  @OrderBy
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id", unique = true, nullable = false)
-  private Long id;
-
   @Size(max = 255)
   @Column(name = "uid", unique = true)
   private String uid;
@@ -56,6 +46,6 @@ public class Message extends BaseModel {
   @JoinColumn(name = "from_contact")
   private Contact fromContact;
 
-  @OneToMany(fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "message", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Media> media;
 }
