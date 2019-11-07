@@ -2,10 +2,6 @@ package ca.levimiller.smsbridge.data.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -28,12 +24,6 @@ import org.hibernate.annotations.Where;
     check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted = false")
 public class Location extends BaseModel {
-
-  @Id
-  @OrderBy
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id", unique = true, nullable = false)
-  private Long id;
 
   @Size(max = 255)
   @Column(name = "city")

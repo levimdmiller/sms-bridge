@@ -4,12 +4,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -32,12 +28,6 @@ import org.hibernate.annotations.Where;
     check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted = false")
 public class Contact extends BaseModel {
-
-  @Id
-  @OrderBy
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id", unique = true, nullable = false)
-  private Long id;
 
   @Size(max = 15)
   @Column(name = "number", unique = true, nullable = false)

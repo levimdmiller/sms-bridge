@@ -1,14 +1,11 @@
 package ca.levimiller.smsbridge.data.model;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -32,12 +29,6 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted = false")
 public class Media extends BaseModel {
 
-  @Id
-  @OrderBy
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id", unique = true, nullable = false)
-  private Long id;
-
   @Size(max = 255)
   @Column(name = "url")
   private String url;
@@ -49,4 +40,36 @@ public class Media extends BaseModel {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "message_id")
   private Message message;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    Media media = (Media) o;
+    return Objects.equals(url, media.url) &&
+        Objects.equals(contentType, media.contentType) &&
+        // break infinite loop
+        Objects.equals(message.getId(), media.message.getId());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), url, contentType, message.getId());
+  }
+
+  @Override
+  public String toString() {
+    return "Media{" +
+        "url='" + url + '\'' +
+        ", contentType='" + contentType + '\'' +
+        ", message=" + message.getId() + // break infinite loop
+        '}';
+  }
 }
