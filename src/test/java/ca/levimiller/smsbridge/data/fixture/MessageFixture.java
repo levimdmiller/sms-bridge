@@ -9,10 +9,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MessageFixture implements Fixture<Message> {
+
   private final RandomUtil randomUtil;
   private final Fixture<Contact> contactFixture;
   private final Fixture<Media> mediaFixture;
 
+  /**
+   * Creates a Message Fixture for creating messages.
+   * @param randomUtil - utility for generating data
+   * @param contactFixture - fixture for contact creation
+   * @param mediaFixture - fixture for media creation
+   */
   @Autowired
   public MessageFixture(RandomUtil randomUtil,
       Fixture<Contact> contactFixture,

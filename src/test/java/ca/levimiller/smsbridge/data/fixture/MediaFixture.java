@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MediaFixture implements Fixture<Media> {
+
   private final RandomUtil randomUtil;
 
   @Autowired

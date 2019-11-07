@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LocationFixture implements Fixture<Location> {
+
   private final RandomUtil randomUtil;
 
   @Autowired

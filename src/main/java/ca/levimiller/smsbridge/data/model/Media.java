@@ -53,10 +53,10 @@ public class Media extends BaseModel {
       return false;
     }
     Media media = (Media) o;
-    return Objects.equals(url, media.url) &&
-        Objects.equals(contentType, media.contentType) &&
+    return Objects.equals(url, media.url)
+        && Objects.equals(contentType, media.contentType)
         // break infinite loop
-        Objects.equals(message.getId(), media.message.getId());
+        && Objects.equals(message.getId(), media.message.getId());
   }
 
   @Override
@@ -66,10 +66,10 @@ public class Media extends BaseModel {
 
   @Override
   public String toString() {
-    return "Media{" +
-        "url='" + url + '\'' +
-        ", contentType='" + contentType + '\'' +
-        ", message=" + message.getId() + // break infinite loop
-        '}';
+    return "Media{"
+        + "url='" + url + '\''
+        + ", contentType='" + contentType + '\''
+        + ", message=" + message.getId() // break infinite loop
+        + '}';
   }
 }

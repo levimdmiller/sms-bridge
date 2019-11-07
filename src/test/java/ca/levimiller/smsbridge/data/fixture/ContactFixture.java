@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ContactFixture implements Fixture<Contact> {
+
   private final RandomUtil randomUtil;
   private final Fixture<Location> locationFixture;
 

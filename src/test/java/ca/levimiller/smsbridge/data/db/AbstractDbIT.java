@@ -3,6 +3,7 @@ package ca.levimiller.smsbridge.data.db;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import ca.levimiller.smsbridge.data.fixture.Fixture;
 import ca.levimiller.smsbridge.data.model.BaseModel;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 public abstract class AbstractDbIT<T extends BaseModel> {
+
   protected final Fixture<T> fixture;
   protected final JpaRepository<T, Long> repository;
 
@@ -112,7 +114,7 @@ public abstract class AbstractDbIT<T extends BaseModel> {
     List<T> entities = Arrays.asList(saveNewEntity(), saveNewEntity());
     repository.deleteAll(entities);
 
-    for(T entity : entities) {
+    for (T entity : entities) {
       assertFalse(repository.existsById(entity.getId()));
     }
     assertTrue(repository.existsById(notDeleted.getId()));
@@ -140,12 +142,12 @@ public abstract class AbstractDbIT<T extends BaseModel> {
   @Test
   void testFindAll_Pageable() {
     T entity1 = saveNewEntity();
-    T entity2 = saveNewEntity();
 
     Page<T> first = repository.findAll(PageRequest.of(0, 1));
     assertEquals(2, first.getTotalPages());
     assertEquals(Collections.singletonList(entity1), first.getContent());
 
+    T entity2 = saveNewEntity();
     Page<T> second = repository.findAll(first.nextPageable());
     assertEquals(2, second.getTotalPages());
     assertEquals(Collections.singletonList(entity2), second.getContent());
@@ -156,7 +158,7 @@ public abstract class AbstractDbIT<T extends BaseModel> {
     T entity = saveNewEntity();
     // temp delete id
     Long id = entity.getId();
-    
+
     Optional<T> result = repository.findOne(Example.of(entity));
 
     assertTrue(result.isPresent());
@@ -167,7 +169,6 @@ public abstract class AbstractDbIT<T extends BaseModel> {
   @Test
   void testfindAllByExample() {
     T entity = saveNewEntity();
-    
 
     List<T> result = repository.findAll(Example.of(entity));
 
@@ -177,7 +178,6 @@ public abstract class AbstractDbIT<T extends BaseModel> {
   @Test
   void testfindAllByExample_Sort() {
     T entity = saveNewEntity();
-    
 
     List<T> result = repository.findAll(Example.of(entity), Sort.by(Sort.Direction.DESC, "id"));
 
@@ -187,7 +187,6 @@ public abstract class AbstractDbIT<T extends BaseModel> {
   @Test
   void testfindAllByExample_Pageable() {
     T entity = saveNewEntity();
-    
 
     Page<T> first = repository.findAll(Example.of(entity), PageRequest.of(0, 1));
     assertEquals(1, first.getTotalPages());
@@ -197,7 +196,7 @@ public abstract class AbstractDbIT<T extends BaseModel> {
   @Test
   void testCountByExample() {
     T entity = saveNewEntity();
-    
+
     long result = repository.count(Example.of(entity));
     assertEquals(1, result);
   }
@@ -205,12 +204,13 @@ public abstract class AbstractDbIT<T extends BaseModel> {
   @Test
   void testExistsByExample() {
     T entity = saveNewEntity();
-    
+
     assertTrue(repository.exists(Example.of(entity)));
   }
 
   /**
    * Create new entity with fixture, and save it to the repo.
+   *
    * @return - saved entity
    */
   protected T saveNewEntity() {

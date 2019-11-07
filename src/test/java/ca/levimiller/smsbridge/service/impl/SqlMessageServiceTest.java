@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import ca.levimiller.smsbridge.data.db.ContactRepository;
 import ca.levimiller.smsbridge.data.db.MessageRepository;
 import ca.levimiller.smsbridge.data.fixture.Fixture;
@@ -22,8 +23,8 @@ class SqlMessageServiceTest {
   private final Fixture<Message> messageFixture;
   private final Fixture<Contact> contactFixture;
   private final SqlMessageService messageService;
-  private Message message, expectedMessage;
-  private Contact expectedTo, expectedFrom;
+  private Message message;
+  private Message expectedMessage;
   @MockBean
   private ContactRepository contactRepository;
   @MockBean
@@ -42,8 +43,8 @@ class SqlMessageServiceTest {
   @BeforeEach
   void setUp() {
     message = messageFixture.create();
-    expectedTo = contactFixture.create();
-    expectedFrom = contactFixture.create();
+    Contact expectedTo = contactFixture.create();
+    Contact expectedFrom = contactFixture.create();
 
     String toNumber = message.getToContact().getNumber();
     when(contactRepository.findDistinctByNumber(toNumber))
@@ -51,7 +52,6 @@ class SqlMessageServiceTest {
     String fromNumber = message.getFromContact().getNumber();
     when(contactRepository.findDistinctByNumber(fromNumber))
         .thenReturn(Optional.of(expectedFrom));
-
 
     expectedMessage = Message.builder()
         .uid(message.getUid())
