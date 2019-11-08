@@ -13,7 +13,7 @@ steps:
 #        path: /root/.m2
 
   - name: tag
-    image: docker:git
+    image: maven
     commands:
       # Get project version
       - mvn help:evaluate -Dexpression=project.version -q -DforceStdout
