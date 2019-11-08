@@ -27,9 +27,9 @@ steps:
       # Get project version
       - echo $DRONE_NETRC_MACHINE
       - echo $DRONE_NETRC_USERNAME
-#      - git config remote.origin.url https://ci-levimdmiller:{github_token}@github.com/levimdmiller/sms-bridge.git
-#      - git tag v`cat /root/version`
-#      - git push origin v`cat /root/version`
+      - git config remote.origin.url https://ci-levimdmiller:{github_token}@github.com/levimdmiller/sms-bridge.git
+      - git tag v`cat /root/version`
+      - git push origin v`cat /root/version`
     volumes:
       - name: shared
         path: /root
