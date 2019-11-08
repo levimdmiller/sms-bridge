@@ -1,6 +1,7 @@
 kind: pipeline
 name: default
 
+
 type: docker
 steps:
 #  - name: build
@@ -25,6 +26,7 @@ steps:
     commands:
       # Get project version
       - cat /root/shared/version.txt
+      - echo $CI_TAG
 #      - get version number from pom or something with bash
 #      - git tag vX.Y.Z
 #      - git push origin vX.Y.Z
@@ -44,7 +46,7 @@ steps:
 #      files:
 #        - dist/*
 #        - bin/binary.exe
-#      title: vX.Y.Z
+#      title: $$TAG
 #      note: CHANGELOG.md
 #      checksum:
 #        - md5
