@@ -28,7 +28,7 @@ steps:
       - echo $SSH_KEY > id_rsa
       - chmod 400 id_rsa
       - echo $SSH_KEY_PUB > id_rsa.pub
-      - echo -e "Host github.com\n  StrictHostKeyChecking no\n  IdentityFile id_rsa\n" >> ~/.ssh/config
+      - echo -e "Host github.com\n  StrictHostKeyChecking no\n  IdentityFile id_rsa\n" > ~/.ssh/config
       - cat .git/config
       - cat ~/.ssh/config
       - pwd
