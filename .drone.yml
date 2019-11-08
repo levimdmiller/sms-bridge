@@ -35,7 +35,7 @@ steps:
 
       # create tag
       - git tag v`cat /root/version`
-      - git push https://${USERNAME}:${PASSWORD}@github.com/levimdmiller/sms-bridge.git v`cat /root/version`
+      - git push origin v`cat /root/version`
     volumes:
       - name: shared
         path: /root
