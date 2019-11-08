@@ -29,6 +29,7 @@ steps:
       - chmod 400 id_rsa
       - echo $SSH_KEY_PUB > id_rsa.pub
 #      - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+      - ls
       - stat -f "%s" id_rsa
       - stat -f "%s" id_rsa.pub
 
