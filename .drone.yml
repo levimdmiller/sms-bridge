@@ -13,7 +13,7 @@ steps:
 #      - name: maven-repo
 #        path: /root/.m2
 
-  - name: test
+  - name: get-version
     image: maven
     commands:
       - mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed -e 's,-SNAPSHOT,,g' > /root/version
@@ -22,14 +22,11 @@ steps:
         path: /root
 
   - name: tag
-    image: maven
+    image: docker:git
     commands:
       # Get project version
-      - cat /root/version
-      - echo $CI_TAG
-#      - get version number from pom or something with bash
-#      - git tag vX.Y.Z
-#      - git push origin vX.Y.Z
+      - git tag v`cat /root/version`
+      - git push origin v`cat /root/version`
     volumes:
       - name: shared
         path: /root
