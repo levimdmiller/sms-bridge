@@ -12,14 +12,14 @@ steps:
 #    volumes:
 #      - name: maven-repo
 #        path: /root/.m2
-
-  - name: get-version
-    image: maven
-    commands:
-      - mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed -e 's,-SNAPSHOT,,g' > /root/version
-    volumes:
-      - name: shared
-        path: /root
+#
+#  - name: get-version
+#    image: maven
+#    commands:
+#      - mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed -e 's,-SNAPSHOT,,g' > /root/version
+#    volumes:
+#      - name: shared
+#        path: /root
 
   - name: tag
     image: docker:git
@@ -34,6 +34,11 @@ steps:
 #      - git config remote.origin.url git@github.com:levimdmiller/sms-bridge.git
 
       # create tag
+      - pwd
+      - ls
+      - ls /root
+      - ls /drone
+      - ls /drone/src
       - git tag v`cat /root/version`
       - git push origin v`cat /root/version`
     volumes:
