@@ -19,7 +19,7 @@ steps:
       - mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed -e 's,-SNAPSHOT,,g' > /root/version
     volumes:
       - name: shared
-        path: /root/shared
+        path: /root
 
   - name: tag
     image: maven
@@ -32,7 +32,7 @@ steps:
 #      - git push origin vX.Y.Z
     volumes:
       - name: shared
-        path: /root/shared
+        path: /root
     when:
       branch:
         - deploy
