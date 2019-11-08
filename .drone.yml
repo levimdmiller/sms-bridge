@@ -22,6 +22,7 @@ steps:
 #      - get version number from pom or something with bash
 #      - git tag vX.Y.Z
 #      - git push origin vX.Y.Z
+    when:
       branch:
         - deploy
       event:
