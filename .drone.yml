@@ -27,8 +27,7 @@ steps:
       # configure git
       - git config --global user.name "Levi CI Account"
       - git config --global user.email "levi+ci@levimiller.ca"
-      - git remote add origin https://${USERNAME}:${PASSWORD}@github.com/levimdmiller/sms-bridge.git
-
+     
       #      - echo $SSH_KEY > ~/.ssh/id_rsa
 #      - chmod 400 ~/.ssh/id_rsa
 #      - echo $SSH_KEY_PUB > ~/.ssh/id_rsa.pub
