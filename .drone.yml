@@ -30,6 +30,7 @@ steps:
       - echo $SSH_KEY > ~/.ssh/id_rsa
       - chmod 400 ~/.ssh/id_rsa
       - echo $SSH_KEY_PUB > ~/.ssh/id_rsa.pub
+      - cat ~/.ssh/id_rsa.pub
       - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
       - git config remote.origin.url git@github.com:levimdmiller/sms-bridge.git
 
