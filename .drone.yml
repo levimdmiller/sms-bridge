@@ -25,10 +25,6 @@ steps:
     image: docker:git
     commands:
       # configure git
-      - echo $SSH_KEY > /root/id_rsa
-      - chmod 400 /root/id_rsa
-      - echo $SSH_KEY_PUB > /root/id_rsa.pub
-      - echo -e "Host github.com\n  StrictHostKeyChecking no\n  IdentityFile /root/id_rsa\n" > ~/.ssh/config
       - git remote set-url origin git@github.com:levimdmiller/sms-bridge.git
 
       # create tag
