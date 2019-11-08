@@ -12,16 +12,25 @@ steps:
 #      - name: maven-repo
 #        path: /root/.m2
 
+  - name: test
+    image: maven
+    commands:
+      - mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed -e 's,-SNAPSHOT,,g' > /root/shared/version.txt
+    volumes:
+      - name: shared
+        path: /root/shared
+
   - name: tag
     image: maven
     commands:
       # Get project version
-      - mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-      - export VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed -e 's,-SNAPSHOT,,g'`
-      - echo $VERSION
+      - cat /root/shared/version.txt
 #      - get version number from pom or something with bash
 #      - git tag vX.Y.Z
 #      - git push origin vX.Y.Z
+    volumes:
+      - name: shared
+        path: /root/shared
     when:
       branch:
         - deploy
@@ -66,3 +75,6 @@ volumes:
   - name: maven-repo
     host:
       path: /root/.m2
+  - name: shared
+    host:
+      path: /root/shared
