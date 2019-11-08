@@ -23,7 +23,7 @@ steps:
 #      - git tag vX.Y.Z
 #      - git push origin vX.Y.Z
       branch:
-        - master-dummy
+        - deploy
       event:
         - push
 
