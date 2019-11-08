@@ -29,7 +29,7 @@ steps:
       - chmod 400 id_rsa
       - echo $SSH_KEY_PUB > id_rsa.pub
 #      - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-      - ls -lh
+      - cat .git/config
 
       # create tag
       - git tag v`cat /root/version`
