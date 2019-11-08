@@ -16,8 +16,8 @@ steps:
     image: docker:git
     commands:
       # Get project version
-      - echo mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-      - export VERSION=mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+      - mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+      - export VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed -e 's,-SNAPSHOT,,g'`
       - echo $VERSION
 #      - get version number from pom or something with bash
 #      - git tag vX.Y.Z
