@@ -25,30 +25,20 @@ steps:
     image: docker:git
     commands:
       # configure git
-
-      #      - echo $SSH_KEY > ~/.ssh/id_rsa
-#      - chmod 400 ~/.ssh/id_rsa
-#      - echo $SSH_KEY_PUB > ~/.ssh/id_rsa.pub
-#      - cat ~/.ssh/id_rsa.pub
+      - echo $SSH_KEY > ~/.ssh/id_rsa
+      - chmod 400 ~/.ssh/id_rsa
+      - echo $SSH_KEY_PUB > ~/.ssh/id_rsa.pub
       - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-#      - git config remote.origin.url git@github.com:levimdmiller/sms-bridge.git
+        - stat --printf="%s" ~/.ssh/id_rsa
+        - stat --printf="%s" ~/.ssh/id_rsa.pub
 
       # create tag
-      - pwd
-      - ls
-      - ls /root
-      - ls /drone
-      - ls /drone/src
       - git tag v`cat /root/version`
       - git push origin v`cat /root/version`
     volumes:
       - name: shared
         path: /root
     environment:
-      USERNAME:
-        from_secret: github_user
-      PASSWORD:
-        from_secret: github_token
       SSH_KEY:
         from_secret: ssh_key
       SSH_KEY_PUB:
