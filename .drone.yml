@@ -25,6 +25,7 @@ steps:
     image: docker:git
     commands:
       # Get project version
+      - echo $TEST
       - git config remote.origin.url https://ci-levimdmiller:${GIT_TOKEN}@github.com/levimdmiller/sms-bridge.git
       - git tag v`cat /root/version`
       - git push origin v`cat /root/version`
@@ -32,8 +33,8 @@ steps:
       - name: shared
         path: /root
     environment:
-      GIT_TOKEN:
-        from_secret: github_token
+      TEST:
+        from_secret: test
     when:
       branch:
         - deploy
