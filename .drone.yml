@@ -29,8 +29,8 @@ steps:
       - chmod 400 ~/.ssh/id_rsa
       - echo $SSH_KEY_PUB > ~/.ssh/id_rsa.pub
       - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-      - stat -f="%s" ~/.ssh/id_rsa
-      - stat -f="%s" ~/.ssh/id_rsa.pub
+      - stat -f "%s" ~/.ssh/id_rsa
+      - stat -f "%s" ~/.ssh/id_rsa.pub
 
       # create tag
       - git tag v`cat /root/version`
