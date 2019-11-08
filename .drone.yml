@@ -25,8 +25,8 @@ steps:
     image: docker:git
     commands:
       # Get project version
-      - echo https://ci-levimdmiller:$Test@github.com/levimdmiller/sms-bridge.git
-      - git config remote.origin.url https://${USER}:${PASSWORD}@github.com/levimdmiller/sms-bridge.git
+#      - git config remote.origin.url https://${USER}:${TOKEN}@github.com/levimdmiller/sms-bridge.git
+      - git config remote.origin.url git@github.com:levimdmiller/sms-bridge.git
       - git tag v`cat /root/version`
       - git push origin v`cat /root/version`
     volumes:
@@ -35,8 +35,8 @@ steps:
     environment:
       USER:
         from_secret: github_user
-      PASSWORD:
-        from_secret: github_password
+      TOKEN:
+        from_secret: github_token
     when:
       branch:
         - deploy
