@@ -16,7 +16,7 @@ steps:
   - name: test
     image: maven
     commands:
-      - mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed -e 's,-SNAPSHOT,,g' > /root/shared/version.txt
+      - mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed -e 's,-SNAPSHOT,,g' > /root/version
     volumes:
       - name: shared
         path: /root/shared
@@ -25,7 +25,7 @@ steps:
     image: maven
     commands:
       # Get project version
-      - cat /root/shared/version.txt
+      - cat /root/version
       - echo $CI_TAG
 #      - get version number from pom or something with bash
 #      - git tag vX.Y.Z
@@ -79,4 +79,4 @@ volumes:
       path: /root/.m2
   - name: shared
     host:
-      path: /root/shared
+      path: /root
