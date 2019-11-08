@@ -3,14 +3,63 @@ name: default
 
 type: docker
 steps:
-  - name: build
-    image: maven
+#  - name: build
+#    image: maven
+#    commands:
+#      - mvn clean install
+#      - mvn checkstyle:check
+#    volumes:
+#      - name: maven-repo
+#        path: /root/.m2
+
+  - name: tag
+    image: docker:git
     commands:
-      - mvn clean install
-      - mvn checkstyle:check
-    volumes:
-      - name: maven-repo
-        path: /root/.m2
+      # Get project version
+      - echo mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+      - export VERSION=mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+      - echo $VERSION
+#      - get version number from pom or something with bash
+#      - git tag vX.Y.Z
+#      - git push origin vX.Y.Z
+      branch:
+        - master-dummy
+      event:
+        - push
+
+#  - name: publish
+#    image: plugins/github-release
+#    settings:
+#      api_key: xxxxxxxx
+#      files:
+#        - dist/*
+#        - bin/binary.exe
+#      title: vX.Y.Z
+#      note: CHANGELOG.md
+#      checksum:
+#        - md5
+#        - sha1
+#        - sha256
+#        - sha512
+#        - adler32
+#        - crc32
+#    when:
+#      event: tag
+#
+#  - name: docker-deploy
+#    image: plugins/docker
+#    settings:
+#      repo: foo/bar
+#      auto_tag: true
+#      auto_tag_suffix: v
+#      username: kevinbacon
+#      password: pa55word
+#    when:
+#      branch:
+#        - master-dummy
+#      event:
+#        - push
+
 
 volumes:
   - name: maven-repo
