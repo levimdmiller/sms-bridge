@@ -24,7 +24,7 @@ steps:
         path: /root
     when:
       branch:
-        - deploy
+        - master
       event:
         - push
 
@@ -42,7 +42,7 @@ steps:
         path: /root
     when:
       branch:
-        - deploy
+        - master
       event:
         - push
 
