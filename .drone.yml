@@ -21,48 +21,41 @@ steps:
 #      - name: shared
 #        path: /root
 
-#  - name: tag
-#    image: docker:git
-#    commands:
-#      # configure git
-#      - git remote set-url origin git@github.com:levimdmiller/sms-bridge.git
-#
-#      # create tag
-#      - git tag v`cat /root/version`
-#      - git push origin v`cat /root/version`
-#    volumes:
-#      - name: shared
-#        path: /root
-#    when:
-#      branch:
-#        - deploy
-#      event:
-#        - push
+  - name: tag
+    image: docker:git
+    commands:
+      # configure git
+      - git remote set-url origin git@github.com:levimdmiller/sms-bridge.git
 
-#  - name: publish
-#    image: plugins/github-release
-#    settings:
-#      api_key:
-#        from_secret: github_token
-##      files: target/sms-bridge*
-#    when:
-#      event:
-#        - tag
-
-  - name: docker-deploy
-    image: plugins/docker
-    settings:
-      repo: levimdmiller/sms-bridge
-      auto_tag: true
-      auto_tag_suffix: v
-      username: levimiller
-      password:
-        from_secret: dockerhub_token
+      # create tag
+      - git tag v`cat /root/version`
+      - git push origin v`cat /root/version`
+    volumes:
+      - name: shared
+        path: /root
     when:
       branch:
         - deploy
       event:
         - push
+
+  - name: publish
+    image: plugins/github-release
+    settings:
+      api_key:
+        from_secret: github_token
+#      files: target/sms-bridge*
+    when:
+      event:
+        - tag
+
+  - name: docker-deploy
+    image: plugins/docker
+    settings:
+      repo: levimdmiller/sms-bridge
+      username: levimiller
+      password:
+        from_secret: dockerhub_token
 
 
 volumes:
