@@ -44,7 +44,7 @@ steps:
     settings:
       api_key:
         from_secret: github_token
-      files:  target/sms-bridge*
+      files: target/sms-bridge*
       title: $$TAG
       note: CHANGELOG.md
     volumes:
