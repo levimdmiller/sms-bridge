@@ -41,10 +41,8 @@ steps:
 
   - name: publish
     image: plugins/github-release
-    commands:
-      - echo publish
     settings:
-      api_key: /root/.ssh/id_rsa
+      api_key: $TOKEN
       files:
         - target/sms-bridge*
       title: $$TAG
@@ -56,6 +54,9 @@ steps:
         - sha512
         - adler32
         - crc32
+    environment:
+      TOKEN:
+        from_secret: github_token
     when:
       event:
         - tag
