@@ -41,7 +41,7 @@ steps:
 
   - name: publish
     image: plugins/github-release
-    environment:
+    settings:
       api_key:
         from_secret: github_token
       files:  target/sms-bridge*
