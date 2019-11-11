@@ -21,52 +21,48 @@ steps:
 #      - name: shared
 #        path: /root
 
-  - name: tag
-    image: docker:git
-    commands:
-      # configure git
-      - git remote set-url origin git@github.com:levimdmiller/sms-bridge.git
+#  - name: tag
+#    image: docker:git
+#    commands:
+#      # configure git
+#      - git remote set-url origin git@github.com:levimdmiller/sms-bridge.git
+#
+#      # create tag
+#      - git tag v`cat /root/version`
+#      - git push origin v`cat /root/version`
+#    volumes:
+#      - name: shared
+#        path: /root
+#    when:
+#      branch:
+#        - deploy
+#      event:
+#        - push
 
-      # create tag
-      - git tag v`cat /root/version`
-      - git push origin v`cat /root/version`
-    volumes:
-      - name: shared
-        path: /root
+#  - name: publish
+#    image: plugins/github-release
+#    settings:
+#      api_key:
+#        from_secret: github_token
+##      files: target/sms-bridge*
+#    when:
+#      event:
+#        - tag
+
+  - name: docker-deploy
+    image: plugins/docker
+    settings:
+      repo: levimdmiller/sms-bridge
+      auto_tag: true
+      auto_tag_suffix: v
+      username: levimiller
+      password:
+        from_secret: dockerhub_token
     when:
       branch:
         - deploy
       event:
         - push
-
-  - name: publish
-    image: plugins/github-release
-    settings:
-      api_key:
-        from_secret: github_token
-#      files: target/sms-bridge*
-#      title: $$TAG
-#      note: CHANGELOG.md
-#    volumes:
-#      - name: shared
-#        path: /root
-    when:
-      event:
-        - tag
-#
-#  - name: docker-deploy
-#    image: plugins/docker
-#    settings:
-#      repo: foo/bar
-#      auto_tag: true
-#      auto_tag_suffix: v
-#      username: kevinbacon
-#      password: pa55word
-#    when:
-#      branch:
-#        - master-dummy
-#      event:
-#        - push
 
 
 volumes:
