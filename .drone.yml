@@ -4,14 +4,14 @@ name: default
 
 type: docker
 steps:
-#  - name: build
-#    image: maven
-#    commands:
-#      - mvn clean install
-#      - mvn checkstyle:check
-#    volumes:
-#      - name: maven-repo
-#        path: /root/.m2
+  - name: build
+    image: maven
+    commands:
+      - mvn clean install
+      - mvn checkstyle:check
+    volumes:
+      - name: maven-repo
+        path: /root/.m2
 
 
 #    DEPLOY
