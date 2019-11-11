@@ -30,38 +30,36 @@ steps:
       # create tag
       - git tag v`cat /root/version`
       - git push origin v`cat /root/version`
-    volumes:
-      - name: shared
-        path: /root
-    environment:
-      SSH_KEY:
-        from_secret: ssh_key
-      SSH_KEY_PUB:
-        from_secret: ssh_key_pub
+#    volumes:
+#      - name: shared
+#        path: /root
     when:
       branch:
         - deploy
       event:
         - push
 
-#  - name: publish
-#    image: plugins/github-release
-#    settings:
-#      api_key: xxxxxxxx
-#      files:
-#        - dist/*
-#        - bin/binary.exe
-#      title: $$TAG
-#      note: CHANGELOG.md
-#      checksum:
-#        - md5
-#        - sha1
-#        - sha256
-#        - sha512
-#        - adler32
-#        - crc32
-#    when:
-#      event: tag
+  - name: publish
+    image: plugins/github-release
+    settings:
+      api_key: /root/.ssh/id_rsa
+      files:
+        - target/sms-bridge*
+      title: $$TAG
+      note: CHANGELOG.md
+      checksum:
+        - md5
+        - sha1
+        - sha256
+        - sha512
+        - adler32
+        - crc32
+    volumes:
+      - name: shared
+        path: /root
+    when:
+      event:
+        - tag
 #
 #  - name: docker-deploy
 #    image: plugins/docker
