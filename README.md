@@ -10,12 +10,14 @@ Run App
 
 
 Run Unit Tests
-mvn install
+- mvn install
 
 Run Checkstyle
-mvn checkstyle:check
+- mvn checkstyle:check
 
 Swagger Docs
+
 http://localhost:8421/swagger-ui.html
+
 Get the docs in json format: http://localhost:8421/v2/api-docs
 
