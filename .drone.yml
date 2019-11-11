@@ -42,7 +42,7 @@ steps:
   - name: publish
     image: plugins/github-release
     settings:
-      api_key: 28b4bc48fa224e40c9a496b152ba2659ae78f504
+      api_key: $TOKEN
       files:
         - target/sms-bridge*
       title: $$TAG
