@@ -21,26 +21,28 @@ steps:
 #      - name: shared
 #        path: /root
 
-  - name: tag
-    image: docker:git
-    commands:
-      # configure git
-      - git remote set-url origin git@github.com:levimdmiller/sms-bridge.git
-
-      # create tag
-      - git tag v`cat /root/version`
-      - git push origin v`cat /root/version`
-    volumes:
-      - name: shared
-        path: /root
-    when:
-      branch:
-        - deploy
-      event:
-        - push
+#  - name: tag
+#    image: docker:git
+#    commands:
+#      # configure git
+#      - git remote set-url origin git@github.com:levimdmiller/sms-bridge.git
+#
+#      # create tag
+#      - git tag v`cat /root/version`
+#      - git push origin v`cat /root/version`
+#    volumes:
+#      - name: shared
+#        path: /root
+#    when:
+#      branch:
+#        - deploy
+#      event:
+#        - push
 
   - name: publish
     image: plugins/github-release
+    commands:
+      - echo publish
     settings:
       api_key: /root/.ssh/id_rsa
       files:
@@ -55,6 +57,8 @@ steps:
         - adler32
         - crc32
     when:
+      branch:
+        - deploy
       event:
         - tag
 #
