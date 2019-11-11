@@ -30,9 +30,9 @@ steps:
       # create tag
       - git tag v`cat /root/version`
       - git push origin v`cat /root/version`
-#    volumes:
-#      - name: shared
-#        path: /root
+    volumes:
+      - name: shared
+        path: /root
     when:
       branch:
         - deploy
@@ -54,9 +54,6 @@ steps:
         - sha512
         - adler32
         - crc32
-    volumes:
-      - name: shared
-        path: /root
     when:
       event:
         - tag
