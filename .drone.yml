@@ -1,6 +1,7 @@
 kind: pipeline
 name: default
 
+
 type: docker
 steps:
   - name: build
@@ -12,7 +13,64 @@ steps:
       - name: maven-repo
         path: /root/.m2
 
+
+#    DEPLOY
+  - name: get-version
+    image: maven
+    commands:
+      - mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed -e 's,-SNAPSHOT,,g' > /root/version
+    volumes:
+      - name: shared
+        path: /root
+    when:
+      branch:
+        - master
+      event:
+        - push
+
+  - name: tag
+    image: docker:git
+    commands:
+      # configure git
+      - git remote set-url origin git@github.com:levimdmiller/sms-bridge.git
+
+      # create tag
+      - git tag v`cat /root/version`
+      - git push origin v`cat /root/version`
+    volumes:
+      - name: shared
+        path: /root
+    when:
+      branch:
+        - master
+      event:
+        - push
+
+  - name: publish
+    image: plugins/github-release
+    settings:
+      api_key:
+        from_secret: github_token
+#      files: target/sms-bridge*
+    when:
+      event:
+        - tag
+
+  - name: docker-deploy
+    image: plugins/docker
+    settings:
+      repo: levimiller/sms-bridge
+      username: levimiller
+      password:
+        from_secret: dockerhub_token
+    when:
+      event:
+        - tag
+
 volumes:
   - name: maven-repo
     host:
       path: /root/.m2
+  - name: shared
+    host:
+      path: /root
