@@ -45,7 +45,7 @@ steps:
       api_key:
         from_secret: github_token
       files:  target/sms-bridge*
-      title: v0.3.3
+      title: v0.7.1
       note: CHANGELOG.md
     volumes:
       - name: shared
