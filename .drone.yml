@@ -57,8 +57,6 @@ steps:
         - adler32
         - crc32
     when:
-      branch:
-        - deploy
       event:
         - tag
 #
