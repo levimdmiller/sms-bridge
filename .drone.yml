@@ -42,13 +42,14 @@ steps:
   - name: publish
     image: plugins/github-release
     settings:
-      api_key: 7cd7bd3fc1c0e00e588455eef19cb0138d46a3a9
-      files: target/sms-bridge*
-      title: $$TAG
-      note: CHANGELOG.md
-    volumes:
-      - name: shared
-        path: /root
+      api_key:
+        from_secret: github_token
+#      files: target/sms-bridge*
+#      title: $$TAG
+#      note: CHANGELOG.md
+#    volumes:
+#      - name: shared
+#        path: /root
     when:
       event:
         - tag
