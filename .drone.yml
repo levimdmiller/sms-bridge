@@ -42,8 +42,8 @@ steps:
   - name: publish
     image: plugins/github-release
     commands:
-      TITLE=v`cat /root/version`
-      echo $TITLE
+      - export TITLE=v`cat /root/version`
+      - echo $TITLE
     settings:
       api_key: $TOKEN
       files:
