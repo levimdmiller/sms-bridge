@@ -59,7 +59,7 @@ steps:
   - name: docker-deploy
     image: plugins/docker
     settings:
-      repo: levimdmiller/sms-bridge
+      repo: levimiller/sms-bridge
       username: levimiller
       password:
         from_secret: dockerhub_token
