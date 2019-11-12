@@ -1,14 +1,14 @@
 package ca.levimiller.smsbridge.data.fixture;
 
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.model.NumberOwner;
-import ca.levimiller.smsbridge.data.model.NumberOwnerType;
+import ca.levimiller.smsbridge.data.model.NumberRegistration;
+import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
 import ca.levimiller.smsbridge.data.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NumberOwnerFixture implements Fixture<NumberOwner> {
+public class NumberOwnerFixture implements Fixture<NumberRegistration> {
   private final RandomUtil randomUtil;
   private final Fixture<Contact> contactFixture;
 
@@ -20,10 +20,10 @@ public class NumberOwnerFixture implements Fixture<NumberOwner> {
   }
 
   @Override
-  public NumberOwner create() {
-    return NumberOwner.builder()
+  public NumberRegistration create() {
+    return NumberRegistration.builder()
         .ownerId(randomUtil.getString(255))
-        .ownerType(randomUtil.getEnum(NumberOwnerType.class))
+        .registrationType(randomUtil.getEnum(NumberRegistrationType.class))
         .contact(contactFixture.create())
         .build();
   }

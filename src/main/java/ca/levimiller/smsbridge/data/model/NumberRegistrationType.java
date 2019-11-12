@@ -1,5 +1,5 @@
 package ca.levimiller.smsbridge.data.model;
 
-public enum NumberOwnerType {
+public enum NumberRegistrationType {
   USER, ROOM;
 }

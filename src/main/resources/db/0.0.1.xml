@@ -119,7 +119,7 @@
         <constraints primaryKey="true" nullable="false"/>
       </column>
       <column name="owner_id" type="nvarchar(255)"/>
-      <column name="owner_type" type="nvarchar(16)"/>
+      <column name="registration_type" type="nvarchar(16)"/>
       <column name="contact" type="bigint">
         <constraints
           foreignKeyName="fk_number_registry_contact"

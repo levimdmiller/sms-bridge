@@ -29,15 +29,15 @@ import org.hibernate.annotations.Where;
 @SQLDelete(sql = "UPDATE number_registry SET deleted = 1 WHERE id = ?;",
     check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted = false")
-public class NumberOwner extends BaseModel {
+public class NumberRegistration extends BaseModel {
 
   @Size(max = 255)
   @Column(name = "owner_id")
   private String ownerId;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "owner_type", length = 16)
-  private NumberOwnerType ownerType;
+  @Column(name = "registration_type", length = 16)
+  private NumberRegistrationType registrationType;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "contact")
