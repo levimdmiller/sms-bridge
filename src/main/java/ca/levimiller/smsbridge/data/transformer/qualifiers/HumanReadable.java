@@ -9,6 +9,6 @@ import org.mapstruct.Qualifier;
 @Qualifier
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)
-public @interface PhoneNumber {
+public @interface HumanReadable {
 
 }
