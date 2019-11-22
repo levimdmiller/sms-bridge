@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NumberOwnerFixture implements Fixture<NumberRegistration> {
+public class NumberRegistrationFixture implements Fixture<NumberRegistration> {
   private final RandomUtil randomUtil;
   private final Fixture<Contact> contactFixture;
 
   @Autowired
-  public NumberOwnerFixture(RandomUtil randomUtil,
+  public NumberRegistrationFixture(RandomUtil randomUtil,
       Fixture<Contact> contactFixture) {
     this.randomUtil = randomUtil;
     this.contactFixture = contactFixture;

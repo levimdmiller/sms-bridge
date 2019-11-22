@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventContent implements Serializable {
