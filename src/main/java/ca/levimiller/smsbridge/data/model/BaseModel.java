@@ -11,8 +11,10 @@ import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @MappedSuperclass
 public abstract class BaseModel implements Serializable {
