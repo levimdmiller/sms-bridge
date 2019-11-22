@@ -10,6 +10,7 @@ import ca.levimiller.smsbridge.data.db.MessageRepository;
 import ca.levimiller.smsbridge.data.fixture.Fixture;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.Message;
+import ca.levimiller.smsbridge.service.ChatService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,8 @@ class SqlMessageServiceTest {
   private ContactRepository contactRepository;
   @MockBean
   private MessageRepository messageRepository;
+  @MockBean
+  private ChatService chatService;
 
   @Autowired
   SqlMessageServiceTest(
@@ -68,5 +71,6 @@ class SqlMessageServiceTest {
     Message result = messageService.save(message);
     assertEquals(expectedMessage, result);
     verify(messageRepository, times(1)).save(expectedMessage);
+    verify(chatService, times(1)).sendMessage(expectedMessage);
   }
 }
