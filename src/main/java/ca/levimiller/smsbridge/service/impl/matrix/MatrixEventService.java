@@ -1,7 +1,6 @@
 package ca.levimiller.smsbridge.service.impl.matrix;
 
 import ca.levimiller.smsbridge.data.dto.matrix.EventDto;
-import java.net.URI;
 import java.util.UUID;
 import javax.inject.Inject;
 import liquibase.util.StringUtils;
@@ -40,30 +39,30 @@ public class MatrixEventService {
       )
   )
   private void sendWithRetry(EventDto event, UUID transactionId) {
-    URI uri = StringUtils.isEmpty(event.getStateKey())
+    String uri = StringUtils.isEmpty(event.getStateKey())
         ? getStateUri(event)
         : getMessageUri(event, transactionId);
 
     restTemplate.put(uri, event);
   }
 
-  private URI getMessageUri(EventDto event, UUID transactionId) {
+  private String getMessageUri(EventDto event, UUID transactionId) {
     UriComponentsBuilder builder = UriComponentsBuilder
         .fromHttpUrl("/rooms/{roomId}/send/{eventType}/{txnId}");
     return builder.buildAndExpand(
         event.getRoomId(),
         event.getType().getCode(),
         transactionId.toString()
-    ).encode().toUri();
+    ).toUriString();
   }
 
-  private URI getStateUri(EventDto event) {
+  private String getStateUri(EventDto event) {
     UriComponentsBuilder builder = UriComponentsBuilder
         .fromHttpUrl("/rooms/{roomId}/state/{eventType}/{stateKey}");
     return builder.buildAndExpand(
         event.getRoomId(),
         event.getType().getCode(),
         event.getStateKey()
-    ).encode().toUri();
+    ).toUriString();
   }
 }

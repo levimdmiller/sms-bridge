@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -36,4 +37,12 @@ public class Contact extends BaseModel {
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "location_id")
   private Location location;
+
+  @PostLoad
+  protected void trim() {
+    // fixed length columns have whitespace
+    if(number != null) {
+      number = number.trim();
+    }
+  }
 }
