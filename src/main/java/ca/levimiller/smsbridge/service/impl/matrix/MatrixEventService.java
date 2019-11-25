@@ -40,10 +40,10 @@ public class MatrixEventService {
   )
   private void sendWithRetry(EventDto event, UUID transactionId) {
     String uri = StringUtils.isEmpty(event.getStateKey())
-        ? getStateUri(event)
-        : getMessageUri(event, transactionId);
+        ? getMessageUri(event, transactionId)
+        : getStateUri(event);
 
-    restTemplate.put(uri, event);
+    restTemplate.put(uri, event.getContent());
   }
 
   private String getMessageUri(EventDto event, UUID transactionId) {

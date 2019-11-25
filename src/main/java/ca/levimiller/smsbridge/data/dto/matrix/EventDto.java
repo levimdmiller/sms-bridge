@@ -1,5 +1,6 @@
 package ca.levimiller.smsbridge.data.dto.matrix;
 
+import ca.levimiller.smsbridge.data.dto.matrix.content.EventContent;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class EventDto {
   @JsonProperty("event_id")
   private String eventId;
   private Long age;
-  private Object content;
+  private EventContent content;
   private EventType type;
   private String sender;
 

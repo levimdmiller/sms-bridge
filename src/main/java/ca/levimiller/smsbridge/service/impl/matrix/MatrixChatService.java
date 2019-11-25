@@ -9,7 +9,6 @@ import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.RoomService;
-import java.time.Instant;
 import java.util.UUID;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +47,6 @@ public class MatrixChatService implements ChatService {
         .eventId(UUID.randomUUID().toString())
         .roomId(roomId)
         .type(EventType.ROOM_MESSAGE)
-        .sender(to.getOwnerId())
-        .originServerTs(Instant.now().toEpochMilli())
         .content(TextContent.builder()
             .body(message.getBody())
             .build())
