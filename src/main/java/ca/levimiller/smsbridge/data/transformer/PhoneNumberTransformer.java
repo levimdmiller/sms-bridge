@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface PhoneNumberTransformer {
+
   @PhoneNumber
   default String transform(String phoneNumber) {
     //+1234567890

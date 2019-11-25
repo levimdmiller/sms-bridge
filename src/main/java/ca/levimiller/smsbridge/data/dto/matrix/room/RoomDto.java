@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomDto {
+
   @JsonProperty("room_id")
   private String roomId;
   private List<String> servers;

@@ -13,6 +13,13 @@ public class TextContent extends EventContent {
   @JsonProperty("formatted_body")
   private String formattedBody;
 
+  /**
+   * Creates a TextContent instance.
+   *
+   * @param body - body of content
+   * @param format - how the formattedBody is formatted (optional)
+   * @param formattedBody - formatted boty (optionsl)
+   */
   @Builder
   public TextContent(String body, String format, String formattedBody) {
     super(ContentType.TEXT, body);

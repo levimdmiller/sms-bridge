@@ -28,8 +28,9 @@ public class MatrixEventService {
   }
 
   /**
-   * Sends the given event to the room specified in the event dto
-   * @param event - event to send
+   * Sends the given event to the room specified in the event dto.
+   *
+   * @param event - event to send.
    */
   public void sendRoomEvent(EventDto event) {
     sendWithRetry(event, uuidSource.newUuid());

@@ -1,12 +1,12 @@
-<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
-  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+<databaseChangeLog xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
   xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd'>
 
-  <changeSet id="0.0.1-1" author="Levi Miller">
+  <changeSet author="Levi Miller" id="0.0.1-1">
     <createTable tableName="location">
-      <column name="id" autoIncrement="true" type="bigint">
-        <constraints primaryKey="true" nullable="false"/>
+      <column autoIncrement="true" name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true"/>
       </column>
       <column name="city" type="nvarchar(255)"/>
       <column name="state" type="nvarchar(255)"/>
@@ -14,22 +14,22 @@
       <column name="zip" type="nvarchar(6)"/>
 
       <!-- boiler plate for tracking columns -->
-      <column name="deleted" type="boolean" defaultValue="false">
+      <column defaultValue="false" name="deleted" type="boolean">
         <constraints nullable="false"/>
       </column>
-      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+      <column defaultValueComputed="${now}" name="created_date" type="timestamp">
         <constraints nullable="false"/>
       </column>
-      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+      <column defaultValueComputed="${now}" name="modified_date" type="timestamp">
         <constraints nullable="false"/>
       </column>
     </createTable>
   </changeSet>
 
-  <changeSet id="0.0.1-2" author="Levi Miller">
+  <changeSet author="Levi Miller" id="0.0.1-2">
     <createTable tableName="contact">
-      <column name="id" autoIncrement="true" type="bigint">
-        <constraints primaryKey="true" nullable="false"/>
+      <column autoIncrement="true" name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true"/>
       </column>
       <!-- https://en.wikipedia.org/wiki/Telephone_numbering_plan -->
       <!-- max length of 15 -->
@@ -43,22 +43,22 @@
       </column>
 
       <!-- boiler plate for tracking columns -->
-      <column name="deleted" type="boolean" defaultValue="false">
+      <column defaultValue="false" name="deleted" type="boolean">
         <constraints nullable="false"/>
       </column>
-      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+      <column defaultValueComputed="${now}" name="created_date" type="timestamp">
         <constraints nullable="false"/>
       </column>
-      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+      <column defaultValueComputed="${now}" name="modified_date" type="timestamp">
         <constraints nullable="false"/>
       </column>
     </createTable>
   </changeSet>
 
-  <changeSet id="0.0.1-3" author="Levi Miller">
+  <changeSet author="Levi Miller" id="0.0.1-3">
     <createTable tableName="message">
-      <column name="id" autoIncrement="true" type="bigint">
-        <constraints primaryKey="true" nullable="false"/>
+      <column autoIncrement="true" name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true"/>
       </column>
       <column name="uid" type="varchar(255)"/>
       <column name="body" type="clob"/>
@@ -74,49 +74,49 @@
       </column>
 
       <!-- boiler plate for tracking columns -->
-      <column name="deleted" type="boolean" defaultValue="false">
+      <column defaultValue="false" name="deleted" type="boolean">
         <constraints nullable="false"/>
       </column>
-      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+      <column defaultValueComputed="${now}" name="created_date" type="timestamp">
         <constraints nullable="false"/>
       </column>
-      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+      <column defaultValueComputed="${now}" name="modified_date" type="timestamp">
         <constraints nullable="false"/>
       </column>
     </createTable>
   </changeSet>
 
-  <changeSet id="0.0.1-4" author="Levi Miller">
+  <changeSet author="Levi Miller" id="0.0.1-4">
     <createTable tableName="media">
-      <column name="id" autoIncrement="true" type="bigint">
-        <constraints primaryKey="true" nullable="false"/>
+      <column autoIncrement="true" name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true"/>
       </column>
       <column name="url" type="nvarchar(255)"/>
       <column name="content_type" type="nvarchar(255)"/>
       <column name="message_id" type="bigint">
         <constraints
           foreignKeyName="fk_message_media"
-          references="message(id)"
-          nullable="false"/>
+          nullable="false"
+          references="message(id)"/>
       </column>
 
       <!-- boiler plate for tracking columns -->
-      <column name="deleted" type="boolean" defaultValue="false">
+      <column defaultValue="false" name="deleted" type="boolean">
         <constraints nullable="false"/>
       </column>
-      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+      <column defaultValueComputed="${now}" name="created_date" type="timestamp">
         <constraints nullable="false"/>
       </column>
-      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+      <column defaultValueComputed="${now}" name="modified_date" type="timestamp">
         <constraints nullable="false"/>
       </column>
     </createTable>
   </changeSet>
 
-  <changeSet id="0.0.1-5" author="Levi Miller">
+  <changeSet author="Levi Miller" id="0.0.1-5">
     <createTable tableName="number_registry">
-      <column name="id" autoIncrement="true" type="bigint">
-        <constraints primaryKey="true" nullable="false"/>
+      <column autoIncrement="true" name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true"/>
       </column>
       <column name="owner_id" type="nvarchar(255)"/>
       <column name="registration_type" type="nvarchar(16)"/>
@@ -127,13 +127,13 @@
       </column>
 
       <!-- boiler plate for tracking columns -->
-      <column name="deleted" type="boolean" defaultValue="false">
+      <column defaultValue="false" name="deleted" type="boolean">
         <constraints nullable="false"/>
       </column>
-      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+      <column defaultValueComputed="${now}" name="created_date" type="timestamp">
         <constraints nullable="false"/>
       </column>
-      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+      <column defaultValueComputed="${now}" name="modified_date" type="timestamp">
         <constraints nullable="false"/>
       </column>
     </createTable>

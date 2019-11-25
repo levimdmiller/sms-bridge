@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+
 import ca.levimiller.smsbridge.data.dto.matrix.room.CreateRoomDto;
 import ca.levimiller.smsbridge.data.dto.matrix.room.RoomPreset;
 import ca.levimiller.smsbridge.data.model.Contact;

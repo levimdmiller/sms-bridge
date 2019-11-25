@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TwilioSmsDto {
+
   @NotNull
   String messageSid;
   @NotNull

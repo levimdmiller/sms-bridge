@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import ca.levimiller.smsbridge.data.dto.matrix.room.CreateRoomDto;
 import ca.levimiller.smsbridge.data.dto.matrix.room.RoomDto;
 import ca.levimiller.smsbridge.data.model.Contact;
@@ -83,6 +84,7 @@ class MatrixRoomServiceTest {
     String response = roomService.getRoom(chatNumber, smsContact);
     assertEquals("roomId", response);
   }
+
   @Test
   void getRoom_NumberNotFoundOrCreated() {
     when(restTemplate.getForObject(

@@ -13,6 +13,7 @@ public interface NumberRegistryRepository extends JpaRepository<NumberRegistrati
 
   /**
    * Finds the number registration by the given contact.
+   *
    * @param contact - contact to look up registration from
    * @return - number registration
    */

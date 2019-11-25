@@ -41,7 +41,7 @@ public class Contact extends BaseModel {
   @PostLoad
   protected void trim() {
     // fixed length columns have whitespace
-    if(number != null) {
+    if (number != null) {
       number = number.trim();
     }
   }

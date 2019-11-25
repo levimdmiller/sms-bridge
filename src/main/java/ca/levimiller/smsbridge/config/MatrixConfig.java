@@ -29,6 +29,11 @@ public class MatrixConfig {
    */
   private String asToken;
 
+  /**
+   * Gets the domain of the Matrix server excluding any subdomains.
+   *
+   * @return - domain of Matrix server
+   */
   // https://stackoverflow.com/questions/51926704/why-is-guavas-eventbus-marked-unstable-in-intellij-2018-2
   @SuppressWarnings("UnstableApiUsage")
   public String getDomain() {
@@ -36,8 +41,8 @@ public class MatrixConfig {
     return InternetDomainName.from(
         Objects.requireNonNull(
             UriComponentsBuilder.fromHttpUrl(url)
-            .build()
-            .getHost())
+                .build()
+                .getHost())
     ).topPrivateDomain().toString();
   }
 

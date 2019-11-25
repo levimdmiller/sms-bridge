@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SqlMessageService implements MessageService {
+
   private final ContactRepository contactRepository;
   private final MessageRepository messageRepository;
 

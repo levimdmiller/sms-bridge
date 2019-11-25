@@ -1,6 +1,7 @@
 package ca.levimiller.smsbridge.data.transformer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.data.model.NumberRegistrationType;

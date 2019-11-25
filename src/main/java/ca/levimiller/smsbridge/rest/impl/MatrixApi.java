@@ -13,7 +13,7 @@ public class MatrixApi implements MatrixController {
   @Override
   public void eventTransaction(String transactionId, TransactionDto data) {
     log.info("Transaction id: {}", transactionId);
-    for(EventDto event : data.getEvents()) {
+    for (EventDto event : data.getEvents()) {
       log.info("Body:\n {}", event);
     }
   }

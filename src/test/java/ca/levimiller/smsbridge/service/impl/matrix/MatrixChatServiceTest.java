@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import ca.levimiller.smsbridge.data.db.NumberRegistryRepository;
 import ca.levimiller.smsbridge.data.dto.matrix.EventDto;
 import ca.levimiller.smsbridge.data.dto.matrix.EventType;

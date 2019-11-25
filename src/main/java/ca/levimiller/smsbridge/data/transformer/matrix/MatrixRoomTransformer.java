@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MatrixRoomTransformer {
+
   private final RoomNameTransformer roomNameTransformer;
 
   @Inject
@@ -22,6 +23,7 @@ public class MatrixRoomTransformer {
 
   /**
    * Transforms the contact numbers to a room.
+   *
    * @param chatNumber - chat service identifier
    * @param smsContact - sms contact
    * @return - create room dto

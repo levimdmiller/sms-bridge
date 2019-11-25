@@ -10,8 +10,8 @@ import org.mapstruct.Mapper;
 public interface RoomNameTransformer {
 
   /**
-   * Returns a human readable name.
-   * E.g., SMS +1234567890
+   * Returns a human readable name. E.g., SMS +1234567890
+   *
    * @param chatNumber - registered id for chat server
    * @param smsContact - sms contact
    * @return - Human readable name
@@ -22,10 +22,9 @@ public interface RoomNameTransformer {
   }
 
   /**
-   * Returns a room name safe for use int a path/url/identifier.
-   * I.e., the name will only have the following characters:
-   * [0-9a-zA-Z-]
-   * E.g., sms-1234567890
+   * Returns a room name safe for use int a path/url/identifier. I.e., the name will only have the
+   * following characters: [0-9a-zA-Z-] E.g., sms-1234567890
+   *
    * @param chatNumber - registered id for chat server
    * @param smsContact - sms contact
    * @return - generated room name

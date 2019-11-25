@@ -7,6 +7,7 @@ public interface RoomService {
 
   /**
    * Gets the room id for the given recipients.
+   *
    * @param chatNumber - chat user/room
    * @param smsContact - sms contact
    * @return - room id.

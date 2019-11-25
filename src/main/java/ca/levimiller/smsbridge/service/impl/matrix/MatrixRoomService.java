@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @Service
 public class MatrixRoomService implements RoomService {
+
   private final MatrixConfig matrixConfig;
   private final MatrixRoomTransformer roomTransformer;
   private final RestTemplate restTemplate;
@@ -35,12 +36,12 @@ public class MatrixRoomService implements RoomService {
   public String getRoom(NumberRegistration chatNumber, Contact smsContact) {
     CreateRoomDto roomDto = roomTransformer.transform(chatNumber, smsContact);
     RoomDto room = restTemplate.getForObject("/directory/room/{room_alias}",
-          RoomDto.class, getFullAlias(roomDto.getRoomAliasName()));
+        RoomDto.class, getFullAlias(roomDto.getRoomAliasName()));
     // create room if not present
-    if(room == null) {
+    if (room == null) {
       room = restTemplate.postForObject("/createRoom", roomDto, RoomDto.class);
     }
-    if(room == null) {
+    if (room == null) {
       throw new RestClientException("Unable to get or create matrix room. Null response.");
     }
     return room.getRoomId();
@@ -49,6 +50,7 @@ public class MatrixRoomService implements RoomService {
   /**
    * Gets the full room alias from the base (required for the GET, but must not exist on the POST)
    * e.g., for sms-test returns #sms-test:domain.ca
+   *
    * @param baseAlias - base room alias (no # or domain)
    * @return - fully qualified room alias (#base:domain.ca)
    */

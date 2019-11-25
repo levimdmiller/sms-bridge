@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class MatrixChatService implements ChatService {
+
   private final UuidSource uuidSource;
   private final NumberRegistryRepository numberRegistryRepository;
   private final MatrixEventService eventService;
