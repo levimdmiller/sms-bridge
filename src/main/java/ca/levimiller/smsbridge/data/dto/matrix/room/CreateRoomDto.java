@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateRoomDto {
 
-  private VisibilityType visibility;
+  private RoomPreset preset;
   @JsonProperty("room_alias_name")
   private String roomAliasName;
   private String name;

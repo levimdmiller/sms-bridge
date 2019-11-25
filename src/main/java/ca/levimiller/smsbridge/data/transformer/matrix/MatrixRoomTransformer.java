@@ -1,7 +1,7 @@
 package ca.levimiller.smsbridge.data.transformer.matrix;
 
 import ca.levimiller.smsbridge.data.dto.matrix.room.CreateRoomDto;
-import ca.levimiller.smsbridge.data.dto.matrix.room.VisibilityType;
+import ca.levimiller.smsbridge.data.dto.matrix.room.RoomPreset;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
@@ -28,7 +28,7 @@ public class MatrixRoomTransformer {
    */
   public CreateRoomDto transform(NumberRegistration chatNumber, Contact smsContact) {
     return CreateRoomDto.builder()
-        .visibility(VisibilityType.PRIVATE)
+        .preset(RoomPreset.TRUSTED_PRIVATE)
         .roomAliasName(roomNameTransformer.transformEncoded(chatNumber, smsContact))
         .name(roomNameTransformer.transformHumanReadable(chatNumber, smsContact))
         .topic("Sms Conversation")
