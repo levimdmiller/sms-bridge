@@ -27,7 +27,7 @@ public class TokenAuthenticationInterceptor implements ClientHttpRequestIntercep
     return execution.execute(requestWrapper, body);
   }
 
-  private static class ParamHttpRequestWrapper extends HttpRequestWrapper {
+  static class ParamHttpRequestWrapper extends HttpRequestWrapper {
 
     private UriComponentsBuilder uriBuilder;
 
