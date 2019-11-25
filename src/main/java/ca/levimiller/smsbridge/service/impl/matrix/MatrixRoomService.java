@@ -1,5 +1,6 @@
 package ca.levimiller.smsbridge.service.impl.matrix;
 
+import ca.levimiller.smsbridge.config.MatrixConfig;
 import ca.levimiller.smsbridge.data.dto.matrix.room.CreateRoomDto;
 import ca.levimiller.smsbridge.data.dto.matrix.room.RoomDto;
 import ca.levimiller.smsbridge.data.model.Contact;
@@ -16,13 +17,16 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @Service
 public class MatrixRoomService implements RoomService {
+  private final MatrixConfig matrixConfig;
   private final MatrixRoomTransformer roomTransformer;
   private final RestTemplate restTemplate;
 
   @Inject
   public MatrixRoomService(
+      MatrixConfig matrixConfig,
       MatrixRoomTransformer roomTransformer,
       @Qualifier("matrixTemplate") RestTemplate restTemplate) {
+    this.matrixConfig = matrixConfig;
     this.roomTransformer = roomTransformer;
     this.restTemplate = restTemplate;
   }
@@ -31,8 +35,8 @@ public class MatrixRoomService implements RoomService {
   public String getRoom(NumberRegistration chatNumber, Contact smsContact) {
     CreateRoomDto roomDto = roomTransformer.transform(chatNumber, smsContact);
     RoomDto room = restTemplate.getForObject("/directory/room/{room_alias}",
-          RoomDto.class, roomDto.getRoomAliasName());
-      // create room if not present
+          RoomDto.class, getFullAlias(roomDto.getRoomAliasName()));
+    // create room if not present
     if(room == null) {
       room = restTemplate.postForObject("/createRoom", roomDto, RoomDto.class);
     }
@@ -40,5 +44,15 @@ public class MatrixRoomService implements RoomService {
       throw new RestClientException("Unable to get or create matrix room. Null response.");
     }
     return room.getRoomId();
+  }
+
+  /**
+   * Gets the full room alias from the base (required for the GET, but must not exist on the POST)
+   * e.g., for sms-test returns #sms-test:domain.ca
+   * @param baseAlias - base room alias (no # or domain)
+   * @return - fully qualified room alias (#base:domain.ca)
+   */
+  private String getFullAlias(String baseAlias) {
+    return String.format("#%s:%s", baseAlias, matrixConfig.getDomain());
   }
 }

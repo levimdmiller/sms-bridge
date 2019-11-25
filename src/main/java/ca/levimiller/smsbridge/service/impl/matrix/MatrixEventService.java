@@ -48,7 +48,7 @@ public class MatrixEventService {
 
   private String getMessageUri(EventDto event, UUID transactionId) {
     UriComponentsBuilder builder = UriComponentsBuilder
-        .fromHttpUrl("/rooms/{roomId}/send/{eventType}/{txnId}");
+        .fromPath("/rooms/{roomId}/send/{eventType}/{txnId}");
     return builder.buildAndExpand(
         event.getRoomId(),
         event.getType().getCode(),
@@ -58,7 +58,7 @@ public class MatrixEventService {
 
   private String getStateUri(EventDto event) {
     UriComponentsBuilder builder = UriComponentsBuilder
-        .fromHttpUrl("/rooms/{roomId}/state/{eventType}/{stateKey}");
+        .fromPath("/rooms/{roomId}/state/{eventType}/{stateKey}");
     return builder.buildAndExpand(
         event.getRoomId(),
         event.getType().getCode(),
