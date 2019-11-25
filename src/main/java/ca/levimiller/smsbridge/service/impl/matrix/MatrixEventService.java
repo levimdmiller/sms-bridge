@@ -1,6 +1,7 @@
 package ca.levimiller.smsbridge.service.impl.matrix;
 
 import ca.levimiller.smsbridge.data.dto.matrix.EventDto;
+import ca.levimiller.smsbridge.util.UuidSource;
 import java.util.UUID;
 import javax.inject.Inject;
 import liquibase.util.StringUtils;
@@ -16,10 +17,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class MatrixEventService {
 
   private final RestTemplate restTemplate;
+  private final UuidSource uuidSource;
 
   @Inject
-  public MatrixEventService(@Qualifier("matrixTemplate") RestTemplate restTemplate) {
+  public MatrixEventService(
+      @Qualifier("matrixTemplate") RestTemplate restTemplate,
+      UuidSource uuidSource) {
     this.restTemplate = restTemplate;
+    this.uuidSource = uuidSource;
   }
 
   /**
@@ -27,7 +32,7 @@ public class MatrixEventService {
    * @param event - event to send
    */
   public void sendRoomEvent(EventDto event) {
-    sendWithRetry(event, UUID.randomUUID());
+    sendWithRetry(event, uuidSource.newUuid());
   }
 
   @Retryable(

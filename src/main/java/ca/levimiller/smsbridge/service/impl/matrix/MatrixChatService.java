@@ -9,7 +9,7 @@ import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.RoomService;
-import java.util.UUID;
+import ca.levimiller.smsbridge.util.UuidSource;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,15 +17,18 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class MatrixChatService implements ChatService {
+  private final UuidSource uuidSource;
   private final NumberRegistryRepository numberRegistryRepository;
   private final MatrixEventService eventService;
   private final RoomService roomService;
 
   @Inject
   public MatrixChatService(
+      UuidSource uuidSource,
       NumberRegistryRepository numberRegistryRepository,
       MatrixEventService eventService,
       RoomService roomService) {
+    this.uuidSource = uuidSource;
     this.numberRegistryRepository = numberRegistryRepository;
     this.eventService = eventService;
     this.roomService = roomService;
@@ -44,7 +47,7 @@ public class MatrixChatService implements ChatService {
     String roomId = roomService.getRoom(to, message.getFromContact());
     // used by the server to ensure idempotency of requests.
     eventService.sendRoomEvent(EventDto.builder()
-        .eventId(UUID.randomUUID().toString())
+        .eventId(uuidSource.newUuid().toString())
         .roomId(roomId)
         .type(EventType.ROOM_MESSAGE)
         .content(TextContent.builder()
