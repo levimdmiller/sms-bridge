@@ -21,3 +21,31 @@ http://localhost:8421/swagger-ui.html
 
 Get the docs in json format: http://localhost:8421/v2/api-docs
 
+# Installation:
+https://matrix.org/docs/guides/application-services/#what-application-services-can-do-for-you
+
+Create an sms-registration.yaml file (see above link):
+```
+id: "some-unique-id"
+url: "https://my-hosted-sms-bridge.ca"
+
+as_token: <generate-random-strings-here>
+hs_token: <generate-random-strings-here>
+
+# this is the local part of the desired user ID for this AS (in this case @logging:localhost)
+sender_localpart: sms
+namespaces:
+  users: 
+    - exclusive: false
+      regex: "@sms-.*"
+  rooms: []
+  aliases:
+    - exclusive: false
+      regex: "#sms-.*"
+```
+
+Add the sms-registration file to homeserver.yml and restart:
+```
+app_service_config_files:
+  - "/path/to/appservice/registration.yaml"
+```
