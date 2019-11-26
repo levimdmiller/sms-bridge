@@ -11,7 +11,7 @@
   </parent>
   <groupId>ca.levimiller</groupId>
   <artifactId>sms-bridge</artifactId>
-  <version>0.7.1-SNAPSHOT</version>
+  <version>0.0.1-SNAPSHOT</version>
   <name>sms-bridge</name>
   <description>Sms Bridge for Matrix</description>
 
@@ -33,6 +33,14 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.retry</groupId>
+      <artifactId>spring-retry</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aspects</artifactId>
     </dependency>
 
     <dependency>
@@ -61,6 +69,11 @@
       <version>2.9.2</version>
     </dependency>
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>com.twilio.sdk</groupId>
       <artifactId>twilio</artifactId>
       <version>7.44.0</version>
@@ -79,6 +92,12 @@
       <artifactId>mapstruct</artifactId>
       <version>${org.mapstruct.version}</version>
     </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.6</version>
+    </dependency>
+
 
     <!-- test dependencies -->
     <dependency>

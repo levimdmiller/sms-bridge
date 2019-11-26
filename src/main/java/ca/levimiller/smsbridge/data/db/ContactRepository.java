@@ -7,5 +7,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 public interface ContactRepository extends JpaRepository<Contact, Long>,
     QuerydslPredicateExecutor<Contact> {
+
   Optional<Contact> findDistinctByNumber(String number);
 }

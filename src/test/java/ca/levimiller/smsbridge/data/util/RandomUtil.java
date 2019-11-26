@@ -40,7 +40,7 @@ public class RandomUtil {
   }
 
   /**
-   * Gets a random bounded int.
+   * Gets a random bounded int between 0 (inclusive) and bound (exclusive).
    *
    * @return - random int.
    */
@@ -72,5 +72,16 @@ public class RandomUtil {
    */
   public <T> List<T> getList(Fixture<T> fixture) {
     return getList(fixture, getInt(9) + 1);
+  }
+
+  /**
+   * Gets a random enum value.
+   * @param enumClass - enum class type
+   * @param <T> - enum type
+   * @return - random value from the enum class
+   */
+  public <T extends Enum> T getEnum(Class<T> enumClass) {
+    T[] values = enumClass.getEnumConstants();
+    return values[getInt(values.length)];
   }
 }

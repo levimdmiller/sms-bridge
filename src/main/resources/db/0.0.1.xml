@@ -112,4 +112,30 @@
       </column>
     </createTable>
   </changeSet>
+
+  <changeSet id="0.0.1-5" author="Levi Miller">
+    <createTable tableName="number_registry">
+      <column name="id" autoIncrement="true" type="bigint">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="owner_id" type="nvarchar(255)"/>
+      <column name="registration_type" type="nvarchar(16)"/>
+      <column name="contact" type="bigint">
+        <constraints
+          foreignKeyName="fk_number_registry_contact"
+          references="contact(id)"/>
+      </column>
+
+      <!-- boiler plate for tracking columns -->
+      <column name="deleted" type="boolean" defaultValue="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
 </databaseChangeLog>

@@ -13,7 +13,7 @@ import org.mapstruct.Mapping;
 public interface ContactTransformer {
 
   @To
-  @Mapping(source = "to", target = "number")
+  @Mapping(source = "to", target = "number", qualifiedBy = PhoneNumber.class)
   @Mapping(source = ".", target = "location", qualifiedBy = To.class)
   Contact transformTo(TwilioSmsDto dto);
 
