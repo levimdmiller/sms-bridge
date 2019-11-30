@@ -49,3 +49,11 @@ Add the sms-registration file to homeserver.yml and restart:
 app_service_config_files:
   - "/path/to/appservice/registration.yaml"
 ```
+
+# Testing:
+- Set up [Ngrok](https://ngrok.com/) to allow Twilio to communicate with a local build.
+- Run/Debug the sms-bridge spring app
+- Run `ngrok http <server.port>` and open the link that appears in the terminal.
+- Copy the **http** url to the twilio Dashboard <br>
+(otherwise the signature validation will fail due to Twilio hashing with https, 
+but sms-bridge hashing with http)

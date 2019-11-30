@@ -28,6 +28,10 @@ public class MatrixConfig {
    * Token for Authorization on Matrix server.
    */
   private String asToken;
+  /**
+   * Token for Home Matrix server.
+   */
+  private String hsToken;
 
   /**
    * Gets the domain of the Matrix server excluding any subdomains.
@@ -48,7 +52,7 @@ public class MatrixConfig {
 
   @Bean
   @Qualifier("matrixTemplate")
-  public RestTemplate restTemplate(
+  RestTemplate restTemplate(
       RestTemplateResponseErrorLoggerHandler errorLoggerHandler,
       RestTemplateBuilder builder) {
     UriBuilder uriBuilder = UriComponentsBuilder.fromUriString(url)
