@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
   private final Filter twilioAuthenticationFilter;
 
   @Inject
@@ -30,15 +31,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         "/swagger-ui.html",
         "/webjars/**");
   }
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     // disable csrf for twilio as it uses a generated token to verify the server.
     http.csrf()
-        .ignoringAntMatchers("/twilio/**");
+        .ignoringAntMatchers("/twilio/**")
+        .and()
+        .authorizeRequests()
+        .antMatchers("/twilio/**")
+        .authenticated()
+        .and()
+        .httpBasic();
   }
 
   @Bean
-  public FilterRegistrationBean<Filter> twilioFilterRegistration() {
+  FilterRegistrationBean<Filter> twilioFilterRegistration() {
     FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
 
     registrationBean.setFilter(twilioAuthenticationFilter);

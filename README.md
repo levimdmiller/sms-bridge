@@ -50,6 +50,16 @@ app_service_config_files:
   - "/path/to/appservice/registration.yaml"
 ```
 
+Create a user in the `security_user` table for twilio to auth with 
+([Online BCrypt Hasher](https://bcrypt-generator.com/)):
+```
+insert into security_user(username, password, role)
+values('whatever-username', 'bcrypt-hashed-password', 'TWILIO_SERVER');
+```
+
+Configure Twilio to make POST requests to 
+`https://username:password@<hosted-domain>/twilio/sms`
+
 # Testing:
 - Set up [Ngrok](https://ngrok.com/) to allow Twilio to communicate with a local build.
 - Run/Debug the sms-bridge spring app

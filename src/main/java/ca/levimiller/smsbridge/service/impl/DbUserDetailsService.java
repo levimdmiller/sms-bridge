@@ -4,12 +4,14 @@ import ca.levimiller.smsbridge.data.db.SecurityUserRepository;
 import ca.levimiller.smsbridge.data.transformer.auth.SecurityUserTransformer;
 import ca.levimiller.smsbridge.error.NotFoundException;
 import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Qualifier("userDetailsService")
 public class DbUserDetailsService implements UserDetailsService {
   private final SecurityUserRepository userRepository;
   private final SecurityUserTransformer userTransformer;
