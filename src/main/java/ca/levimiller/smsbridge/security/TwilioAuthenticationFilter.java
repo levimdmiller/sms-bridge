@@ -1,6 +1,5 @@
 package ca.levimiller.smsbridge.security;
 
-import ca.levimiller.smsbridge.config.TwilioConfig;
 import ca.levimiller.smsbridge.error.ForbiddenException;
 import ca.levimiller.smsbridge.error.UnauthorizedException;
 import com.twilio.security.RequestValidator;
@@ -31,13 +30,10 @@ import org.springframework.web.filter.GenericFilterBean;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Qualifier("twilioFilter")
 public class TwilioAuthenticationFilter extends GenericFilterBean {
-  private final TwilioConfig config;
   private final RequestValidator requestValidator;
 
   @Inject
-  public TwilioAuthenticationFilter(TwilioConfig config,
-      RequestValidator requestValidator) {
-    this.config = config;
+  public TwilioAuthenticationFilter(RequestValidator requestValidator) {
     this.requestValidator = requestValidator;
   }
 
