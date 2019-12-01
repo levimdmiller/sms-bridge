@@ -138,4 +138,26 @@
       </column>
     </createTable>
   </changeSet>
+
+  <changeSet id="0.0.1-6" author="Levi Miller">
+    <createTable tableName="security_user">
+      <column name="id" autoIncrement="true" type="bigint">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="username" type="nvarchar(255)"/>
+      <column name="password" type="nvarchar(255)"/>
+      <column name="role" type="nvarchar(16)"/>
+
+      <!-- boiler plate for tracking columns -->
+      <column name="deleted" type="boolean" defaultValue="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
 </databaseChangeLog>
