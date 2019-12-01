@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class TwilioConfig {
 
   /**
-   * Token used to validate X-Twilio-Signature
+   * Token used to validate X-Twilio-Signature.
    */
   private String token;
 

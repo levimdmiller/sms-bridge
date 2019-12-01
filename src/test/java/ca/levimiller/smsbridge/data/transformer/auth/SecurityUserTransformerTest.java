@@ -1,6 +1,7 @@
 package ca.levimiller.smsbridge.data.transformer.auth;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import ca.levimiller.smsbridge.data.fixture.Fixture;
 import ca.levimiller.smsbridge.data.model.auth.SecurityUser;
 import com.google.common.collect.Iterables;

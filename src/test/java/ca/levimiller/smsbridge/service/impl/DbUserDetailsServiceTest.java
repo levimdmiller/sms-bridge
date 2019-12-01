@@ -3,6 +3,7 @@ package ca.levimiller.smsbridge.service.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+
 import ca.levimiller.smsbridge.data.db.SecurityUserRepository;
 import ca.levimiller.smsbridge.data.model.auth.SecurityUser;
 import ca.levimiller.smsbridge.data.transformer.auth.SecurityUserTransformer;

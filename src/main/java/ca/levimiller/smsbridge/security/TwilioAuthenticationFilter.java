@@ -30,6 +30,7 @@ import org.springframework.web.filter.GenericFilterBean;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Qualifier("twilioFilter")
 public class TwilioAuthenticationFilter extends GenericFilterBean {
+
   private final RequestValidator requestValidator;
 
   @Inject
@@ -49,7 +50,7 @@ public class TwilioAuthenticationFilter extends GenericFilterBean {
       // Extracts only the POST parameters and converts the parameters Map type
       Map<String, String> postParams = extractPostParams(httpRequest);
       String signatureHeader = httpRequest.getHeader("X-Twilio-Signature");
-      if(StringUtils.isEmpty(signatureHeader)) {
+      if (StringUtils.isEmpty(signatureHeader)) {
         throw new UnauthorizedException();
       }
 
@@ -59,7 +60,7 @@ public class TwilioAuthenticationFilter extends GenericFilterBean {
           signatureHeader);
     }
 
-    if(isValidRequest) {
+    if (isValidRequest) {
       chain.doFilter(request, response);
     } else {
       throw new ForbiddenException();
@@ -77,7 +78,7 @@ public class TwilioAuthenticationFilter extends GenericFilterBean {
   }
 
   private List<String> getQueryStringKeys(String queryString) {
-    if(StringUtils.isEmpty(queryString)) {
+    if (StringUtils.isEmpty(queryString)) {
       return Collections.emptyList();
     } else {
       return Arrays.stream(queryString.split("&"))
@@ -89,7 +90,7 @@ public class TwilioAuthenticationFilter extends GenericFilterBean {
   private String getRequestUrlAndQueryString(HttpServletRequest request) {
     String queryString = request.getQueryString();
     String requestUrl = request.getRequestURL().toString();
-    if(!StringUtils.isEmpty(queryString)) {
+    if (!StringUtils.isEmpty(queryString)) {
       return requestUrl + "?" + queryString;
     }
     return requestUrl;
