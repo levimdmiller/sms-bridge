@@ -60,6 +60,9 @@ values('whatever-username', 'bcrypt-hashed-password', 'TWILIO_SERVER');
 Configure Twilio to make POST requests to 
 `https://username:password@<hosted-domain>/twilio/sms`
 
+It's really important to use **https** here, as the server only uses Basic Authentication,
+and will send the username/password unencrypted if you don't use https.
+
 # Testing:
 - Set up [Ngrok](https://ngrok.com/) to allow Twilio to communicate with a local build.
 - Run/Debug the sms-bridge spring app
