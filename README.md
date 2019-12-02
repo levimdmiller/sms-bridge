@@ -1,7 +1,7 @@
 # sms-bridge
 Matrix Sms Bridge
 
-Bridges the sms service Twilio to matrix, but is easily extendible to other services/chat servers
+Bridges the sms service Twilio to matrix, but could be extended to other services/chat servers
 
 
 Run App
