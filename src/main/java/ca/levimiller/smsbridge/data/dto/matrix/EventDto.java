@@ -22,7 +22,7 @@ public class EventDto {
   private String eventId;
   private Long age;
   private EventContent content;
-  private EventType type;
+  private String type;
   private String sender;
 
   // Optional information about the event
@@ -33,4 +33,18 @@ public class EventDto {
   @JsonProperty("state_key")
   private String stateKey;
 
+  public void setType(EventType type) {
+    this.type = type == null ? null : type.getCode();
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public static class EventDtoBuilder {
+    public EventDtoBuilder type(EventType type) {
+      this.type = type == null ? null : type.getCode();
+      return this;
+    }
+  }
 }

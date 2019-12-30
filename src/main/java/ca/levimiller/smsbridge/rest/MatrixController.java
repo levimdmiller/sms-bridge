@@ -1,5 +1,6 @@
 package ca.levimiller.smsbridge.rest;
 
+import ca.levimiller.smsbridge.data.dto.EmptyResponse;
 import ca.levimiller.smsbridge.data.dto.matrix.TransactionDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,7 +27,7 @@ public interface MatrixController {
       @ApiResponse(code = 200, message = "Successfully processed"),
       @ApiResponse(code = 400, message = "Request not valid")
   })
-  void eventTransaction(@PathVariable("id") String transactionId, @RequestBody TransactionDto data);
+  EmptyResponse eventTransaction(@PathVariable("id") String transactionId, @RequestBody TransactionDto data);
 
   @GetMapping("/users/{userId}")
   @ApiOperation("Handles queries for if a user exists, and creates the user if the number is valid")
@@ -36,7 +37,7 @@ public interface MatrixController {
       @ApiResponse(code = 403, message = "Credentials rejected"),
       @ApiResponse(code = 404, message = "User does not exist")
   })
-  void users(@PathVariable("userId") String userId);
+  EmptyResponse users(@PathVariable("userId") String userId);
 
   @GetMapping("/rooms/{alias}")
   @ApiOperation("Handles queries for if a room exists, or creates the room")
@@ -46,5 +47,5 @@ public interface MatrixController {
       @ApiResponse(code = 403, message = "Credentials rejected"),
       @ApiResponse(code = 404, message = "User does not exist")
   })
-  void rooms(@PathVariable("alias") String alias);
+  EmptyResponse rooms(@PathVariable("alias") String alias);
 }

@@ -12,6 +12,15 @@ import lombok.NoArgsConstructor;
 public class EventContent implements Serializable {
 
   @JsonProperty("msgtype")
-  private ContentType type;
+  private String type;
   private String body;
+
+  public EventContent(ContentType type, String body) {
+    setType(type);
+    this.body = body;
+  }
+
+  public void setType(ContentType type) {
+    this.type = type == null ? null : type.getType();
+  }
 }

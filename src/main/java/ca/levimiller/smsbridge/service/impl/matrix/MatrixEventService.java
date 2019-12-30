@@ -57,7 +57,7 @@ public class MatrixEventService {
         .fromPath("/rooms/{roomId}/send/{eventType}/{txnId}");
     return builder.buildAndExpand(
         event.getRoomId(),
-        event.getType().getCode(),
+        event.getType(),
         transactionId.toString()
     ).toUriString();
   }
@@ -67,7 +67,7 @@ public class MatrixEventService {
         .fromPath("/rooms/{roomId}/state/{eventType}/{stateKey}");
     return builder.buildAndExpand(
         event.getRoomId(),
-        event.getType().getCode(),
+        event.getType(),
         event.getStateKey()
     ).toUriString();
   }
