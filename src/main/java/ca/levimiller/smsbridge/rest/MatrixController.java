@@ -27,7 +27,9 @@ public interface MatrixController {
       @ApiResponse(code = 200, message = "Successfully processed"),
       @ApiResponse(code = 400, message = "Request not valid")
   })
-  EmptyResponse eventTransaction(@PathVariable("id") String transactionId, @RequestBody TransactionDto data);
+  EmptyResponse eventTransaction(
+      @PathVariable("id") String transactionId,
+      @RequestBody TransactionDto data);
 
   @GetMapping("/users/{userId}")
   @ApiOperation("Handles queries for if a user exists, and creates the user if the number is valid")
