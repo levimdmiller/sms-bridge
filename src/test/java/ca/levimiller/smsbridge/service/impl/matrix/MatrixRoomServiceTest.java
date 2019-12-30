@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -78,6 +80,9 @@ class MatrixRoomServiceTest {
 
   @Test
   void getRoom_NumberNotFound() {
+    when(restTemplate.getForObject(
+        "/directory/room/{room_alias}", RoomDto.class, "#alias:domain.ca"))
+        .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
     when(restTemplate.postForObject(eq("/createRoom"), any(), eq(RoomDto.class)))
         .thenReturn(roomDto);
 
@@ -89,7 +94,7 @@ class MatrixRoomServiceTest {
   void getRoom_NumberNotFoundOrCreated() {
     when(restTemplate.getForObject(
         "/directory/room/{room_alias}", RoomDto.class, "#alias:domain.ca"))
-        .thenReturn(null);
+        .thenThrow(HttpClientErrorException.NotFound.class);
     when(restTemplate.postForObject("/createRoom", roomDto, RoomDto.class))
         .thenReturn(roomDto);
 
