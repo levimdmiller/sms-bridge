@@ -1,8 +1,6 @@
 package ca.levimiller.smsbridge.config;
 
 import ca.levimiller.smsbridge.error.RestTemplateResponseErrorLoggerHandler;
-import com.google.common.net.InternetDomainName;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +19,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class MatrixConfig {
 
   /**
+   * Because I misconfigured my matrix server years ago and didn't include the subdomain.
+   */
+  private String serverName;
+  /**
    * Url to Matrix server.
    */
   private String url;
@@ -32,23 +34,6 @@ public class MatrixConfig {
    * Token for Home Matrix server.
    */
   private String hsToken;
-
-  /**
-   * Gets the domain of the Matrix server excluding any subdomains.
-   *
-   * @return - domain of Matrix server
-   */
-  // https://stackoverflow.com/questions/51926704/why-is-guavas-eventbus-marked-unstable-in-intellij-2018-2
-  @SuppressWarnings("UnstableApiUsage")
-  public String getDomain() {
-    // Ignore subdomain as matrix throws a 500 if included
-    return InternetDomainName.from(
-        Objects.requireNonNull(
-            UriComponentsBuilder.fromHttpUrl(url)
-                .build()
-                .getHost())
-    ).topPrivateDomain().toString();
-  }
 
   @Bean
   @Qualifier("matrixTemplate")

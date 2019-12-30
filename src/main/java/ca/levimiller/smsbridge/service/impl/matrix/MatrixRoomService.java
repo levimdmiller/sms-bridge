@@ -55,6 +55,6 @@ public class MatrixRoomService implements RoomService {
    * @return - fully qualified room alias (#base:domain.ca)
    */
   private String getFullAlias(String baseAlias) {
-    return String.format("#%s:%s", baseAlias, matrixConfig.getDomain());
+    return String.format("#%s:%s", baseAlias, matrixConfig.getServerName());
   }
 }
