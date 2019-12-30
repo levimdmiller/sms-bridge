@@ -6,11 +6,15 @@ import ca.levimiller.smsbridge.data.dto.matrix.room.RoomDto;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomTransformer;
+import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.service.RoomService;
+import com.twilio.twiml.video.Room;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -35,10 +39,15 @@ public class MatrixRoomService implements RoomService {
   @Override
   public String getRoom(NumberRegistration chatNumber, Contact smsContact) {
     CreateRoomDto roomDto = roomTransformer.transform(chatNumber, smsContact);
-    RoomDto room = restTemplate.getForObject("/directory/room/{room_alias}",
-        RoomDto.class, getFullAlias(roomDto.getRoomAliasName()));
-    // create room if not present
-    if (room == null) {
+    RoomDto room;
+    try {
+      room = restTemplate.getForObject("/directory/room/{room_alias}",
+          RoomDto.class, getFullAlias(roomDto.getRoomAliasName()));
+    } catch (HttpClientErrorException error) {
+      if(error.getStatusCode() != HttpStatus.NOT_FOUND) {
+        throw new RestClientException("Unable to get or create matrix room. Server error:", error);
+      }
+      // create room if not present
       room = restTemplate.postForObject("/createRoom", roomDto, RoomDto.class);
     }
     if (room == null) {

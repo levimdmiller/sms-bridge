@@ -1,6 +1,5 @@
 package ca.levimiller.smsbridge.config;
 
-import ca.levimiller.smsbridge.error.RestTemplateResponseErrorLoggerHandler;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,14 +37,12 @@ public class MatrixConfig {
   @Bean
   @Qualifier("matrixTemplate")
   RestTemplate restTemplate(
-      RestTemplateResponseErrorLoggerHandler errorLoggerHandler,
       RestTemplateBuilder builder) {
     UriBuilder uriBuilder = UriComponentsBuilder.fromUriString(url)
         .path("/_matrix/client/r0");
     return builder
         .rootUri(uriBuilder.build().toString())
         .interceptors(new TokenAuthenticationInterceptor(asToken))
-        .errorHandler(errorLoggerHandler)
         .build();
   }
 }
