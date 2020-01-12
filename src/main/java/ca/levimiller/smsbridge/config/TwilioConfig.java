@@ -1,6 +1,7 @@
 package ca.levimiller.smsbridge.config;
 
 import com.twilio.security.RequestValidator;
+import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,6 +17,7 @@ public class TwilioConfig {
   /**
    * Token used to validate X-Twilio-Signature.
    */
+  @NotBlank
   private String token;
 
   @Bean

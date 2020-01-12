@@ -1,4 +1,5 @@
-package ca.levimiller.smsbridge.config;
+package ca.levimiller.smsbridge
+matrix.serverName=matrix-d.levimiller.ca.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
