@@ -29,5 +29,5 @@ public class Transaction extends BaseModel {
   private String transactionId;
 
   @Column(name = "completed")
-  private Boolean completed;
+  private boolean completed;
 }

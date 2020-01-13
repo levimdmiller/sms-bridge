@@ -1,6 +1,5 @@
 package ca.levimiller.smsbridge.data.fixture;
 
-import ca.levimiller.smsbridge.data.model.Location;
 import ca.levimiller.smsbridge.data.model.Transaction;
 import ca.levimiller.smsbridge.data.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +9,10 @@ import org.springframework.stereotype.Component;
 public class TransactionFixture implements Fixture<Transaction> {
 
   private final RandomUtil randomUtil;
-  private final Fixture<Location> locationFixture;
 
   @Autowired
-  public TransactionFixture(RandomUtil randomUtil,
-      Fixture<Location> locationFixture) {
+  public TransactionFixture(RandomUtil randomUtil) {
     this.randomUtil = randomUtil;
-    this.locationFixture = locationFixture;
   }
 
   @Override

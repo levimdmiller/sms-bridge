@@ -1,6 +1,8 @@
 package ca.levimiller.smsbridge.config;
 
 import ca.levimiller.smsbridge.util.UuidSource;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.ma1uta.matrix.support.jackson.JacksonContextResolver;
 import java.util.UUID;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -32,5 +34,10 @@ public class AppConfig {
     loggingFilter.setIncludeQueryString(true);
     loggingFilter.setIncludePayload(true);
     return loggingFilter;
+  }
+
+  @Bean
+  public ObjectMapper mapper() {
+    return new JacksonContextResolver().getContext(null);
   }
 }
