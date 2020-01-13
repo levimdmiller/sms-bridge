@@ -3,7 +3,7 @@ package ca.levimiller.smsbridge.rest.impl;
 import ca.levimiller.smsbridge.data.db.TransactionRepository;
 import ca.levimiller.smsbridge.data.model.Transaction;
 import ca.levimiller.smsbridge.rest.MatrixController;
-import ca.levimiller.smsbridge.service.impl.matrix.MatrixEventServiceFactory;
+import ca.levimiller.smsbridge.service.impl.matrix.events.MatrixEventServiceFactory;
 import io.github.ma1uta.matrix.EmptyResponse;
 import io.github.ma1uta.matrix.application.model.TransactionRequest;
 import javax.inject.Inject;

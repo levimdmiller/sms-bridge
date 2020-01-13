@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import ca.levimiller.smsbridge.data.db.TransactionRepository;
 import ca.levimiller.smsbridge.data.model.Transaction;
 import ca.levimiller.smsbridge.service.MatrixEventService;
-import ca.levimiller.smsbridge.service.impl.matrix.MatrixEventServiceFactory;
+import ca.levimiller.smsbridge.service.impl.matrix.events.MatrixEventServiceFactory;
 import io.github.ma1uta.matrix.application.model.TransactionRequest;
 import io.github.ma1uta.matrix.event.RoomAliases;
 import io.github.ma1uta.matrix.event.RoomMessage;
