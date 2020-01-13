@@ -14,9 +14,10 @@ public class MatrixUtil {
    * @return true if caused by a MatrixException with the status code false otherwise
    */
   public boolean causedBy(Throwable t, HttpStatus status) {
+    Integer code = status == null ? null : status.value();
     while (t != null) {
       if (t instanceof MatrixException
-          && Objects.equals(((MatrixException) t).getStatus(), status.value())) {
+          && Objects.equals(((MatrixException) t).getStatus(), code)) {
         return true;
       }
       t = t.getCause();

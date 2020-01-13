@@ -3,7 +3,7 @@ package ca.levimiller.smsbridge.service.impl.matrix;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,38 +13,47 @@ import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomTransformer;
 import ca.levimiller.smsbridge.service.RoomService;
+import ca.levimiller.smsbridge.util.MatrixUtil;
+import io.github.ma1uta.matrix.client.AppServiceClient;
+import io.github.ma1uta.matrix.client.methods.RoomMethods;
 import io.github.ma1uta.matrix.client.model.room.CreateRoomRequest;
-import io.github.ma1uta.matrix.client.model.room.RoomResolveResponse;
+import io.github.ma1uta.matrix.client.model.room.RoomId;
+import io.github.ma1uta.matrix.impl.exception.MatrixException;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 class MatrixRoomServiceTest {
   @MockBean
   private MatrixRoomTransformer roomTransformer;
   @MockBean
-  @Qualifier("matrixTemplate")
-  private RestTemplate restTemplate;
+  private AppServiceClient matrixClient;
+  @MockBean
+  private MatrixUtil matrixUtil;
+  @Mock
+  private RoomMethods roomMethods;
+  @Mock
+  private CompletableFuture<RoomId> roomFuture;
   private final RoomService roomService;
 
   private NumberRegistration chatNumber;
   private Contact smsContact;
   private CreateRoomRequest createRoomRequest;
-  private RoomResolveResponse roomResponse;
+  private RoomId roomId;
 
   @Autowired
   MatrixRoomServiceTest(RoomService roomService) {
     this.roomService = roomService;
   }
-
 
   @BeforeEach
   void setUp() {
@@ -60,44 +69,56 @@ class MatrixRoomServiceTest {
         .build();
     createRoomRequest = new CreateRoomRequest();
     createRoomRequest.setRoomAliasName("alias");
-    roomResponse = new RoomResolveResponse();
-    roomResponse.setRoomId("roomId");
+    roomId = new RoomId();
+    roomId.setRoomId("roomId");
 
     when(roomTransformer.transform(chatNumber, smsContact)).thenReturn(createRoomRequest);
+    when(matrixClient.room()).thenReturn(roomMethods);
+    when(roomMethods.resolveAlias("#alias:domain.ca"))
+        .thenReturn(roomFuture);
+    when(roomMethods.create(createRoomRequest))
+        .thenReturn(roomFuture);
   }
 
 
   @Test
   void getRoom_NumberExists() {
-    when(restTemplate.getForObject(
-        "/directory/room/{room_alias}", RoomResolveResponse.class, "#alias:domain.ca"))
-        .thenReturn(roomResponse);
+    when(roomFuture.join()).thenReturn(roomId);
     String response = roomService.getRoom(chatNumber, smsContact);
     assertEquals("roomId", response);
-    verify(restTemplate, times(0))
-        .postForObject("/createRoom", roomResponse, RoomResolveResponse.class);
+    verify(roomMethods, times(0)).create(any());
   }
 
   @Test
   void getRoom_NumberNotFound() {
-    when(restTemplate.getForObject(
-        "/directory/room/{room_alias}", RoomResolveResponse.class, "#alias:domain.ca"))
-        .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
-    when(restTemplate.postForObject(eq("/createRoom"), any(), eq(RoomResolveResponse.class)))
-        .thenReturn(roomResponse);
+    // lookup throws 404
+    CompletionException e = new CompletionException(new MatrixException("", "", 404));
+    when(roomFuture.join())
+        .thenThrow(e);
+    when(matrixUtil.causedBy(e, HttpStatus.NOT_FOUND)).thenReturn(true);
+    // creation mocking
+    CompletableFuture<RoomId> roomFuture2 = mock(CompletableFuture.class);
+    when(roomMethods.create(createRoomRequest))
+        .thenReturn(roomFuture2);
+    when(roomFuture2.join()).thenReturn(roomId);
 
     String response = roomService.getRoom(chatNumber, smsContact);
     assertEquals("roomId", response);
   }
 
   @Test
-  void getRoom_NumberNotFoundOrCreated() {
-    when(restTemplate.getForObject(
-        "/directory/room/{room_alias}", RoomResolveResponse.class, "#alias:domain.ca"))
-        .thenThrow(HttpClientErrorException.NotFound.class);
-    when(restTemplate.postForObject("/createRoom", roomResponse, RoomResolveResponse.class))
-        .thenReturn(roomResponse);
-
+  void getRoom_NumberNotFoundOrCreated_Exception() {
+    when(roomFuture.join())
+        .thenThrow(new CompletionException(new MatrixException("", "", 500)));
     assertThrows(RestClientException.class, () -> roomService.getRoom(chatNumber, smsContact));
+    verify(roomMethods, times(0)).create(any());
+  }
+
+  @Test
+  void getRoom_NumberNotFoundOrCreated_Cancelled() {
+    when(roomFuture.join())
+        .thenThrow(new CancellationException());
+    assertThrows(RestClientException.class, () -> roomService.getRoom(chatNumber, smsContact));
+    verify(roomMethods, times(0)).create(any());
   }
 }
