@@ -8,13 +8,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import ca.levimiller.smsbridge.data.dto.matrix.room.CreateRoomDto;
-import ca.levimiller.smsbridge.data.dto.matrix.room.RoomDto;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomTransformer;
 import ca.levimiller.smsbridge.service.RoomService;
+import io.github.ma1uta.matrix.client.model.room.CreateRoomRequest;
+import io.github.ma1uta.matrix.client.model.room.RoomResolveResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +37,8 @@ class MatrixRoomServiceTest {
 
   private NumberRegistration chatNumber;
   private Contact smsContact;
-  private CreateRoomDto createRoomDto;
-  private RoomDto roomDto;
+  private CreateRoomRequest createRoomRequest;
+  private RoomResolveResponse roomResponse;
 
   @Autowired
   MatrixRoomServiceTest(RoomService roomService) {
@@ -58,33 +58,33 @@ class MatrixRoomServiceTest {
     smsContact = Contact.builder()
         .number("+smsNumber")
         .build();
-    createRoomDto = CreateRoomDto.builder()
-        .roomAliasName("alias")
-        .build();
-    roomDto = new RoomDto("roomId", null);
+    createRoomRequest = new CreateRoomRequest();
+    createRoomRequest.setRoomAliasName("alias");
+    roomResponse = new RoomResolveResponse();
+    roomResponse.setRoomId("roomId");
 
-    when(roomTransformer.transform(chatNumber, smsContact)).thenReturn(createRoomDto);
+    when(roomTransformer.transform(chatNumber, smsContact)).thenReturn(createRoomRequest);
   }
 
 
   @Test
   void getRoom_NumberExists() {
     when(restTemplate.getForObject(
-        "/directory/room/{room_alias}", RoomDto.class, "#alias:domain.ca"))
-        .thenReturn(roomDto);
+        "/directory/room/{room_alias}", RoomResolveResponse.class, "#alias:domain.ca"))
+        .thenReturn(roomResponse);
     String response = roomService.getRoom(chatNumber, smsContact);
     assertEquals("roomId", response);
     verify(restTemplate, times(0))
-        .postForObject("/createRoom", roomDto, RoomDto.class);
+        .postForObject("/createRoom", roomResponse, RoomResolveResponse.class);
   }
 
   @Test
   void getRoom_NumberNotFound() {
     when(restTemplate.getForObject(
-        "/directory/room/{room_alias}", RoomDto.class, "#alias:domain.ca"))
+        "/directory/room/{room_alias}", RoomResolveResponse.class, "#alias:domain.ca"))
         .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
-    when(restTemplate.postForObject(eq("/createRoom"), any(), eq(RoomDto.class)))
-        .thenReturn(roomDto);
+    when(restTemplate.postForObject(eq("/createRoom"), any(), eq(RoomResolveResponse.class)))
+        .thenReturn(roomResponse);
 
     String response = roomService.getRoom(chatNumber, smsContact);
     assertEquals("roomId", response);
@@ -93,10 +93,10 @@ class MatrixRoomServiceTest {
   @Test
   void getRoom_NumberNotFoundOrCreated() {
     when(restTemplate.getForObject(
-        "/directory/room/{room_alias}", RoomDto.class, "#alias:domain.ca"))
+        "/directory/room/{room_alias}", RoomResolveResponse.class, "#alias:domain.ca"))
         .thenThrow(HttpClientErrorException.NotFound.class);
-    when(restTemplate.postForObject("/createRoom", roomDto, RoomDto.class))
-        .thenReturn(roomDto);
+    when(restTemplate.postForObject("/createRoom", roomResponse, RoomResolveResponse.class))
+        .thenReturn(roomResponse);
 
     assertThrows(RestClientException.class, () -> roomService.getRoom(chatNumber, smsContact));
   }

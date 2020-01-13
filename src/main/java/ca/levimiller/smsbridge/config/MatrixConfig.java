@@ -1,20 +1,23 @@
 package ca.levimiller.smsbridge.config;
 
-import javax.validation.constraints.NotBlank;
+import ca.levimiller.smsbridge.util.MatrixUtil;
+import io.github.ma1uta.matrix.client.AppServiceClient;
+import io.github.ma1uta.matrix.client.factory.jaxrs.JaxRsRequestFactory;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.validation.annotation.Validated;
 
 @Configuration
 @ConfigurationProperties(prefix = "matrix")
+@Validated
 @Getter
 @Setter
 public class MatrixConfig {
@@ -22,44 +25,46 @@ public class MatrixConfig {
   /**
    * Because I misconfigured my matrix server years ago and didn't include the subdomain.
    */
+//  @NotEmpty
   private String serverName;
   /**
    * Url to Matrix server.
    */
-  @NotBlank
+  @NotEmpty
   private String url;
   /**
    * Token for Authorization on Matrix server.
    */
-  @NotBlank
+  @NotEmpty
   private String asToken;
   /**
    * Token for Home Matrix server.
    */
-  @NotBlank
+  @NotEmpty
   private String hsToken;
 
-  /**
-   * Server Name overrides url for when the matrix server has a different
-   * server name than the url used to call the api.
-   * @return - matrix server name
-   */
-  public String getServerName() {
+  @PostConstruct
+  public void init() {
     if(StringUtils.isEmpty(serverName)) {
-      return url;
+      try {
+        serverName = new URL(url).getHost();
+      } catch (MalformedURLException e) {
+        throw new IllegalArgumentException("ServerName is not set, and failed to extract "
+            + "host from the server url.", e);
+      }
     }
-    return serverName;
   }
 
   @Bean
-  @Qualifier("matrixTemplate")
-  RestTemplate restTemplate(
-      RestTemplateBuilder builder) {
-    UriBuilder uriBuilder = UriComponentsBuilder.fromUriString(url)
-        .path("/_matrix/client/r0");
-    return builder
-        .rootUri(uriBuilder.build().toString())
-        .interceptors(new TokenAuthenticationInterceptor(asToken))
+  MatrixUtil matrixUtil() {
+    return new MatrixUtil();
+  }
+
+  @Bean
+  AppServiceClient matrixClient() {
+    return new AppServiceClient.Builder()
+        .requestFactory(new JaxRsRequestFactory(url))
+        .accessToken(asToken)
         .build();
   }
 }
