@@ -25,7 +25,6 @@ public class MatrixConfig {
   /**
    * Because I misconfigured my matrix server years ago and didn't include the subdomain.
    */
-//  @NotEmpty
   private String serverName;
   /**
    * Url to Matrix server.
@@ -43,9 +42,12 @@ public class MatrixConfig {
   @NotEmpty
   private String hsToken;
 
+  /**
+   * Default serverName to url's domain name.
+   */
   @PostConstruct
   public void init() {
-    if(StringUtils.isEmpty(serverName)) {
+    if (StringUtils.isEmpty(serverName)) {
       try {
         serverName = new URL(url).getHost();
       } catch (MalformedURLException e) {

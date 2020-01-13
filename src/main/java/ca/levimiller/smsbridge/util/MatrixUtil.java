@@ -7,16 +7,15 @@ import org.springframework.http.HttpStatus;
 public class MatrixUtil {
 
   /**
-   * Checks if the cause of the throwable t is a MatrixException with the given
-   * status code.
+   * Checks if the cause of the throwable t is a MatrixException with the given status code.
+   *
    * @param t - throwable to check
    * @param status - status code that caused the error
-   * @return true if the throwable was caused by a MatrixException with the status code
-   * false otherwise
+   * @return true if caused by a MatrixException with the status code false otherwise
    */
   public boolean causedBy(Throwable t, HttpStatus status) {
-    while(t != null) {
-      if(t instanceof MatrixException
+    while (t != null) {
+      if (t instanceof MatrixException
           && Objects.equals(((MatrixException) t).getStatus(), status.value())) {
         return true;
       }
