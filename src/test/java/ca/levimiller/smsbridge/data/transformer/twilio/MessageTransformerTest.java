@@ -18,14 +18,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class MessageTransformerTest {
 
+  private final Fixture<Message> messageFixture;
   private final Fixture<TwilioSmsDto> smsDtoFixture;
   private final MessageTransformer transformer;
   private TwilioSmsDto dto;
 
   @Autowired
   MessageTransformerTest(
+      Fixture<Message> messageFixture,
       Fixture<TwilioSmsDto> smsDtoFixture,
       MessageTransformer transformer) {
+    this.messageFixture = messageFixture;
     this.smsDtoFixture = smsDtoFixture;
     this.transformer = transformer;
   }
@@ -36,7 +39,7 @@ class MessageTransformerTest {
   }
 
   @Test
-  void transform() {
+  void transformFromTwilio() {
     Message message = transformer.transform(dto);
 
     assertEquals(dto.getMessageSid(), message.getUid());

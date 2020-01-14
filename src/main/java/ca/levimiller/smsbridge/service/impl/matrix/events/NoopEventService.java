@@ -9,11 +9,16 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@Qualifier("NoopEventService")
-public class NoopEventService implements MatrixEventService<EventContent> {
+@Qualifier("noopEventService")
+public class NoopEventService implements MatrixEventService {
 
   @Override
   public void process(Event<EventContent> event) {
     log.info("Event ignored: {}", event.getType());
+  }
+
+  @Override
+  public String getType() {
+    return ANY_TYPE;
   }
 }

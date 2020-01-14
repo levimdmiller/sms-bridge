@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -45,7 +46,7 @@ class MatrixChatServiceTest {
   private UUID uuid;
 
   @Autowired
-  MatrixChatServiceTest(ChatService chatService) {
+  MatrixChatServiceTest(@Qualifier("matrixChatService") ChatService chatService) {
     this.chatService = chatService;
   }
 

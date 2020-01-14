@@ -9,9 +9,11 @@ import ca.levimiller.smsbridge.service.RoomService;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
+@Qualifier("matrixChatService")
 @Slf4j
 public class MatrixChatService implements ChatService {
 

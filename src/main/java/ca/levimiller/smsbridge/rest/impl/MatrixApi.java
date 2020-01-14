@@ -3,7 +3,7 @@ package ca.levimiller.smsbridge.rest.impl;
 import ca.levimiller.smsbridge.data.db.TransactionRepository;
 import ca.levimiller.smsbridge.data.model.Transaction;
 import ca.levimiller.smsbridge.rest.MatrixController;
-import ca.levimiller.smsbridge.service.impl.matrix.events.MatrixEventServiceFactory;
+import ca.levimiller.smsbridge.service.MatrixEventService;
 import io.github.ma1uta.matrix.EmptyResponse;
 import io.github.ma1uta.matrix.application.model.TransactionRequest;
 import javax.inject.Inject;
@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class MatrixApi implements MatrixController {
   private final TransactionRepository transactionRepository;
-  private final MatrixEventServiceFactory eventServiceFactory;
+  private final MatrixEventService eventService;
 
   @Inject
   public MatrixApi(TransactionRepository transactionRepository,
-      MatrixEventServiceFactory eventServiceFactory) {
+      MatrixEventService eventService) {
     this.transactionRepository = transactionRepository;
-    this.eventServiceFactory = eventServiceFactory;
+    this.eventService = eventService;
   }
 
   @Override
@@ -31,8 +31,7 @@ public class MatrixApi implements MatrixController {
           .build());
 
       // process all events
-      request.getEvents().forEach(
-          e -> eventServiceFactory.getEventService(e.getClass()).process(e));
+      request.getEvents().forEach(eventService::process);
 
       transaction.setCompleted(true);
       return transactionRepository.save(transaction);

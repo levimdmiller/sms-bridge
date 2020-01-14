@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import ca.levimiller.smsbridge.data.db.TransactionRepository;
 import ca.levimiller.smsbridge.data.model.Transaction;
 import ca.levimiller.smsbridge.service.MatrixEventService;
-import ca.levimiller.smsbridge.service.impl.matrix.events.MatrixEventServiceFactory;
 import io.github.ma1uta.matrix.application.model.TransactionRequest;
 import io.github.ma1uta.matrix.event.RoomAliases;
 import io.github.ma1uta.matrix.event.RoomMessage;
@@ -17,7 +16,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,8 +25,6 @@ class MatrixApiTest {
   @MockBean
   private TransactionRepository transactionRepository;
   @MockBean
-  private MatrixEventServiceFactory eventServiceFactory;
-  @Mock
   private MatrixEventService eventService;
 
   private final MatrixApi matrixApi;
@@ -51,10 +47,9 @@ class MatrixApiTest {
         .build();
     transactionRequest = new TransactionRequest();
     transactionRequest.setEvents(Arrays.asList(
-        new RoomMessage(), new RoomAliases()
+        new RoomMessage<>(), new RoomAliases()
     ));
 
-    when(eventServiceFactory.getEventService(any())).thenReturn(eventService);
     when(transactionRepository.save(any())).thenReturn(transaction);
   }
 
