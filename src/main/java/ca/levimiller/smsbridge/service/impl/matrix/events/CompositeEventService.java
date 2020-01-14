@@ -39,14 +39,15 @@ public class CompositeEventService implements MatrixEventService {
 
   /**
    * Creates a map from event type to event service, ignoring ANY_TYPE services.
+   *
    * @param eventServices - matrix event service
    * @return - event service map
    */
   private Map<String, MatrixEventService> initMap(
       List<MatrixEventService> eventServices) {
     Map<String, MatrixEventService> map = new HashMap<>();
-    for(MatrixEventService eventService : eventServices) {
-      if(!ANY_TYPE.equals(eventService.getType())) {
+    for (MatrixEventService eventService : eventServices) {
+      if (!ANY_TYPE.equals(eventService.getType())) {
         map.put(eventService.getType(), eventService);
       }
     }
