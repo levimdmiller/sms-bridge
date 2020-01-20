@@ -16,4 +16,10 @@
     <tagDatabase tag="0.0.2_tag"/>
   </changeSet>
 
+  <include file="db/0.0.2.xml"/>
+
+  <changeSet id="0.0.3_tag" author="Levi Miller">
+    <tagDatabase tag="0.0.3_tag"/>
+  </changeSet>
+
 </databaseChangeLog>

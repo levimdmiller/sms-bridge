@@ -18,4 +18,12 @@ public interface NumberRegistryRepository extends JpaRepository<NumberRegistrati
    * @return - number registration
    */
   Optional<NumberRegistration> findDistinctByContact(Contact contact);
+
+  /**
+   * Finds the number registration by owner id.
+   *
+   * @param ownerId - owner id
+   * @return - number registration
+   */
+  Optional<NumberRegistration> findDistinctByOwnerId(String ownerId);
 }

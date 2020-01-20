@@ -8,6 +8,7 @@ import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.MessageService;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -20,6 +21,7 @@ public class TwilioApi implements TwilioController {
 
   @Inject
   public TwilioApi(
+      @Qualifier("matrixChatService")
       ChatService chatService,
       MessageTransformer messageTransformer,
       MessageService messageService) {

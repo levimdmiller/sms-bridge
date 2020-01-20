@@ -1,7 +1,7 @@
 # sms-bridge
 Matrix Sms Bridge
 
-Bridges the sms service Twilio to matrix, but is easily extendible to other services/chat servers
+Bridges the sms service Twilio to matrix, but could be extended to other services/chat servers
 
 
 Run App
@@ -22,6 +22,8 @@ http://localhost:8421/swagger-ui.html
 Get the docs in json format: http://localhost:8421/v2/api-docs
 
 # Installation:
+(Hopefully more automated in the future)
+### Matrix:
 https://matrix.org/docs/guides/application-services/#what-application-services-can-do-for-you
 
 Create an sms-registration.yaml file (see above link):
@@ -50,6 +52,21 @@ app_service_config_files:
   - "/path/to/appservice/registration.yaml"
 ```
 
+### Sms Bridge Database Setup:
+Create a database called sms_bridge (with appropriate users/roles if required)
+E.g., in postgres:
+```
+CREATE DATABASE sms_bridge;
+CREATE USER youruser WITH ENCRYPTED PASSWORD 'yourpass';
+GRANT ALL PRIVILEGES ON DATABASE yourdbname TO sms_bridge;
+```
+
+Register the phone number you want to send/receive messages for with your matrix user:
+```
+INSERT INTO contact(number) VALUES('+1234567890'); # Can add optional location
+INSERT INTO number_registry(owner_id, registration_type, contact) VALUES('@username:server.ca', 'USER', <id-of-above>);
+```
+
 Create a user in the `security_user` table for twilio to auth with 
 ([Online BCrypt Hasher](https://bcrypt-generator.com/)):
 ```
@@ -62,6 +79,34 @@ Configure Twilio to make POST requests to
 
 It's really important to use **https** here, as the server only uses Basic Authentication,
 and will send the username/password unencrypted if you don't use https.
+
+### Example docker-compose:
+```
+matrix:
+  // matrix config
+
+sms-bridge:
+  image: levimiller/sms-bridge:latest
+  links:
+    - database:db
+    - matrix
+  expose:
+    - "8421"
+  environment:
+    VIRTUAL_HOST: sms.domain.com
+    VIRTUAL_PORT: 8421
+    BRIDGE_DB_USERNAME: sms_bridge
+    BRIDGE_DB_PASSWORD: <password for user>
+    BRIDGE_MATRIX_URL: https://matrix.hosted.url
+    BRIDGE_MATRIX_AS_TOKEN: <application service token>
+    BRIDGE_MATRIX_HS_TOKEN: <home server token>
+    BRIDGE_TWILIO_SID: <twilio app sid>
+    BRIDGE_TWILIO_TOKEN: <twilio app token>
+    
+database:
+  image: postgres:9.6.2
+  // postgres config
+```
 
 # Testing:
 - Set up [Ngrok](https://ngrok.com/) to allow Twilio to communicate with a local build.

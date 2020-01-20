@@ -29,4 +29,14 @@ class NumberRegistryRepositoryIT extends AbstractDbIT<NumberRegistration> {
     assertTrue(result.isPresent());
     assertEquals(owner, result.orElse(null));
   }
+
+  @Test
+  void findDistinctByOwnerId() {
+    NumberRegistration owner = saveNewEntity();
+
+    Optional<NumberRegistration> result = numberRegistryRepository.findDistinctByOwnerId(
+        owner.getOwnerId());
+    assertTrue(result.isPresent());
+    assertEquals(owner, result.orElse(null));
+  }
 }

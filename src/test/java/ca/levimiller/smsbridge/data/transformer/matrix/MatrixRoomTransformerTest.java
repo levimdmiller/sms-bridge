@@ -5,12 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import ca.levimiller.smsbridge.data.dto.matrix.room.CreateRoomDto;
-import ca.levimiller.smsbridge.data.dto.matrix.room.RoomPreset;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
 import ca.levimiller.smsbridge.data.transformer.RoomNameTransformer;
+import io.github.ma1uta.matrix.client.model.room.CreateRoomRequest;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,24 +54,24 @@ class MatrixRoomTransformerTest {
   @Test
   void transformUser() {
     chatNumber.setRegistrationType(NumberRegistrationType.USER);
-    CreateRoomDto result = roomTransformer.transform(chatNumber, smsContact);
-    assertEquals(RoomPreset.TRUSTED_PRIVATE, result.getPreset());
+    CreateRoomRequest result = roomTransformer.transform(chatNumber, smsContact);
+    assertEquals("trusted_private_chat", result.getPreset());
     assertEquals("alias", result.getRoomAliasName());
     assertEquals("Room Name", result.getName());
     assertEquals("Sms Conversation", result.getTopic());
     assertEquals(Collections.singletonList("ownerId"), result.getInvite());
-    assertTrue(result.isDirect());
+    assertTrue(result.getDirect());
   }
 
   @Test
   void transformRoom() {
     chatNumber.setRegistrationType(NumberRegistrationType.ROOM);
-    CreateRoomDto result = roomTransformer.transform(chatNumber, smsContact);
-    assertEquals(RoomPreset.TRUSTED_PRIVATE, result.getPreset());
+    CreateRoomRequest result = roomTransformer.transform(chatNumber, smsContact);
+    assertEquals("trusted_private_chat", result.getPreset());
     assertEquals("alias", result.getRoomAliasName());
     assertEquals("Room Name", result.getName());
     assertEquals("Sms Conversation", result.getTopic());
     assertEquals(Collections.singletonList("ownerId"), result.getInvite());
-    assertFalse(result.isDirect());
+    assertFalse(result.getDirect());
   }
 }
