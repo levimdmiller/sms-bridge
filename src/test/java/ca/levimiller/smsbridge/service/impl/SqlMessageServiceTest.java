@@ -10,6 +10,7 @@ import ca.levimiller.smsbridge.data.db.MessageRepository;
 import ca.levimiller.smsbridge.data.fixture.Fixture;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.Message;
+import ca.levimiller.smsbridge.service.MessageServiceTest;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
-class SqlMessageServiceTest {
+class SqlMessageServiceTest extends MessageServiceTest {
 
   private final Fixture<Message> messageFixture;
   private final Fixture<Contact> contactFixture;
@@ -35,6 +36,7 @@ class SqlMessageServiceTest {
       Fixture<Message> messageFixture,
       Fixture<Contact> contactFixture,
       SqlMessageService messageService) {
+    super(messageService);
     this.messageFixture = messageFixture;
     this.contactFixture = contactFixture;
     this.messageService = messageService;

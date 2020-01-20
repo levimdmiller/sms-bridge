@@ -23,4 +23,10 @@
       </column>
     </createTable>
   </changeSet>
+
+  <changeSet id="0.0.2-2" author="Levi Miller">
+    <addUniqueConstraint tableName="number_registry"
+      columnNames="owner_id"
+      constraintName="UX_number_registry_owner_id"/>
+  </changeSet>
 </databaseChangeLog>
