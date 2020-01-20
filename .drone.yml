@@ -56,17 +56,6 @@ steps:
       event:
         - tag
 
-  - name: docker-deploy
-    image: plugins/docker
-    settings:
-      repo: levimiller/sms-bridge
-      username: levimiller
-      password:
-        from_secret: dockerhub_token
-    when:
-      event:
-        - tag
-
 volumes:
   - name: maven-repo
     host:
