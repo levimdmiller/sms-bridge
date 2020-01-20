@@ -48,6 +48,10 @@ public class RandomUtil {
     return random.nextInt(bound);
   }
 
+  public boolean getBoolean() {
+    return random.nextBoolean();
+  }
+
   /**
    * Creates a list of the given size filled with the given fixture.
    *

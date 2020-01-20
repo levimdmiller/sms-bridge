@@ -1,11 +1,10 @@
 package ca.levimiller.smsbridge.data.transformer.matrix;
 
-import ca.levimiller.smsbridge.data.dto.matrix.room.CreateRoomDto;
-import ca.levimiller.smsbridge.data.dto.matrix.room.RoomPreset;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
 import ca.levimiller.smsbridge.data.transformer.RoomNameTransformer;
+import io.github.ma1uta.matrix.client.model.room.CreateRoomRequest;
 import java.util.Collections;
 import javax.inject.Inject;
 import org.springframework.stereotype.Component;
@@ -28,14 +27,14 @@ public class MatrixRoomTransformer {
    * @param smsContact - sms contact
    * @return - create room dto
    */
-  public CreateRoomDto transform(NumberRegistration chatNumber, Contact smsContact) {
-    return CreateRoomDto.builder()
-        .preset(RoomPreset.TRUSTED_PRIVATE)
-        .roomAliasName(roomNameTransformer.transformEncoded(chatNumber, smsContact))
-        .name(roomNameTransformer.transformHumanReadable(chatNumber, smsContact))
-        .topic("Sms Conversation")
-        .invite(Collections.singletonList(chatNumber.getOwnerId()))
-        .isDirect(NumberRegistrationType.USER.equals(chatNumber.getRegistrationType()))
-        .build();
+  public CreateRoomRequest transform(NumberRegistration chatNumber, Contact smsContact) {
+    CreateRoomRequest roomRequest = new CreateRoomRequest();
+    roomRequest.setPreset("trusted_private_chat");
+    roomRequest.setRoomAliasName(roomNameTransformer.transformEncoded(chatNumber, smsContact));
+    roomRequest.setName(roomNameTransformer.transformHumanReadable(chatNumber, smsContact));
+    roomRequest.setTopic("Sms Conversation");
+    roomRequest.setInvite(Collections.singletonList(chatNumber.getOwnerId()));
+    roomRequest.setDirect(NumberRegistrationType.USER.equals(chatNumber.getRegistrationType()));
+    return roomRequest;
   }
 }

@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,5 +45,10 @@ public class Contact extends BaseModel {
     if (number != null) {
       number = number.trim();
     }
+  }
+
+  @NotBlank
+  public String getNumber() {
+    return number;
   }
 }

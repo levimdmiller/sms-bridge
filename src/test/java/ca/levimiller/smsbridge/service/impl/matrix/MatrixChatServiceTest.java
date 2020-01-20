@@ -6,35 +6,38 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ca.levimiller.smsbridge.data.db.NumberRegistryRepository;
-import ca.levimiller.smsbridge.data.dto.matrix.EventDto;
-import ca.levimiller.smsbridge.data.dto.matrix.EventType;
-import ca.levimiller.smsbridge.data.dto.matrix.content.TextContent;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.Message;
 import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.service.ChatService;
+import ca.levimiller.smsbridge.service.ChatServiceTest;
 import ca.levimiller.smsbridge.service.RoomService;
 import ca.levimiller.smsbridge.util.UuidSource;
+import io.github.ma1uta.matrix.client.AppServiceClient;
+import io.github.ma1uta.matrix.client.methods.EventMethods;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
-class MatrixChatServiceTest {
+class MatrixChatServiceTest extends ChatServiceTest {
   @MockBean
   private NumberRegistryRepository numberRegistryRepository;
   @MockBean
-  private MatrixEventService eventService;
+  private AppServiceClient matrixClient;
   @MockBean
   private RoomService roomService;
   @MockBean
   private UuidSource uuidSource;
-  private final ChatService chatService;
+  @Mock
+  private EventMethods eventMethods;
 
   private Message message;
   private Contact fromContact;
@@ -43,14 +46,14 @@ class MatrixChatServiceTest {
   private UUID uuid;
 
   @Autowired
-  MatrixChatServiceTest(ChatService chatService) {
-    this.chatService = chatService;
+  MatrixChatServiceTest(@Qualifier("matrixChatService") ChatService chatService) {
+    super(chatService);
   }
 
   @BeforeEach
   void setUp() {
-    fromContact = new Contact();
-    toContact = new Contact();
+    fromContact = Contact.builder().number("1235").build();
+    toContact = Contact.builder().number("67890").build();
     toRegistration = new NumberRegistration();
     message = Message.builder()
         .fromContact(fromContact)
@@ -61,6 +64,8 @@ class MatrixChatServiceTest {
         .thenReturn("room-id");
     uuid = UUID.fromString("0a2afa26-b13e-4b70-9fb2-f870722a6e76");
     when(uuidSource.newUuid()).thenReturn(uuid);
+
+    when(matrixClient.event()).thenReturn(eventMethods);
   }
 
   @Test
@@ -69,14 +74,7 @@ class MatrixChatServiceTest {
     when(numberRegistryRepository.findDistinctByContact(toContact))
         .thenReturn(maybeRegistration);
     chatService.sendMessage(message);
-    verify(eventService, times(1)).sendRoomEvent(EventDto.builder()
-        .eventId(uuid.toString())
-        .roomId("room-id")
-        .type(EventType.ROOM_MESSAGE)
-        .content(TextContent.builder()
-            .body(message.getBody())
-            .build())
-        .build());
+    verify(eventMethods, times(1)).sendMessage("room-id", "body");
   }
 
   @Test
