@@ -100,6 +100,7 @@ sms-bridge:
     BRIDGE_MATRIX_URL: https://matrix.hosted.url
     BRIDGE_MATRIX_AS_TOKEN: <application service token>
     BRIDGE_MATRIX_HS_TOKEN: <home server token>
+    BRIDGE_TWILIO_SID: <twilio app sid>
     BRIDGE_TWILIO_TOKEN: <twilio app token>
     
 database:
