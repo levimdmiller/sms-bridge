@@ -27,7 +27,9 @@ public abstract class MessageServiceTest {
     validContact = Contact.builder()
         .number("1234567890")
         .build();
-    invalidContact = Contact.builder().build();
+    invalidContact = Contact.builder()
+        .number("")
+        .build();
   }
 
   @Test
@@ -62,7 +64,7 @@ public abstract class MessageServiceTest {
             .fromContact(validContact)
             .toContact(invalidContact)
             .build()));
-    assertEquals("save.message.toContact.number: must not be null", thrown.getMessage());
+    assertEquals("save.message.toContact.number: must not be blank", thrown.getMessage());
   }
 
   @Test
@@ -72,6 +74,6 @@ public abstract class MessageServiceTest {
             .fromContact(invalidContact)
             .toContact(validContact)
             .build()));
-    assertEquals("save.message.fromContact.number: must not be null", thrown.getMessage());
+    assertEquals("save.message.fromContact.number: must not be blank", thrown.getMessage());
   }
 }
