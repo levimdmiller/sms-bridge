@@ -70,7 +70,7 @@ public class MatrixRoomService implements RoomService {
       EventContent canonicalAlias = matrixClient.event()
           .eventContent(roomId, RoomCanonicalAlias.TYPE, "").join();
       if (!(canonicalAlias instanceof RoomCanonicalAliasContent)) {
-        throw new BadRequestException("Incorrect event content for alias lookup + "
+        throw new BadRequestException("Incorrect event content for alias lookup: "
             + canonicalAlias);
       }
       RoomCanonicalAliasContent aliasContent = (RoomCanonicalAliasContent) canonicalAlias;

@@ -8,6 +8,7 @@ import ca.levimiller.smsbridge.data.db.NumberRegistryRepository;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.error.TransformationException;
+import ca.levimiller.smsbridge.service.RoomService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,10 @@ class MatrixContactTransformerTest {
   private final MatrixContactTransformer matrixContactTransformer;
   @MockBean
   private NumberRegistryRepository numberRegistryRepository;
+  @MockBean
+  private RoomService roomService;
 
+  private String roomId;
   private String sender;
   private Contact contact;
 
@@ -33,12 +37,16 @@ class MatrixContactTransformerTest {
 
   @BeforeEach
   void setUp() {
+    roomId = "roomId";
     sender = "sender";
     contact = new Contact();
   }
 
   @Test
   void transformTo() {
+    when(roomService.getNumber(roomId)).thenReturn(contact);
+    Contact result = matrixContactTransformer.transformTo(roomId);
+    assertEquals(contact, result);
   }
 
   @Test

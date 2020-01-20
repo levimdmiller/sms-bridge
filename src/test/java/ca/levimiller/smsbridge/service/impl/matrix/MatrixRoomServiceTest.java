@@ -11,13 +11,20 @@ import static org.mockito.Mockito.when;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
+import ca.levimiller.smsbridge.data.transformer.PhoneNumberTransformer;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomTransformer;
+import ca.levimiller.smsbridge.error.BadRequestException;
 import ca.levimiller.smsbridge.service.RoomService;
 import ca.levimiller.smsbridge.util.MatrixUtil;
 import io.github.ma1uta.matrix.client.AppServiceClient;
+import io.github.ma1uta.matrix.client.methods.EventMethods;
 import io.github.ma1uta.matrix.client.methods.RoomMethods;
 import io.github.ma1uta.matrix.client.model.room.CreateRoomRequest;
 import io.github.ma1uta.matrix.client.model.room.RoomId;
+import io.github.ma1uta.matrix.event.RoomCanonicalAlias;
+import io.github.ma1uta.matrix.event.content.EventContent;
+import io.github.ma1uta.matrix.event.content.RoomCanonicalAliasContent;
+import io.github.ma1uta.matrix.event.message.Text;
 import io.github.ma1uta.matrix.impl.exception.MatrixException;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -33,17 +40,25 @@ import org.springframework.web.client.RestClientException;
 
 @SpringBootTest
 class MatrixRoomServiceTest {
+
+  private final RoomService roomService;
+
   @MockBean
   private MatrixRoomTransformer roomTransformer;
   @MockBean
   private AppServiceClient matrixClient;
   @MockBean
   private MatrixUtil matrixUtil;
+  @MockBean
+  private PhoneNumberTransformer phoneNumberTransformer;
   @Mock
   private RoomMethods roomMethods;
   @Mock
   private CompletableFuture<RoomId> roomFuture;
-  private final RoomService roomService;
+  @Mock
+  private EventMethods eventMethods;
+  @Mock
+  private CompletableFuture<EventContent> eventFuture;
 
   private NumberRegistration chatNumber;
   private Contact smsContact;
@@ -78,6 +93,10 @@ class MatrixRoomServiceTest {
         .thenReturn(roomFuture);
     when(roomMethods.create(createRoomRequest))
         .thenReturn(roomFuture);
+
+    when(matrixClient.event()).thenReturn(eventMethods);
+    when(eventMethods.eventContent(roomId.getRoomId(), RoomCanonicalAlias.TYPE, ""))
+        .thenReturn(eventFuture);
   }
 
 
@@ -120,5 +139,46 @@ class MatrixRoomServiceTest {
         .thenThrow(new CancellationException());
     assertThrows(RestClientException.class, () -> roomService.getRoom(chatNumber, smsContact));
     verify(roomMethods, times(0)).create(any());
+  }
+
+  @Test
+  void testGetNumber_Cancelled() {
+    when(eventFuture.join()).thenThrow(new CancellationException());
+    BadRequestException thrown = assertThrows(BadRequestException.class,
+        () -> roomService.getNumber(roomId.getRoomId()));
+    assertEquals("Unable to resolve canonical alias for roomId: " + roomId.getRoomId(),
+        thrown.getMessage());
+  }
+
+  @Test
+  void testGetNumber_CompletionException() {
+    when(eventFuture.join()).thenThrow(new CompletionException(new Exception()));
+    BadRequestException thrown = assertThrows(BadRequestException.class,
+        () -> roomService.getNumber(roomId.getRoomId()));
+    assertEquals("Unable to resolve canonical alias for roomId: " + roomId.getRoomId(),
+        thrown.getMessage());
+  }
+
+  @Test
+  void testGetNumber_WrongEventContent() {
+    EventContent content = new Text();
+    when(eventFuture.join()).thenReturn(content);
+    BadRequestException thrown = assertThrows(BadRequestException.class,
+        () -> roomService.getNumber(roomId.getRoomId()));
+    assertEquals("Incorrect event content for alias lookup: " + content,
+        thrown.getMessage());
+  }
+
+  @Test
+  void testGetNumber_Success() {
+    RoomCanonicalAliasContent content = new RoomCanonicalAliasContent();
+    content.setAlias("alias");
+    when(eventFuture.join()).thenReturn(content);
+    when(phoneNumberTransformer.transform("alias")).thenReturn("number");
+
+    Contact result = roomService.getNumber(roomId.getRoomId());
+    assertEquals(Contact.builder()
+        .number("number")
+        .build(), result);
   }
 }

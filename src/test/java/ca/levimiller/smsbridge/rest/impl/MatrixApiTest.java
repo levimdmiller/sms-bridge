@@ -1,5 +1,6 @@
 package ca.levimiller.smsbridge.rest.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.when;
 import ca.levimiller.smsbridge.data.db.TransactionRepository;
 import ca.levimiller.smsbridge.data.model.Transaction;
 import ca.levimiller.smsbridge.service.MatrixEventService;
+import io.github.ma1uta.matrix.EmptyResponse;
 import io.github.ma1uta.matrix.application.model.TransactionRequest;
 import io.github.ma1uta.matrix.event.RoomAliases;
 import io.github.ma1uta.matrix.event.RoomMessage;
@@ -90,5 +92,15 @@ class MatrixApiTest {
         .save(any());
     // no events processed
     verify(eventService, times(0)).process(any());
+  }
+
+  @Test
+  void rooms() {
+    assertEquals(EmptyResponse.class, matrixApi.rooms("rooms").getClass());
+  }
+
+  @Test
+  void users() {
+    assertEquals(EmptyResponse.class, matrixApi.users("users").getClass());
   }
 }
