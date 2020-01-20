@@ -11,6 +11,7 @@ import ca.levimiller.smsbridge.data.model.Message;
 import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.service.ChatService;
+import ca.levimiller.smsbridge.service.ChatServiceTest;
 import ca.levimiller.smsbridge.service.RoomService;
 import ca.levimiller.smsbridge.util.UuidSource;
 import io.github.ma1uta.matrix.client.AppServiceClient;
@@ -26,7 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
-class MatrixChatServiceTest {
+class MatrixChatServiceTest extends ChatServiceTest {
   @MockBean
   private NumberRegistryRepository numberRegistryRepository;
   @MockBean
@@ -35,7 +36,6 @@ class MatrixChatServiceTest {
   private RoomService roomService;
   @MockBean
   private UuidSource uuidSource;
-  private final ChatService chatService;
   @Mock
   private EventMethods eventMethods;
 
@@ -47,13 +47,13 @@ class MatrixChatServiceTest {
 
   @Autowired
   MatrixChatServiceTest(@Qualifier("matrixChatService") ChatService chatService) {
-    this.chatService = chatService;
+    super(chatService);
   }
 
   @BeforeEach
   void setUp() {
-    fromContact = new Contact();
-    toContact = new Contact();
+    fromContact = Contact.builder().number("1235").build();
+    toContact = Contact.builder().number("67890").build();
     toRegistration = new NumberRegistration();
     message = Message.builder()
         .fromContact(fromContact)
