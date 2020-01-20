@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class MatrixContactTransformerTest {
+
   private final MatrixContactTransformer matrixContactTransformer;
   @MockBean
   private NumberRegistryRepository numberRegistryRepository;
@@ -41,7 +42,7 @@ class MatrixContactTransformerTest {
   }
 
   @Test
-  void transformFrom() {
+  void transformFrom() throws TransformationException {
     NumberRegistration numberRegistration = NumberRegistration.builder()
         .ownerId(sender)
         .contact(contact)

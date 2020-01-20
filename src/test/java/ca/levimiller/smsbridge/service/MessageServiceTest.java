@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public abstract class MessageServiceTest {
+
   private final MessageService messageService;
 
   protected MessageServiceTest(MessageService messageService) {
@@ -39,9 +40,9 @@ public abstract class MessageServiceTest {
   @Test
   void save_NullToContactThrowsConstraintViolationException() {
     ConstraintViolationException thrown = assertThrows(ConstraintViolationException.class,
-            () -> messageService.save(Message.builder()
-                .fromContact(validContact)
-                .build()));
+        () -> messageService.save(Message.builder()
+            .fromContact(validContact)
+            .build()));
     assertEquals("save.message.toContact: must not be null", thrown.getMessage());
   }
 

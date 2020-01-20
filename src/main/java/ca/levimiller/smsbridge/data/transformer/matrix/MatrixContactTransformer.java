@@ -24,13 +24,25 @@ public class MatrixContactTransformer {
     this.roomService = roomService;
   }
 
+  /**
+   * Transforms the room id to a phone number.
+   * @param roomId - room id.
+   * @return - number associated with room.
+   */
   @To
   public Contact transformTo(String roomId) {
     return roomService.getNumber(roomId);
   }
 
+  /**
+   * Transforms a matrix user id to a Contact with a phone number.
+   *
+   * @param sender - matrix user id
+   * @return - phone number linked to matrix user.
+   * @throws TransformationException if there is no linked number.
+   */
   @From
-  public Contact transformFrom(String sender) {
+  public Contact transformFrom(String sender) throws TransformationException {
     return numberRegistryRepository.findDistinctByOwnerId(sender)
         .map(NumberRegistration::getContact)
         .orElseThrow(() -> new TransformationException(

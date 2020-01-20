@@ -1,6 +1,6 @@
 package ca.levimiller.smsbridge.error;
 
-public class TransformationException extends RuntimeException {
+public class TransformationException extends Exception {
 
   public TransformationException() {
     super();

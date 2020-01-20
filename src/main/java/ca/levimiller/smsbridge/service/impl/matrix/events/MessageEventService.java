@@ -2,6 +2,8 @@ package ca.levimiller.smsbridge.service.impl.matrix.events;
 
 import ca.levimiller.smsbridge.data.model.Message;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomMessageTransformer;
+import ca.levimiller.smsbridge.error.BadRequestException;
+import ca.levimiller.smsbridge.error.TransformationException;
 import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.MatrixEventService;
 import ca.levimiller.smsbridge.service.MessageService;
@@ -33,9 +35,13 @@ public class MessageEventService implements
   @Override
   public void process(RoomMessage<RoomMessageContent> event) {
     log.debug("Received matrix event: {}", event);
-    Message message = roomMessageTransformer.transform(event);
-    messageService.save(message);
-    twilioChatService.sendMessage(message);
+    try {
+      Message message = roomMessageTransformer.transform(event);
+      messageService.save(message);
+      twilioChatService.sendMessage(message);
+    } catch (TransformationException e) {
+      throw new BadRequestException("Failed to parse message event: ", e);
+    }
   }
 
   @Override

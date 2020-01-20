@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 
 @Primary
 @Service
-public class CompositeEventService implements MatrixEventService<Event<EventContent>, EventContent> {
+public class CompositeEventService implements
+    MatrixEventService<Event<EventContent>, EventContent> {
 
   private final MatrixEventService noopEventService;
   private final Map<String, MatrixEventService> eventServiceMap;

@@ -20,7 +20,8 @@ public interface RoomService {
       @Valid @NotNull Contact smsContact);
 
   /**
-   * Gets the sms Contact
+   * Gets the sms Contact.
+   *
    * @param roomId - room id
    * @return - sms contact
    */

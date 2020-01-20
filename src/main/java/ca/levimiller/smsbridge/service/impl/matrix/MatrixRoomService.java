@@ -65,11 +65,11 @@ public class MatrixRoomService implements RoomService {
   }
 
   @Override
-  public Contact getNumber(String roomId) {    RoomId room;
+  public Contact getNumber(String roomId) {
     try {
       EventContent canonicalAlias = matrixClient.event()
           .eventContent(roomId, RoomCanonicalAlias.TYPE, "").join();
-      if(!(canonicalAlias instanceof RoomCanonicalAliasContent)) {
+      if (!(canonicalAlias instanceof RoomCanonicalAliasContent)) {
         throw new BadRequestException("Incorrect event content for alias lookup + "
             + canonicalAlias);
       }
