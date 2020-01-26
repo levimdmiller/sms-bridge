@@ -21,23 +21,19 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-@Table(name = "media")
-@SQLDelete(sql = "UPDATE media SET deleted = 1 WHERE id = ?;",
+@Table(name = "room_user")
+@SQLDelete(sql = "UPDATE room_user SET deleted = 1 WHERE id = ?;",
     check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted = false")
-public class Media extends BaseModel {
+public class RoomUser extends BaseModel {
 
   @Size(max = 255)
-  @Column(name = "url")
-  private String url;
+  @Column(name = "user_id", unique = true)
+  private String userId;
 
-  @Size(max = 255)
-  @Column(name = "content_type")
-  private String contentType;
-
+  @JoinColumn(name = "room_id")
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "message_id")
-  private Message message;
+  private Room room;
 
   @Override
   public boolean equals(Object o) {
@@ -50,31 +46,26 @@ public class Media extends BaseModel {
     if (!super.equals(o)) {
       return false;
     }
-    Media media = (Media) o;
-    if(message == null ^ media.message == null) {
+    RoomUser roomUser = (RoomUser) o;
+    if(room == null ^ roomUser.room == null) {
       return false;
     }
-    if(message == null) {
+    if(room == null) {
       return true;
     }
-    return Objects.equals(url, media.url)
-        && Objects.equals(contentType, media.contentType)
-        // break infinite loop
-        && Objects.equals(message.getId(), media.message.getId());
+    return Objects.equals(userId, roomUser.userId) &&
+        Objects.equals(room.getId(), roomUser.room.getId());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), url, contentType,
-        message == null ? null :message.getId());
+    return Objects.hash(super.hashCode(), userId, room == null ? null : room.getId());
   }
 
   @Override
   public String toString() {
-    return "Media{"
-        + "url='" + url + '\''
-        + ", contentType='" + contentType + '\''
-        + ", message=" + (message == null ? null : message.getId()) // break infinite loop
+    return "RoomUser{"
+        + "room='" + (room == null ? null : room.getId())  // break infinite loop
         + '}';
   }
 }

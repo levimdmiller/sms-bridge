@@ -1,0 +1,48 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd'>
+
+  <changeSet id="0.0.3-1" author="Levi Miller">
+    <createTable tableName="room">
+      <column name="id" autoIncrement="true" type="bigint">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="room_id" type="nvarchar(255)"/>
+
+      <!-- boiler plate for tracking columns -->
+      <column name="deleted" type="boolean" defaultValue="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createTable tableName="room_user">
+      <column name="id" autoIncrement="true" type="bigint">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="user_id" type="nvarchar(255)"/>
+      <column name="room_id" type="bigint">
+        <constraints
+          foreignKeyName="fk_user_room"
+          references="room(id)"/>
+      </column>
+
+      <!-- boiler plate for tracking columns -->
+      <column name="deleted" type="boolean" defaultValue="false">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+      <column name="modified_date" type="timestamp" defaultValueComputed="${now}">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>
