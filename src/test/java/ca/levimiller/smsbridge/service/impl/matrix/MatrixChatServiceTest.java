@@ -13,11 +13,9 @@ import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.ChatServiceTest;
 import ca.levimiller.smsbridge.service.RoomService;
-import ca.levimiller.smsbridge.util.UuidSource;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.client.methods.EventMethods;
 import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -34,8 +32,6 @@ class MatrixChatServiceTest extends ChatServiceTest {
   private AppServiceClient matrixClient;
   @MockBean
   private RoomService roomService;
-  @MockBean
-  private UuidSource uuidSource;
   @Mock
   private EventMethods eventMethods;
 
@@ -43,7 +39,6 @@ class MatrixChatServiceTest extends ChatServiceTest {
   private Contact fromContact;
   private Contact toContact;
   private NumberRegistration toRegistration;
-  private UUID uuid;
 
   @Autowired
   MatrixChatServiceTest(@Qualifier("matrixChatService") ChatService chatService) {
@@ -62,8 +57,6 @@ class MatrixChatServiceTest extends ChatServiceTest {
         .build();
     when(roomService.getRoom(toRegistration, fromContact))
         .thenReturn("room-id");
-    uuid = UUID.fromString("0a2afa26-b13e-4b70-9fb2-f870722a6e76");
-    when(uuidSource.newUuid()).thenReturn(uuid);
 
     when(matrixClient.event()).thenReturn(eventMethods);
   }

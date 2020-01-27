@@ -1,0 +1,61 @@
+package ca.levimiller.smsbridge.service.impl.matrix;
+
+import ca.levimiller.smsbridge.data.db.VirtualUserRepository;
+import ca.levimiller.smsbridge.data.model.Contact;
+import ca.levimiller.smsbridge.data.model.VirtualUser;
+import ca.levimiller.smsbridge.data.transformer.UserNameTransformer;
+import ca.levimiller.smsbridge.data.transformer.matrix.MatrixUserRegisterTransformer;
+import ca.levimiller.smsbridge.error.BadRequestException;
+import ca.levimiller.smsbridge.service.UserService;
+import io.github.ma1uta.matrix.client.AppServiceClient;
+import io.github.ma1uta.matrix.client.model.account.RegisterRequest;
+import io.github.ma1uta.matrix.client.model.auth.LoginResponse;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletionException;
+import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import org.springframework.stereotype.Service;
+
+@Service
+public class MatrixUserService implements UserService {
+  private final VirtualUserRepository userRepository;
+  private final MatrixUserRegisterTransformer matrixUserRegisterTransformer;
+  private final UserNameTransformer userNameTransformer;
+  private final AppServiceClient matrixClient;
+
+  @Inject
+  public MatrixUserService(
+      VirtualUserRepository userRepository,
+      MatrixUserRegisterTransformer matrixUserRegisterTransformer,
+      UserNameTransformer userNameTransformer,
+      AppServiceClient matrixClient) {
+    this.userRepository = userRepository;
+    this.matrixUserRegisterTransformer = matrixUserRegisterTransformer;
+    this.userNameTransformer = userNameTransformer;
+    this.matrixClient = matrixClient;
+  }
+
+  @Override
+  public String getUser(@Valid @NotNull Contact smsContact) {
+    VirtualUser user = userRepository.findDistinctByContact(smsContact).orElseGet(
+        () -> userRepository.save(VirtualUser.builder()
+        .userId(createUser(smsContact))
+        .contact(smsContact)
+        .build()));
+    return user.getUserId();
+  }
+
+  private String createUser(Contact smsContact) {
+    RegisterRequest request = matrixUserRegisterTransformer.transform(smsContact);
+    try {
+      LoginResponse response = matrixClient.account().register(request).join();
+      matrixClient.userId(response.getUserId())
+          .profile()
+          .setDisplayName(userNameTransformer.transform(smsContact));
+      return response.getUserId();
+    } catch (CancellationException | CompletionException e) {
+      throw new BadRequestException("Failed to create virtual sms user: ", e);
+    }
+  }
+}

@@ -7,6 +7,9 @@ import org.mapstruct.Mapper;
 public interface UserNameTransformer {
 
   default String transform(Contact smsContact) {
-    return "sms-" + smsContact.getNumber().replaceAll("\\+", "");
+    if(smsContact == null) {
+      return null;
+    }
+    return smsContact.getNumber();
   }
 }

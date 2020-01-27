@@ -6,6 +6,7 @@ import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.RoomService;
+import ca.levimiller.smsbridge.service.UserService;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +20,17 @@ public class MatrixChatService implements ChatService {
 
   private final NumberRegistryRepository numberRegistryRepository;
   private final RoomService roomService;
+  private final UserService userService;
   private final AppServiceClient matrixClient;
 
   @Inject
   public MatrixChatService(
       NumberRegistryRepository numberRegistryRepository,
-      RoomService roomService, AppServiceClient matrixClient) {
+      RoomService roomService, UserService userService,
+      AppServiceClient matrixClient) {
     this.numberRegistryRepository = numberRegistryRepository;
     this.roomService = roomService;
+    this.userService = userService;
     this.matrixClient = matrixClient;
   }
 
@@ -39,8 +43,9 @@ public class MatrixChatService implements ChatService {
           return new NotFoundException("Destination number is not registered.");
         });
 
-    // Get room id (ensure created/joined/etc.)
+    // Get room id and user id (ensure created/joined/etc.)
+    String userId = userService.getUser(message.getFromContact());
     String roomId = roomService.getRoom(to, message.getFromContact());
-    matrixClient.event().sendMessage(roomId, message.getBody());
+    matrixClient.userId(userId).event().sendMessage(roomId, message.getBody());
   }
 }

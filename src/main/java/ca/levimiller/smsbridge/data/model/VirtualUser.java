@@ -1,11 +1,9 @@
 package ca.levimiller.smsbridge.data.model;
 
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -23,16 +21,17 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-@Table(name = "room")
-@SQLDelete(sql = "UPDATE room SET deleted = 1 WHERE id = ?;",
+@Table(name = "virtual_user")
+@SQLDelete(sql = "UPDATE virtual_user SET deleted = 1 WHERE id = ?;",
     check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted = false")
-public class Room extends BaseModel {
+public class VirtualUser extends BaseModel {
 
   @Size(max = 255)
-  @Column(name = "room_id", unique = true)
-  private String roomId;
+  @Column(name = "user_id", unique = true)
+  private String userId;
 
-  @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private List<RoomUser> roomUser;
+  @JoinColumn(name = "contact_id")
+  @ManyToOne
+  private Contact contact;
 }

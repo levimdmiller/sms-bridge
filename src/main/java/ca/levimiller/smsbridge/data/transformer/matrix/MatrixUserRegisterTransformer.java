@@ -1,15 +1,27 @@
 package ca.levimiller.smsbridge.data.transformer.matrix;
 
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.transformer.UserNameTransformer;
+import ca.levimiller.smsbridge.util.UuidSource;
 import io.github.ma1uta.matrix.client.model.account.RegisterRequest;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", uses = {UserNameTransformer.class})
-public interface MatrixUserRegisterTransformer {
+@Component
+public class MatrixUserRegisterTransformer {
+  private final UuidSource uuidSource;
 
-  @Mapping(source = ".", target = "username")
-  @Mapping(target = "inhibitLogin", constant = "true")
-  RegisterRequest transform(Contact contact);
+  protected MatrixUserRegisterTransformer(UuidSource uuidSource) {
+    this.uuidSource = uuidSource;
+  }
+
+  /**
+   * Transforms the Contact to a matrix user registration request.
+   * @param contact - contact to transform.
+   * @return - matrix register user request
+   */
+  public RegisterRequest transform(Contact contact) {
+    RegisterRequest registerRequest = new RegisterRequest();
+    registerRequest.setUsername(uuidSource.newUuid().toString());
+    registerRequest.setInhibitLogin(true);
+    return registerRequest;
+  }
 }
