@@ -1,5 +1,6 @@
 package ca.levimiller.smsbridge.data.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -32,6 +33,6 @@ public class VirtualUser extends BaseModel {
   private String userId;
 
   @JoinColumn(name = "contact_id")
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   private Contact contact;
 }

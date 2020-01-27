@@ -9,7 +9,7 @@
         <constraints primaryKey="true" nullable="false"/>
       </column>
       <column name="user_id" type="nvarchar(255)"/>
-      <column name="contact_id">
+      <column name="contact_id" type="bigint">
         <constraints
           foreignKeyName="fk_user_room"
           references="contact(id)"/>

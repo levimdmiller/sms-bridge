@@ -13,6 +13,7 @@ import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.ChatServiceTest;
 import ca.levimiller.smsbridge.service.RoomService;
+import ca.levimiller.smsbridge.service.UserService;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.client.methods.EventMethods;
 import java.util.Optional;
@@ -29,9 +30,13 @@ class MatrixChatServiceTest extends ChatServiceTest {
   @MockBean
   private NumberRegistryRepository numberRegistryRepository;
   @MockBean
-  private AppServiceClient matrixClient;
-  @MockBean
   private RoomService roomService;
+  @MockBean
+  private UserService userService;
+  @MockBean
+  private AppServiceClient matrixClient;
+  @Mock
+  private AppServiceClient userClient;
   @Mock
   private EventMethods eventMethods;
 
@@ -55,10 +60,12 @@ class MatrixChatServiceTest extends ChatServiceTest {
         .toContact(toContact)
         .body("body")
         .build();
+    when(userService.getUser(fromContact)).thenReturn("user-id");
     when(roomService.getRoom(toRegistration, fromContact))
         .thenReturn("room-id");
 
-    when(matrixClient.event()).thenReturn(eventMethods);
+    when(matrixClient.userId("user-id")).thenReturn(userClient);
+    when(userClient.event()).thenReturn(eventMethods);
   }
 
   @Test

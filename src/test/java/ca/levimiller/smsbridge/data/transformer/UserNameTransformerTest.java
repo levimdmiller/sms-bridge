@@ -29,6 +29,6 @@ class UserNameTransformerTest {
   @Test
   void transform() {
     String result = userNameTransformer.transform(contact);
-    assertEquals("sms-smsNumber", result);
+    assertEquals("+smsNumber", result);
   }
 }
