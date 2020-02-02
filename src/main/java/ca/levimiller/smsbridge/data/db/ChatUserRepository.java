@@ -1,7 +1,7 @@
 package ca.levimiller.smsbridge.data.db;
 
-import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.ChatUser;
+import ca.levimiller.smsbridge.data.model.Contact;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;

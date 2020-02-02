@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import ca.levimiller.smsbridge.data.model.ChatUser;
-import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.ChatUserType;
+import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.transformer.RoomNameTransformer;
 import io.github.ma1uta.matrix.client.model.room.CreateRoomRequest;
 import java.util.Collections;
@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class MatrixRoomTransformerTest {
+
   @MockBean
   private RoomNameTransformer roomNameTransformer;
   private final MatrixRoomTransformer roomTransformer;

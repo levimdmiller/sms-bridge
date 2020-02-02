@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MatrixUserRegisterTransformer {
+
   private final UuidSource uuidSource;
 
   protected MatrixUserRegisterTransformer(UuidSource uuidSource) {
@@ -15,6 +16,7 @@ public class MatrixUserRegisterTransformer {
 
   /**
    * Transforms the Contact to a matrix user registration request.
+   *
    * @param contact - contact to transform.
    * @return - matrix register user request
    */

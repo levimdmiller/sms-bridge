@@ -51,10 +51,10 @@ public class Media extends BaseModel {
       return false;
     }
     Media media = (Media) o;
-    if(message == null ^ media.message == null) {
+    if (message == null ^ media.message == null) {
       return false;
     }
-    if(message == null) {
+    if (message == null) {
       return true;
     }
     return Objects.equals(url, media.url)
@@ -66,7 +66,7 @@ public class Media extends BaseModel {
   @Override
   public int hashCode() {
     return Objects.hash(super.hashCode(), url, contentType,
-        message == null ? null :message.getId());
+        message == null ? null : message.getId());
   }
 
   @Override

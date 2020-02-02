@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Qualifier("twilioChatService")
 public class TwilioChatService implements ChatService {
+
   private final MessageCreatorFactory messageCreatorFactory;
 
   @Inject

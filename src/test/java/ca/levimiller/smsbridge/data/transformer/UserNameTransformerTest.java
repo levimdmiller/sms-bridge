@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class UserNameTransformerTest {
+
   private final UserNameTransformer userNameTransformer;
 
   private Contact contact;
@@ -22,8 +23,8 @@ class UserNameTransformerTest {
   @BeforeEach
   void setUp() {
     contact = Contact.builder()
-      .number("+smsNumber")
-      .build();
+        .number("+smsNumber")
+        .build();
   }
 
   @Test

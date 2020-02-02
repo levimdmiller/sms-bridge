@@ -1,8 +1,8 @@
 package ca.levimiller.smsbridge.service.impl.matrix;
 
 import ca.levimiller.smsbridge.config.MatrixConfig;
-import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.ChatUser;
+import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.transformer.PhoneNumberTransformer;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;

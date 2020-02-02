@@ -1,8 +1,8 @@
 package ca.levimiller.smsbridge.data.transformer.matrix;
 
 import ca.levimiller.smsbridge.data.db.ChatUserRepository;
-import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.ChatUser;
+import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.transformer.qualifiers.From;
 import ca.levimiller.smsbridge.data.transformer.qualifiers.To;
 import ca.levimiller.smsbridge.error.TransformationException;
@@ -26,6 +26,7 @@ public class MatrixContactTransformer {
 
   /**
    * Transforms the room id to a phone number.
+   *
    * @param roomId - room id.
    * @return - number associated with room.
    */

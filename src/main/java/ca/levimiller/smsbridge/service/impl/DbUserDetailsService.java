@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Qualifier("userDetailsService")
 public class DbUserDetailsService implements UserDetailsService {
+
   private final SecurityUserRepository userRepository;
   private final SecurityUserTransformer userTransformer;
 

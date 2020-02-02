@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {MatrixContactTransformer.class})
 public interface MatrixRoomMessageTransformer {
+
   @Mapping(source = "eventId", target = "uid")
   @Mapping(source = "content.body", target = "body")
   @Mapping(source = "roomId", target = "toContact", qualifiedBy = To.class)
