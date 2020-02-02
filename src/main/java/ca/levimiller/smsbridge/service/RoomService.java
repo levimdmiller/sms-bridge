@@ -1,7 +1,7 @@
 package ca.levimiller.smsbridge.service;
 
+import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +16,7 @@ public interface RoomService {
    * @param smsContact - sms contact (not linked to chat service)
    * @return - room id.
    */
-  String getRoom(@Valid @NotNull NumberRegistration chatNumber,
+  String getRoom(@Valid @NotNull ChatUser chatNumber,
       @Valid @NotNull Contact smsContact);
 
   /**

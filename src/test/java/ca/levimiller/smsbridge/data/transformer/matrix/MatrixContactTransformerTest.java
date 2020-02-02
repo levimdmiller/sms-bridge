@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import ca.levimiller.smsbridge.data.db.NumberRegistryRepository;
+import ca.levimiller.smsbridge.data.db.ChatUserRepository;
+import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.error.TransformationException;
 import ca.levimiller.smsbridge.service.RoomService;
 import java.util.Optional;
@@ -21,7 +21,7 @@ class MatrixContactTransformerTest {
 
   private final MatrixContactTransformer matrixContactTransformer;
   @MockBean
-  private NumberRegistryRepository numberRegistryRepository;
+  private ChatUserRepository chatUserRepository;
   @MockBean
   private RoomService roomService;
 
@@ -51,12 +51,12 @@ class MatrixContactTransformerTest {
 
   @Test
   void transformFrom() throws TransformationException {
-    NumberRegistration numberRegistration = NumberRegistration.builder()
+    ChatUser chatUser = ChatUser.builder()
         .ownerId(sender)
         .contact(contact)
         .build();
-    when(numberRegistryRepository.findDistinctByOwnerId(sender))
-        .thenReturn(Optional.of(numberRegistration));
+    when(chatUserRepository.findDistinctByOwnerId(sender))
+        .thenReturn(Optional.of(chatUser));
 
     Contact result = matrixContactTransformer.transformFrom(sender);
     assertEquals(contact, result);
@@ -64,7 +64,7 @@ class MatrixContactTransformerTest {
 
   @Test
   void transformFrom_NoLink() {
-    when(numberRegistryRepository.findDistinctByOwnerId(sender))
+    when(chatUserRepository.findDistinctByOwnerId(sender))
         .thenReturn(Optional.empty());
     TransformationException thrown = assertThrows(TransformationException.class,
         () -> matrixContactTransformer.transformFrom(sender));

@@ -1,15 +1,15 @@
 package ca.levimiller.smsbridge.data.db;
 
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
+import ca.levimiller.smsbridge.data.model.ChatUser;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface NumberRegistryRepository extends JpaRepository<NumberRegistration, Long>,
-    QuerydslPredicateExecutor<NumberRegistration> {
+public interface ChatUserRepository extends JpaRepository<ChatUser, Long>,
+    QuerydslPredicateExecutor<ChatUser> {
 
   /**
    * Finds the number registration by the given contact.
@@ -17,7 +17,7 @@ public interface NumberRegistryRepository extends JpaRepository<NumberRegistrati
    * @param contact - contact to look up registration from
    * @return - number registration
    */
-  Optional<NumberRegistration> findDistinctByContact(Contact contact);
+  Optional<ChatUser> findDistinctByContact(Contact contact);
 
   /**
    * Finds the number registration by owner id.
@@ -25,5 +25,5 @@ public interface NumberRegistryRepository extends JpaRepository<NumberRegistrati
    * @param ownerId - owner id
    * @return - number registration
    */
-  Optional<NumberRegistration> findDistinctByOwnerId(String ownerId);
+  Optional<ChatUser> findDistinctByOwnerId(String ownerId);
 }

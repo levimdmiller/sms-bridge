@@ -1,8 +1,8 @@
 package ca.levimiller.smsbridge.service.impl.matrix;
 
-import ca.levimiller.smsbridge.data.db.NumberRegistryRepository;
+import ca.levimiller.smsbridge.data.db.ChatUserRepository;
+import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Message;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.RoomService;
@@ -18,17 +18,17 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class MatrixChatService implements ChatService {
 
-  private final NumberRegistryRepository numberRegistryRepository;
+  private final ChatUserRepository chatUserRepository;
   private final RoomService roomService;
   private final UserService userService;
   private final AppServiceClient matrixClient;
 
   @Inject
   public MatrixChatService(
-      NumberRegistryRepository numberRegistryRepository,
+      ChatUserRepository chatUserRepository,
       RoomService roomService, UserService userService,
       AppServiceClient matrixClient) {
-    this.numberRegistryRepository = numberRegistryRepository;
+    this.chatUserRepository = chatUserRepository;
     this.roomService = roomService;
     this.userService = userService;
     this.matrixClient = matrixClient;
@@ -37,7 +37,7 @@ public class MatrixChatService implements ChatService {
   @Override
   public void sendMessage(Message message) {
     // Find channel or room registered to the destination of the message
-    NumberRegistration to = numberRegistryRepository.findDistinctByContact(message.getToContact())
+    ChatUser to = chatUserRepository.findDistinctByContact(message.getToContact())
         .orElseThrow(() -> {
           log.error("Destination number is not registered: {}", message.getToContact());
           return new NotFoundException("Destination number is not registered.");

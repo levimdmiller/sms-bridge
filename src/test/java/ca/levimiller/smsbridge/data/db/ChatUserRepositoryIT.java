@@ -4,27 +4,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ca.levimiller.smsbridge.data.fixture.Fixture;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
+import ca.levimiller.smsbridge.data.model.ChatUser;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class NumberRegistryRepositoryIT extends AbstractDbIT<NumberRegistration> {
-  private final NumberRegistryRepository numberRegistryRepository;
+class ChatUserRepositoryIT extends AbstractDbIT<ChatUser> {
+  private final ChatUserRepository chatUserRepository;
 
   @Autowired
-  NumberRegistryRepositoryIT(
-      Fixture<NumberRegistration> fixture,
-      NumberRegistryRepository repository) {
+  ChatUserRepositoryIT(
+      Fixture<ChatUser> fixture,
+      ChatUserRepository repository) {
     super(fixture, repository);
-    numberRegistryRepository = repository;
+    chatUserRepository = repository;
   }
 
   @Test
   void findDistinctByContact() {
-    NumberRegistration owner = saveNewEntity();
+    ChatUser owner = saveNewEntity();
 
-    Optional<NumberRegistration> result = numberRegistryRepository.findDistinctByContact(
+    Optional<ChatUser> result = chatUserRepository.findDistinctByContact(
         owner.getContact());
     assertTrue(result.isPresent());
     assertEquals(owner, result.orElse(null));
@@ -32,9 +32,9 @@ class NumberRegistryRepositoryIT extends AbstractDbIT<NumberRegistration> {
 
   @Test
   void findDistinctByOwnerId() {
-    NumberRegistration owner = saveNewEntity();
+    ChatUser owner = saveNewEntity();
 
-    Optional<NumberRegistration> result = numberRegistryRepository.findDistinctByOwnerId(
+    Optional<ChatUser> result = chatUserRepository.findDistinctByOwnerId(
         owner.getOwnerId());
     assertTrue(result.isPresent());
     assertEquals(owner, result.orElse(null));

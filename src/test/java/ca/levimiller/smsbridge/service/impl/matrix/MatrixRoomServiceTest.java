@@ -8,9 +8,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import ca.levimiller.smsbridge.data.model.ChatUser;
+import ca.levimiller.smsbridge.data.model.ChatUserType;
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
-import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
 import ca.levimiller.smsbridge.data.transformer.PhoneNumberTransformer;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
@@ -60,7 +60,7 @@ class MatrixRoomServiceTest {
   @Mock
   private CompletableFuture<EventContent> eventFuture;
 
-  private NumberRegistration chatNumber;
+  private ChatUser chatNumber;
   private Contact smsContact;
   private CreateRoomRequest createRoomRequest;
   private RoomId roomId;
@@ -72,9 +72,9 @@ class MatrixRoomServiceTest {
 
   @BeforeEach
   void setUp() {
-    chatNumber = NumberRegistration.builder()
+    chatNumber = ChatUser.builder()
         .ownerId("ownerId")
-        .registrationType(NumberRegistrationType.USER)
+        .registrationType(ChatUserType.USER)
         .contact(Contact.builder()
             .number("+registrationNumber")
             .build())

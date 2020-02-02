@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
-import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
+import ca.levimiller.smsbridge.data.model.ChatUserType;
 import ca.levimiller.smsbridge.data.transformer.RoomNameTransformer;
 import io.github.ma1uta.matrix.client.model.room.CreateRoomRequest;
 import java.util.Collections;
@@ -23,7 +23,7 @@ class MatrixRoomTransformerTest {
   private RoomNameTransformer roomNameTransformer;
   private final MatrixRoomTransformer roomTransformer;
 
-  private NumberRegistration chatNumber;
+  private ChatUser chatNumber;
   private Contact smsContact;
 
   @Autowired
@@ -34,9 +34,9 @@ class MatrixRoomTransformerTest {
 
   @BeforeEach
   void setUp() {
-    chatNumber = NumberRegistration.builder()
+    chatNumber = ChatUser.builder()
         .ownerId("ownerId")
-        .registrationType(NumberRegistrationType.USER)
+        .registrationType(ChatUserType.USER)
         .contact(Contact.builder()
             .number("+registrationNumber")
             .build())
@@ -53,7 +53,7 @@ class MatrixRoomTransformerTest {
 
   @Test
   void transformUser() {
-    chatNumber.setRegistrationType(NumberRegistrationType.USER);
+    chatNumber.setRegistrationType(ChatUserType.USER);
     CreateRoomRequest result = roomTransformer.transform(chatNumber, smsContact);
     assertEquals("trusted_private_chat", result.getPreset());
     assertEquals("alias", result.getRoomAliasName());
@@ -65,7 +65,7 @@ class MatrixRoomTransformerTest {
 
   @Test
   void transformRoom() {
-    chatNumber.setRegistrationType(NumberRegistrationType.ROOM);
+    chatNumber.setRegistrationType(ChatUserType.ROOM);
     CreateRoomRequest result = roomTransformer.transform(chatNumber, smsContact);
     assertEquals("trusted_private_chat", result.getPreset());
     assertEquals("alias", result.getRoomAliasName());

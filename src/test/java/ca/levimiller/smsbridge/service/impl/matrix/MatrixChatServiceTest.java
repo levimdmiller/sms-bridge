@@ -5,10 +5,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import ca.levimiller.smsbridge.data.db.NumberRegistryRepository;
+import ca.levimiller.smsbridge.data.db.ChatUserRepository;
+import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.Message;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.ChatServiceTest;
@@ -28,7 +28,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 @SpringBootTest
 class MatrixChatServiceTest extends ChatServiceTest {
   @MockBean
-  private NumberRegistryRepository numberRegistryRepository;
+  private ChatUserRepository chatUserRepository;
   @MockBean
   private RoomService roomService;
   @MockBean
@@ -43,7 +43,7 @@ class MatrixChatServiceTest extends ChatServiceTest {
   private Message message;
   private Contact fromContact;
   private Contact toContact;
-  private NumberRegistration toRegistration;
+  private ChatUser toRegistration;
 
   @Autowired
   MatrixChatServiceTest(@Qualifier("matrixChatService") ChatService chatService) {
@@ -54,7 +54,7 @@ class MatrixChatServiceTest extends ChatServiceTest {
   void setUp() {
     fromContact = Contact.builder().number("1235").build();
     toContact = Contact.builder().number("67890").build();
-    toRegistration = new NumberRegistration();
+    toRegistration = new ChatUser();
     message = Message.builder()
         .fromContact(fromContact)
         .toContact(toContact)
@@ -70,8 +70,8 @@ class MatrixChatServiceTest extends ChatServiceTest {
 
   @Test
   void sendMessage() {
-    Optional<NumberRegistration> maybeRegistration = Optional.of(toRegistration);
-    when(numberRegistryRepository.findDistinctByContact(toContact))
+    Optional<ChatUser> maybeRegistration = Optional.of(toRegistration);
+    when(chatUserRepository.findDistinctByContact(toContact))
         .thenReturn(maybeRegistration);
     chatService.sendMessage(message);
     verify(eventMethods, times(1)).sendMessage("room-id", "body");
@@ -79,7 +79,7 @@ class MatrixChatServiceTest extends ChatServiceTest {
 
   @Test
   void sendMessage_Error() {
-    when(numberRegistryRepository.findDistinctByContact(toContact))
+    when(chatUserRepository.findDistinctByContact(toContact))
         .thenReturn(Optional.empty());
     assertThrows(NotFoundException.class, () -> chatService.sendMessage(message));
   }
