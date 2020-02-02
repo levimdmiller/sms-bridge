@@ -2,6 +2,7 @@ package ca.levimiller.smsbridge.service.impl.matrix;
 
 import ca.levimiller.smsbridge.data.db.ChatUserRepository;
 import ca.levimiller.smsbridge.data.model.ChatUser;
+import ca.levimiller.smsbridge.data.model.ChatUserType;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.transformer.UserNameTransformer;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixUserRegisterTransformer;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MatrixUserService implements UserService {
+
   private final ChatUserRepository userRepository;
   private final MatrixUserRegisterTransformer matrixUserRegisterTransformer;
   private final UserNameTransformer userNameTransformer;
@@ -40,9 +42,10 @@ public class MatrixUserService implements UserService {
   public String getUser(@Valid @NotNull Contact smsContact) {
     ChatUser user = userRepository.findDistinctByContact(smsContact).orElseGet(
         () -> userRepository.save(ChatUser.builder()
-        .ownerId(createUser(smsContact))
-        .contact(smsContact)
-        .build()));
+            .ownerId(createUser(smsContact))
+            .contact(smsContact)
+            .userType(ChatUserType.VIRTUAL_USER)
+            .build()));
     return user.getOwnerId();
   }
 

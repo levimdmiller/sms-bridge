@@ -36,7 +36,7 @@ class MatrixRoomTransformerTest {
   void setUp() {
     chatNumber = ChatUser.builder()
         .ownerId("ownerId")
-        .registrationType(ChatUserType.USER)
+        .userType(ChatUserType.USER)
         .contact(Contact.builder()
             .number("+registrationNumber")
             .build())
@@ -53,7 +53,7 @@ class MatrixRoomTransformerTest {
 
   @Test
   void transformUser() {
-    chatNumber.setRegistrationType(ChatUserType.USER);
+    chatNumber.setUserType(ChatUserType.USER);
     CreateRoomRequest result = roomTransformer.transform(chatNumber, smsContact);
     assertEquals("trusted_private_chat", result.getPreset());
     assertEquals("alias", result.getRoomAliasName());
@@ -65,7 +65,7 @@ class MatrixRoomTransformerTest {
 
   @Test
   void transformRoom() {
-    chatNumber.setRegistrationType(ChatUserType.ROOM);
+    chatNumber.setUserType(ChatUserType.ROOM);
     CreateRoomRequest result = roomTransformer.transform(chatNumber, smsContact);
     assertEquals("trusted_private_chat", result.getPreset());
     assertEquals("alias", result.getRoomAliasName());

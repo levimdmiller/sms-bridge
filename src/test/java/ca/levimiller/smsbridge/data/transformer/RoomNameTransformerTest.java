@@ -19,7 +19,7 @@ class RoomNameTransformerTest {
   void setUp() {
     chatNumber = ChatUser.builder()
         .ownerId("ownerId")
-        .registrationType(ChatUserType.USER)
+        .userType(ChatUserType.USER)
         .contact(Contact.builder()
             .number("+registrationNumber")
             .build())

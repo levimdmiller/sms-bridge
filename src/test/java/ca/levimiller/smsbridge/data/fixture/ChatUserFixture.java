@@ -23,7 +23,7 @@ public class ChatUserFixture implements Fixture<ChatUser> {
   public ChatUser create() {
     return ChatUser.builder()
         .ownerId(randomUtil.getString(255))
-        .registrationType(randomUtil.getEnum(ChatUserType.class))
+        .userType(randomUtil.getEnum(ChatUserType.class))
         .contact(contactFixture.create())
         .build();
   }

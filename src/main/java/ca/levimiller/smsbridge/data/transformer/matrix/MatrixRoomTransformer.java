@@ -34,7 +34,7 @@ public class MatrixRoomTransformer {
     roomRequest.setName(roomNameTransformer.transformHumanReadable(chatNumber, smsContact));
     roomRequest.setTopic("Sms Conversation");
     roomRequest.setInvite(Collections.singletonList(chatNumber.getOwnerId()));
-    roomRequest.setDirect(ChatUserType.USER.equals(chatNumber.getRegistrationType()));
+    roomRequest.setDirect(ChatUserType.USER.equals(chatNumber.getUserType()));
     return roomRequest;
   }
 }

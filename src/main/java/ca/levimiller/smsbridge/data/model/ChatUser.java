@@ -36,8 +36,8 @@ public class ChatUser extends BaseModel {
   private String ownerId;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "registration_type", length = 16)
-  private ChatUserType registrationType;
+  @Column(name = "user_type", length = 16)
+  private ChatUserType userType;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "contact")
