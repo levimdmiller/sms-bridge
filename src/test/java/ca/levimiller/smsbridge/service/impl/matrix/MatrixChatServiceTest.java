@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import ca.levimiller.smsbridge.data.db.ChatUserRepository;
 import ca.levimiller.smsbridge.data.model.ChatUser;
+import ca.levimiller.smsbridge.data.model.ChatUserType;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.Message;
 import ca.levimiller.smsbridge.error.NotFoundException;
@@ -43,7 +44,8 @@ class MatrixChatServiceTest extends ChatServiceTest {
   private Message message;
   private Contact fromContact;
   private Contact toContact;
-  private ChatUser toRegistration;
+  private ChatUser toUser;
+  private ChatUser fromUser;
 
   @Autowired
   MatrixChatServiceTest(@Qualifier("matrixChatService") ChatService chatService) {
@@ -54,23 +56,32 @@ class MatrixChatServiceTest extends ChatServiceTest {
   void setUp() {
     fromContact = Contact.builder().number("1235").build();
     toContact = Contact.builder().number("67890").build();
-    toRegistration = new ChatUser();
+    toUser = ChatUser.builder()
+        .ownerId("to-user-id")
+        .userType(ChatUserType.USER)
+        .contact(toContact)
+        .build();
+    fromUser = ChatUser.builder()
+        .ownerId("from-user-id")
+        .userType(ChatUserType.VIRTUAL_USER)
+        .contact(fromContact)
+        .build();
     message = Message.builder()
         .fromContact(fromContact)
         .toContact(toContact)
         .body("body")
         .build();
-    when(userService.getUser(fromContact)).thenReturn("user-id");
-    when(roomService.getRoom(toRegistration, fromContact))
+    when(userService.getUser(fromContact)).thenReturn(fromUser);
+    when(roomService.getRoom(toUser, fromUser))
         .thenReturn("room-id");
 
-    when(matrixClient.userId("user-id")).thenReturn(userClient);
+    when(matrixClient.userId("from-user-id")).thenReturn(userClient);
     when(userClient.event()).thenReturn(eventMethods);
   }
 
   @Test
   void sendMessage() {
-    Optional<ChatUser> maybeRegistration = Optional.of(toRegistration);
+    Optional<ChatUser> maybeRegistration = Optional.of(toUser);
     when(chatUserRepository.findDistinctByContact(toContact))
         .thenReturn(maybeRegistration);
     chatService.sendMessage(message);

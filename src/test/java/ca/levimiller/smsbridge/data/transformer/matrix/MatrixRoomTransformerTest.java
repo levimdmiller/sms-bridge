@@ -10,7 +10,8 @@ import ca.levimiller.smsbridge.data.model.ChatUserType;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.transformer.RoomNameTransformer;
 import io.github.ma1uta.matrix.client.model.room.CreateRoomRequest;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ class MatrixRoomTransformerTest {
   private RoomNameTransformer roomNameTransformer;
   private final MatrixRoomTransformer roomTransformer;
 
-  private ChatUser chatNumber;
-  private Contact smsContact;
+  private ChatUser chatUser;
+  private ChatUser smsUser;
 
   @Autowired
   MatrixRoomTransformerTest(
@@ -35,44 +36,48 @@ class MatrixRoomTransformerTest {
 
   @BeforeEach
   void setUp() {
-    chatNumber = ChatUser.builder()
+    chatUser = ChatUser.builder()
         .ownerId("ownerId")
         .userType(ChatUserType.USER)
         .contact(Contact.builder()
             .number("+registrationNumber")
             .build())
         .build();
-    smsContact = Contact.builder()
-        .number("+smsNumber")
+    smsUser = ChatUser.builder()
+        .ownerId("smsOwnerId")
+        .userType(ChatUserType.VIRTUAL_USER)
+        .contact(Contact.builder()
+            .number("+smsNumber")
+            .build())
         .build();
 
-    when(roomNameTransformer.transformEncoded(chatNumber, smsContact))
+    when(roomNameTransformer.transformEncoded(chatUser, smsUser.getContact()))
         .thenReturn("alias");
-    when(roomNameTransformer.transformHumanReadable(chatNumber, smsContact))
+    when(roomNameTransformer.transformHumanReadable(chatUser, smsUser.getContact()))
         .thenReturn("Room Name");
   }
 
   @Test
   void transformUser() {
-    chatNumber.setUserType(ChatUserType.USER);
-    CreateRoomRequest result = roomTransformer.transform(chatNumber, smsContact);
+    chatUser.setUserType(ChatUserType.USER);
+    CreateRoomRequest result = roomTransformer.transform(chatUser, smsUser);
     assertEquals("trusted_private_chat", result.getPreset());
     assertEquals("alias", result.getRoomAliasName());
     assertEquals("Room Name", result.getName());
     assertEquals("Sms Conversation", result.getTopic());
-    assertEquals(Collections.singletonList("ownerId"), result.getInvite());
+    assertEquals(Set.of("ownerId", "smsOwnerId"), new HashSet<>(result.getInvite()));
     assertTrue(result.getDirect());
   }
 
   @Test
   void transformRoom() {
-    chatNumber.setUserType(ChatUserType.ROOM);
-    CreateRoomRequest result = roomTransformer.transform(chatNumber, smsContact);
+    chatUser.setUserType(ChatUserType.ROOM);
+    CreateRoomRequest result = roomTransformer.transform(chatUser, smsUser);
     assertEquals("trusted_private_chat", result.getPreset());
     assertEquals("alias", result.getRoomAliasName());
     assertEquals("Room Name", result.getName());
     assertEquals("Sms Conversation", result.getTopic());
-    assertEquals(Collections.singletonList("ownerId"), result.getInvite());
+    assertEquals(Set.of("ownerId", "smsOwnerId"), new HashSet<>(result.getInvite()));
     assertFalse(result.getDirect());
   }
 }

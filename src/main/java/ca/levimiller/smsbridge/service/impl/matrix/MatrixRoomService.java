@@ -46,8 +46,8 @@ public class MatrixRoomService implements RoomService {
   }
 
   @Override
-  public String getRoom(ChatUser chatNumber, Contact smsContact) {
-    CreateRoomRequest roomRequest = roomTransformer.transform(chatNumber, smsContact);
+  public String getRoom(ChatUser chatUser, ChatUser smsUser) {
+    CreateRoomRequest roomRequest = roomTransformer.transform(chatUser, smsUser);
 
     RoomId room;
     try {

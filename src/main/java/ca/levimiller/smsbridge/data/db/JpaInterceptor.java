@@ -3,7 +3,6 @@ package ca.levimiller.smsbridge.data.db;
 import ca.levimiller.smsbridge.data.model.BaseModel;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.HibernateException;
@@ -18,7 +17,7 @@ public class JpaInterceptor extends EmptyInterceptor {
       Object[] previousState, String[] propertyNames, Type[] types) {
 
     if (entity instanceof BaseModel) {
-      List<String> properties = Arrays.asList(propertyNames);
+      List<String> properties = List.of(propertyNames);
       Instant now = Instant.now();
       currentState[getModifiedIndex(properties)] = now;
     }
@@ -30,7 +29,7 @@ public class JpaInterceptor extends EmptyInterceptor {
       Type[] types) {
 
     if (entity instanceof BaseModel) {
-      List<String> properties = Arrays.asList(propertyNames);
+      List<String> properties = List.of(propertyNames);
       Instant now = Instant.now();
       state[getCreatedIndex(properties)] = now;
       state[getModifiedIndex(properties)] = now;

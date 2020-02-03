@@ -12,12 +12,12 @@ public interface RoomService {
   /**
    * Gets the room id for the given recipients.
    *
-   * @param chatNumber - chat user/room
-   * @param smsContact - sms contact (not linked to chat service)
+   * @param chatUser - chat user/room
+   * @param smsUser - sms contact (not linked to chat service)
    * @return - room id.
    */
-  String getRoom(@Valid @NotNull ChatUser chatNumber,
-      @Valid @NotNull Contact smsContact);
+  String getRoom(@Valid @NotNull ChatUser chatUser,
+      @Valid @NotNull ChatUser smsUser);
 
   /**
    * Gets the sms Contact.

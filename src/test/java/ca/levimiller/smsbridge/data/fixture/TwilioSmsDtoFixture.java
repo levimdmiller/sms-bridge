@@ -1,7 +1,7 @@
 package ca.levimiller.smsbridge.data.fixture;
 
 import ca.levimiller.smsbridge.data.dto.TwilioSmsDto;
-import java.util.Arrays;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,8 +18,8 @@ public class TwilioSmsDtoFixture implements Fixture<TwilioSmsDto> {
         .body("body")
         .numSegments(3)
         .numMedia(2)
-        .mediaContentTypes(Arrays.asList("media1", "media2"))
-        .mediaUrls(Arrays.asList("url1", "url2"))
+        .mediaContentTypes(List.of("media1", "media2"))
+        .mediaUrls(List.of("url1", "url2"))
         .fromCity("fromCity")
         .fromState("fromState")
         .fromCountry("fromCountry")

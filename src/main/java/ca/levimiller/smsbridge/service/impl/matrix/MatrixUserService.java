@@ -39,16 +39,22 @@ public class MatrixUserService implements UserService {
   }
 
   @Override
-  public String getUser(@Valid @NotNull Contact smsContact) {
+  public ChatUser getUser(@Valid @NotNull Contact smsContact) {
     ChatUser user = userRepository.findDistinctByContact(smsContact).orElseGet(
         () -> userRepository.save(ChatUser.builder()
             .ownerId(createUser(smsContact))
             .contact(smsContact)
             .userType(ChatUserType.VIRTUAL_USER)
             .build()));
-    return user.getOwnerId();
+    return user;
   }
 
+  /**
+   * Creates a matrix user.
+   *
+   * @param smsContact - user to create.
+   * @return - created matrix user id
+   */
   private String createUser(Contact smsContact) {
     RegisterRequest request = matrixUserRegisterTransformer.transform(smsContact);
     try {

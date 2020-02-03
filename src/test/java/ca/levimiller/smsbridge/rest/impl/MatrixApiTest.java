@@ -14,7 +14,7 @@ import io.github.ma1uta.matrix.EmptyResponse;
 import io.github.ma1uta.matrix.application.model.TransactionRequest;
 import io.github.ma1uta.matrix.event.RoomAliases;
 import io.github.ma1uta.matrix.event.RoomMessage;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class MatrixApiTest {
         .completed(true)
         .build();
     transactionRequest = new TransactionRequest();
-    transactionRequest.setEvents(Arrays.asList(
+    transactionRequest.setEvents(List.of(
         new RoomMessage<>(), new RoomAliases()
     ));
 
