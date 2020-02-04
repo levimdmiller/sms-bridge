@@ -57,7 +57,7 @@ public class MatrixUserService implements UserService {
           .profile()
           .setDisplayName(newName)
           .join();
-    } catch (CompletionException | CancellationException e ) {
+    } catch (CompletionException | CancellationException e) {
       log.error("Failed to set user display name", e);
     }
   }

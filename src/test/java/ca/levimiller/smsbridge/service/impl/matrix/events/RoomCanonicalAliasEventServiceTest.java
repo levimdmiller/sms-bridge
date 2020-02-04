@@ -37,6 +37,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class RoomCanonicalAliasEventServiceTest {
+
   private final MatrixEventService<RoomName> eventService;
 
   @MockBean
@@ -114,9 +115,11 @@ class RoomCanonicalAliasEventServiceTest {
         messageEvent, noVirtualUsers, hasVirtualUsers
     ));
 
-    when(chatUserRepository.existsByOwnerIdAndUserType("noVirtualUsers-sender", ChatUserType.VIRTUAL_USER))
+    when(chatUserRepository
+        .existsByOwnerIdAndUserType("noVirtualUsers-sender", ChatUserType.VIRTUAL_USER))
         .thenReturn(false);
-    when(chatUserRepository.existsByOwnerIdAndUserType("hasVirtualUsers-sender", ChatUserType.VIRTUAL_USER))
+    when(chatUserRepository
+        .existsByOwnerIdAndUserType("hasVirtualUsers-sender", ChatUserType.VIRTUAL_USER))
         .thenReturn(true);
 
     // mock call thenAccept

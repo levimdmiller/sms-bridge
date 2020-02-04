@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 
 public class MockLogger {
+
   private final Appender mockAppender;
   //Captor is genericised with ch.qos.logback.classic.spi.LoggingEvent
   private final ArgumentCaptor<LoggingEvent> captorLoggingEvent;
@@ -26,6 +27,12 @@ public class MockLogger {
     logger.addAppender(mockAppender);
   }
 
+  /**
+   * Verifies that a log entry with the given level and message was submitted.
+   *
+   * @param expectedLevel - log level
+   * @param expectedMessage - formatted log message
+   */
   public void verify(Level expectedLevel, String expectedMessage) {
     Mockito.verify(mockAppender).doAppend(captorLoggingEvent.capture());
     LoggingEvent logEvent = captorLoggingEvent.getValue();
@@ -33,6 +40,13 @@ public class MockLogger {
     assertEquals(expectedMessage, logEvent.getFormattedMessage());
   }
 
+  /**
+   * Verifies that a log entry with the given level, message, and throwable was submitted.
+   *
+   * @param expectedLevel - log level
+   * @param expectedMessage - formatted log message
+   * @param expectedCause - passed in throwable
+   */
   public void verify(Level expectedLevel, String expectedMessage, Throwable expectedCause) {
     Mockito.verify(mockAppender).doAppend(captorLoggingEvent.capture());
     LoggingEvent logEvent = captorLoggingEvent.getValue();
