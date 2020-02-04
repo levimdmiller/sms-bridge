@@ -22,4 +22,10 @@
     <tagDatabase tag="0.0.3_tag"/>
   </changeSet>
 
+  <include file="db/0.0.3.xml"/>
+
+  <changeSet id="0.0.4_tag" author="Levi Miller">
+    <tagDatabase tag="0.0.4_tag"/>
+  </changeSet>
+
 </databaseChangeLog>

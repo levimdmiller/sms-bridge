@@ -8,9 +8,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import ca.levimiller.smsbridge.data.model.ChatUser;
+import ca.levimiller.smsbridge.data.model.ChatUserType;
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
-import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
 import ca.levimiller.smsbridge.data.transformer.PhoneNumberTransformer;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
@@ -36,7 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.RestClientException;
 
 @SpringBootTest
 class MatrixRoomServiceTest {
@@ -54,14 +53,18 @@ class MatrixRoomServiceTest {
   @Mock
   private RoomMethods roomMethods;
   @Mock
-  private CompletableFuture<RoomId> roomFuture;
+  private AppServiceClient userClient;
   @Mock
   private EventMethods eventMethods;
   @Mock
   private CompletableFuture<EventContent> eventFuture;
+  @Mock
+  private CompletableFuture<RoomId> roomFuture;
+  @Mock
+  private CompletableFuture<RoomId> joinFuture;
 
-  private NumberRegistration chatNumber;
-  private Contact smsContact;
+  private ChatUser chatUser;
+  private ChatUser smsUser;
   private CreateRoomRequest createRoomRequest;
   private RoomId roomId;
 
@@ -72,22 +75,26 @@ class MatrixRoomServiceTest {
 
   @BeforeEach
   void setUp() {
-    chatNumber = NumberRegistration.builder()
+    chatUser = ChatUser.builder()
         .ownerId("ownerId")
-        .registrationType(NumberRegistrationType.USER)
+        .userType(ChatUserType.USER)
         .contact(Contact.builder()
             .number("+registrationNumber")
             .build())
         .build();
-    smsContact = Contact.builder()
-        .number("+smsNumber")
+    smsUser = ChatUser.builder()
+        .ownerId("smsOwnerId")
+        .userType(ChatUserType.VIRTUAL_USER)
+        .contact(Contact.builder()
+            .number("+smsNumber")
+            .build())
         .build();
     createRoomRequest = new CreateRoomRequest();
     createRoomRequest.setRoomAliasName("alias");
     roomId = new RoomId();
     roomId.setRoomId("roomId");
 
-    when(roomTransformer.transform(chatNumber, smsContact)).thenReturn(createRoomRequest);
+    when(roomTransformer.transform(chatUser, smsUser)).thenReturn(createRoomRequest);
     when(matrixClient.room()).thenReturn(roomMethods);
     when(roomMethods.resolveAlias("#alias:domain.ca"))
         .thenReturn(roomFuture);
@@ -97,15 +104,19 @@ class MatrixRoomServiceTest {
     when(matrixClient.event()).thenReturn(eventMethods);
     when(eventMethods.eventContent(roomId.getRoomId(), RoomCanonicalAlias.TYPE, ""))
         .thenReturn(eventFuture);
-  }
 
+    when(matrixClient.userId("smsOwnerId")).thenReturn(userClient);
+    when(userClient.room()).thenReturn(roomMethods);
+    when(roomMethods.joinByIdOrAlias(roomId.getRoomId())).thenReturn(joinFuture);
+  }
 
   @Test
   void getRoom_NumberExists() {
     when(roomFuture.join()).thenReturn(roomId);
-    String response = roomService.getRoom(chatNumber, smsContact);
+    String response = roomService.getRoom(chatUser, smsUser);
     assertEquals("roomId", response);
     verify(roomMethods, times(0)).create(any());
+    verifyJoinRoom();
   }
 
   @Test
@@ -121,15 +132,16 @@ class MatrixRoomServiceTest {
         .thenReturn(roomFuture2);
     when(roomFuture2.join()).thenReturn(roomId);
 
-    String response = roomService.getRoom(chatNumber, smsContact);
+    String response = roomService.getRoom(chatUser, smsUser);
     assertEquals("roomId", response);
+    verifyJoinRoom();
   }
 
   @Test
   void getRoom_NumberNotFoundOrCreated_Exception() {
     when(roomFuture.join())
         .thenThrow(new CompletionException(new MatrixException("", "", 500)));
-    assertThrows(RestClientException.class, () -> roomService.getRoom(chatNumber, smsContact));
+    assertThrows(BadRequestException.class, () -> roomService.getRoom(chatUser, smsUser));
     verify(roomMethods, times(0)).create(any());
   }
 
@@ -137,7 +149,7 @@ class MatrixRoomServiceTest {
   void getRoom_NumberNotFoundOrCreated_Cancelled() {
     when(roomFuture.join())
         .thenThrow(new CancellationException());
-    assertThrows(RestClientException.class, () -> roomService.getRoom(chatNumber, smsContact));
+    assertThrows(BadRequestException.class, () -> roomService.getRoom(chatUser, smsUser));
     verify(roomMethods, times(0)).create(any());
   }
 
@@ -180,5 +192,29 @@ class MatrixRoomServiceTest {
     assertEquals(Contact.builder()
         .number("number")
         .build(), result);
+  }
+
+  @Test
+  void joinRoomError_Cancelled() {
+    when(roomFuture.join()).thenReturn(roomId);
+    when(joinFuture.join()).thenThrow(new CancellationException());
+    BadRequestException thrown = assertThrows(BadRequestException.class,
+        () -> roomService.getRoom(chatUser, smsUser));
+    assertEquals("Unable to add virtual user to room: smsOwnerId - " + roomId.getRoomId(),
+        thrown.getMessage());
+  }
+
+  @Test
+  void joinRoomError_Completed() {
+    when(roomFuture.join()).thenReturn(roomId);
+    when(joinFuture.join()).thenThrow(new CompletionException(new Exception()));
+    BadRequestException thrown = assertThrows(BadRequestException.class,
+        () -> roomService.getRoom(chatUser, smsUser));
+    assertEquals("Unable to add virtual user to room: smsOwnerId - " + roomId.getRoomId(),
+        thrown.getMessage());
+  }
+
+  void verifyJoinRoom() {
+    verify(joinFuture).join();
   }
 }

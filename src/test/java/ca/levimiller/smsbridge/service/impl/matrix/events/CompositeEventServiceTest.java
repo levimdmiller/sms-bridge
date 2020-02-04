@@ -13,7 +13,7 @@ import io.github.ma1uta.matrix.event.RoomMessage;
 import io.github.ma1uta.matrix.event.content.EventContent;
 import io.github.ma1uta.matrix.event.content.RoomMemberContent;
 import io.github.ma1uta.matrix.event.message.Text;
-import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -35,7 +35,7 @@ class CompositeEventServiceTest {
     when(messageEventService.getType()).thenReturn("m.room.message");
     when(roomMemberEventService.getType()).thenReturn("m.room.member");
     compositeEventService = new CompositeEventService(noopEventService,
-        Arrays.asList(messageEventService, roomMemberEventService));
+        List.of(messageEventService, roomMemberEventService));
   }
 
   @Test

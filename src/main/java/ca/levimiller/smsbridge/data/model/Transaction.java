@@ -24,6 +24,7 @@ import org.hibernate.annotations.Where;
     check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted = false")
 public class Transaction extends BaseModel {
+
   @Size(max = 255)
   @Column(name = "transaction_id")
   private String transactionId;

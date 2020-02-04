@@ -1,5 +1,6 @@
 package ca.levimiller.smsbridge.service.impl.matrix.events;
 
+import ca.levimiller.smsbridge.data.db.ChatUserRepository;
 import ca.levimiller.smsbridge.data.model.Message;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomMessageTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
@@ -18,18 +19,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class MessageEventService implements
     MatrixEventService<RoomMessage<RoomMessageContent>, RoomMessageContent> {
+
   private final MatrixRoomMessageTransformer roomMessageTransformer;
   private final ChatService twilioChatService;
   private final MessageService messageService;
+  private final ChatUserRepository chatUserRepository;
 
   @Inject
   public MessageEventService(
       MatrixRoomMessageTransformer roomMessageTransformer,
       @Qualifier("twilioChatService") ChatService twilioChatService,
-      MessageService messageService) {
+      MessageService messageService,
+      ChatUserRepository chatUserRepository) {
     this.roomMessageTransformer = roomMessageTransformer;
     this.twilioChatService = twilioChatService;
     this.messageService = messageService;
+    this.chatUserRepository = chatUserRepository;
   }
 
   @Override
@@ -37,6 +42,10 @@ public class MessageEventService implements
     log.debug("Received matrix event: {}", event);
     try {
       Message message = roomMessageTransformer.transform(event);
+      // don't send texts for messages from virtual users.
+      if (chatUserRepository.isVirtual(message.getFromContact())) {
+        return;
+      }
       messageService.save(message);
       twilioChatService.sendMessage(message);
     } catch (TransformationException e) {

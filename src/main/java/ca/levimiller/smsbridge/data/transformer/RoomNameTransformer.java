@@ -1,7 +1,7 @@
 package ca.levimiller.smsbridge.data.transformer;
 
+import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.data.transformer.qualifiers.Encoded;
 import ca.levimiller.smsbridge.data.transformer.qualifiers.HumanReadable;
 import org.mapstruct.Mapper;
@@ -17,7 +17,7 @@ public interface RoomNameTransformer {
    * @return - Human readable name
    */
   @HumanReadable
-  default String transformHumanReadable(NumberRegistration chatNumber, Contact smsContact) {
+  default String transformHumanReadable(ChatUser chatNumber, Contact smsContact) {
     return "SMS " + smsContact.getNumber();
   }
 
@@ -30,7 +30,7 @@ public interface RoomNameTransformer {
    * @return - generated room name
    */
   @Encoded
-  default String transformEncoded(NumberRegistration chatNumber, Contact smsContact) {
+  default String transformEncoded(ChatUser chatNumber, Contact smsContact) {
     return "sms-" + smsContact.getNumber().replaceAll("\\+", "");
   }
 }

@@ -1,8 +1,8 @@
 package ca.levimiller.smsbridge.data.transformer.matrix;
 
-import ca.levimiller.smsbridge.data.db.NumberRegistryRepository;
+import ca.levimiller.smsbridge.data.db.ChatUserRepository;
+import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
 import ca.levimiller.smsbridge.data.transformer.qualifiers.From;
 import ca.levimiller.smsbridge.data.transformer.qualifiers.To;
 import ca.levimiller.smsbridge.error.TransformationException;
@@ -13,19 +13,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class MatrixContactTransformer {
 
-  private final NumberRegistryRepository numberRegistryRepository;
+  private final ChatUserRepository chatUserRepository;
   private final RoomService roomService;
 
   @Inject
   public MatrixContactTransformer(
-      NumberRegistryRepository numberRegistryRepository,
+      ChatUserRepository chatUserRepository,
       RoomService roomService) {
-    this.numberRegistryRepository = numberRegistryRepository;
+    this.chatUserRepository = chatUserRepository;
     this.roomService = roomService;
   }
 
   /**
    * Transforms the room id to a phone number.
+   *
    * @param roomId - room id.
    * @return - number associated with room.
    */
@@ -43,8 +44,8 @@ public class MatrixContactTransformer {
    */
   @From
   public Contact transformFrom(String sender) throws TransformationException {
-    return numberRegistryRepository.findDistinctByOwnerId(sender)
-        .map(NumberRegistration::getContact)
+    return chatUserRepository.findDistinctByOwnerId(sender)
+        .map(ChatUser::getContact)
         .orElseThrow(() -> new TransformationException(
             "Message sender isn't linked to a number: " + sender));
   }

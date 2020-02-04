@@ -2,24 +2,25 @@ package ca.levimiller.smsbridge.data.transformer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import ca.levimiller.smsbridge.data.model.ChatUser;
+import ca.levimiller.smsbridge.data.model.ChatUserType;
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
-import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 
 class RoomNameTransformerTest {
+
   private RoomNameTransformer roomNameTransformer;
-  private NumberRegistration chatNumber;
+  private ChatUser chatNumber;
   private Contact smsContact;
 
   @BeforeEach
   void setUp() {
-    chatNumber = NumberRegistration.builder()
+    chatNumber = ChatUser.builder()
         .ownerId("ownerId")
-        .registrationType(NumberRegistrationType.USER)
+        .userType(ChatUserType.USER)
         .contact(Contact.builder()
             .number("+registrationNumber")
             .build())

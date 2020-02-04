@@ -22,7 +22,7 @@ public class TwilioApi implements TwilioController {
   @Inject
   public TwilioApi(
       @Qualifier("matrixChatService")
-      ChatService chatService,
+          ChatService chatService,
       MessageTransformer messageTransformer,
       MessageService messageService) {
     this.chatService = chatService;

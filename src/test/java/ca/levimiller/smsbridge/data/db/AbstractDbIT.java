@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ca.levimiller.smsbridge.data.fixture.Fixture;
 import ca.levimiller.smsbridge.data.model.BaseModel;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -51,7 +50,7 @@ public abstract class AbstractDbIT<T extends BaseModel> {
 
   @Test
   void testSaveAll_findAll() {
-    List<T> entities = Arrays.asList(saveNewEntity(), saveNewEntity());
+    List<T> entities = List.of(saveNewEntity(), saveNewEntity());
 
     List<T> all = repository.findAll();
     assertEquals(all, entities);
@@ -68,7 +67,7 @@ public abstract class AbstractDbIT<T extends BaseModel> {
 
   @Test
   void testFindAllById() {
-    List<T> entities = Arrays.asList(saveNewEntity(), saveNewEntity());
+    List<T> entities = List.of(saveNewEntity(), saveNewEntity());
     List<Long> ids = entities.stream().map(BaseModel::getId).collect(Collectors.toList());
 
     List<T> all = repository.findAllById(ids);
@@ -111,7 +110,7 @@ public abstract class AbstractDbIT<T extends BaseModel> {
   @Test
   void testDeleteAll_Iterable() {
     T notDeleted = saveNewEntity();
-    List<T> entities = Arrays.asList(saveNewEntity(), saveNewEntity());
+    List<T> entities = List.of(saveNewEntity(), saveNewEntity());
     repository.deleteAll(entities);
 
     for (T entity : entities) {
@@ -136,7 +135,7 @@ public abstract class AbstractDbIT<T extends BaseModel> {
     T entity2 = saveNewEntity();
 
     List<T> result = repository.findAll(Sort.by(Direction.DESC, "id"));
-    assertEquals(Arrays.asList(entity2, entity1), result);
+    assertEquals(List.of(entity2, entity1), result);
   }
 
   @Test

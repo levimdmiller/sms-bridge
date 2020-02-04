@@ -13,6 +13,7 @@ public interface ChatService {
 
   /**
    * Sends the given message to the chat server.
+   *
    * @param message - message to send.
    */
   void sendMessage(@Valid @NotNull Message message);

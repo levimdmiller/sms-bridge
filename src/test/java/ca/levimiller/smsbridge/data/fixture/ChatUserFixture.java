@@ -1,29 +1,29 @@
 package ca.levimiller.smsbridge.data.fixture;
 
+import ca.levimiller.smsbridge.data.model.ChatUser;
+import ca.levimiller.smsbridge.data.model.ChatUserType;
 import ca.levimiller.smsbridge.data.model.Contact;
-import ca.levimiller.smsbridge.data.model.NumberRegistration;
-import ca.levimiller.smsbridge.data.model.NumberRegistrationType;
 import ca.levimiller.smsbridge.data.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NumberRegistrationFixture implements Fixture<NumberRegistration> {
+public class ChatUserFixture implements Fixture<ChatUser> {
   private final RandomUtil randomUtil;
   private final Fixture<Contact> contactFixture;
 
   @Autowired
-  public NumberRegistrationFixture(RandomUtil randomUtil,
+  public ChatUserFixture(RandomUtil randomUtil,
       Fixture<Contact> contactFixture) {
     this.randomUtil = randomUtil;
     this.contactFixture = contactFixture;
   }
 
   @Override
-  public NumberRegistration create() {
-    return NumberRegistration.builder()
+  public ChatUser create() {
+    return ChatUser.builder()
         .ownerId(randomUtil.getString(255))
-        .registrationType(randomUtil.getEnum(NumberRegistrationType.class))
+        .userType(randomUtil.getEnum(ChatUserType.class))
         .contact(contactFixture.create())
         .build();
   }

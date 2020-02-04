@@ -51,6 +51,12 @@ public class Media extends BaseModel {
       return false;
     }
     Media media = (Media) o;
+    if (message == null ^ media.message == null) {
+      return false;
+    }
+    if (message == null) {
+      return true;
+    }
     return Objects.equals(url, media.url)
         && Objects.equals(contentType, media.contentType)
         // break infinite loop
@@ -59,7 +65,8 @@ public class Media extends BaseModel {
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), url, contentType, message.getId());
+    return Objects.hash(super.hashCode(), url, contentType,
+        message == null ? null : message.getId());
   }
 
   @Override
@@ -67,7 +74,7 @@ public class Media extends BaseModel {
     return "Media{"
         + "url='" + url + '\''
         + ", contentType='" + contentType + '\''
-        + ", message=" + message.getId() // break infinite loop
+        + ", message=" + (message == null ? null : message.getId()) // break infinite loop
         + '}';
   }
 }

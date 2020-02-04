@@ -10,6 +10,7 @@ public interface SecurityUserTransformer {
 
   /**
    * Transforms a sms-bridge SecurityUser to a spring UserDetails.
+   *
    * @param user - user to transform
    * @return - spring user object
    */

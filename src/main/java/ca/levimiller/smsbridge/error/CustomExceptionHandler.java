@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class CustomExceptionHandler {
 
   /**
-   * Catches the constraint violations and returns a bad request status
-   * with a map of the violations.
+   * Catches the constraint violations and returns a bad request status with a map of the
+   * violations.
+   *
    * @param ex - constraint violation exception
    * @return - error map
    */
