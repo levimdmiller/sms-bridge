@@ -1,7 +1,6 @@
 package ca.levimiller.smsbridge.service.impl.matrix;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -27,10 +26,8 @@ import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-import java.util.function.Function;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -154,12 +151,6 @@ class MatrixUserServiceTest {
     when(registerFuture.join()).thenReturn(loginResponse);
     when(userRepository.save(any())).thenReturn(chatUser);
     ChatUser result = userService.getUser(contact);
-    ArgumentCaptor<Function<Throwable, EmptyResponse>> argumentCaptor = ArgumentCaptor
-        .forClass(Function.class);
-    verify(displayFuture).exceptionally(argumentCaptor.capture());
-    assertNotNull(argumentCaptor.getValue());
-
-    argumentCaptor.getValue().apply(new Throwable());
 
     assertEquals(chatUser, result);
     verify(userRepository).save(eq(ChatUser.builder()
@@ -170,4 +161,24 @@ class MatrixUserServiceTest {
     verify(profileMethods).setDisplayName(displayName);
   }
 
+  @Test
+  void renameUser_Cancelled() {
+    when(displayFuture.join()).thenThrow(new CancellationException());
+    userService.renameUser(userId, displayName);
+    // exception is caught
+  }
+
+  @Test
+  void renameUser_CompletionException() {
+    when(displayFuture.join()).thenThrow(new CompletionException(new Exception()));
+    userService.renameUser(userId, displayName);
+    // exception is caught
+  }
+
+  @Test
+  void renameUser_Success() {
+    when(displayFuture.join()).thenReturn(new EmptyResponse());
+    userService.renameUser(userId, displayName);
+    verify(profileMethods).setDisplayName(displayName);
+  }
 }

@@ -50,6 +50,18 @@ public class MatrixUserService implements UserService {
             .build()));
   }
 
+  @Override
+  public void renameUser(String userId, String newName) {
+    try {
+      matrixClient.userId(userId)
+          .profile()
+          .setDisplayName(newName)
+          .join();
+    } catch (CompletionException | CancellationException e ) {
+      log.error("Failed to set user display name", e);
+    }
+  }
+
   /**
    * Creates a matrix user.
    *
@@ -60,13 +72,7 @@ public class MatrixUserService implements UserService {
     RegisterRequest request = matrixUserRegisterTransformer.transform(smsContact);
     try {
       LoginResponse response = matrixClient.account().register(request).join();
-      matrixClient.userId(response.getUserId())
-          .profile()
-          .setDisplayName(userNameTransformer.transform(smsContact))
-          .exceptionally(t -> {
-            log.error("Failed to set user display name", t);
-            return null;
-          });
+      renameUser(response.getUserId(), userNameTransformer.transform(smsContact));
       return response.getUserId();
     } catch (CancellationException | CompletionException e) {
       throw new BadRequestException("Failed to create virtual sms user: ", e);

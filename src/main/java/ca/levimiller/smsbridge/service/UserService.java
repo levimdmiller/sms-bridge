@@ -14,4 +14,11 @@ public interface UserService {
    * @return - room id.
    */
   ChatUser getUser(@Valid @NotNull Contact smsContact);
+
+  /**
+   * Renames the given user.
+   * @param userId - user to rename.
+   * @param newName - new display name.
+   */
+  void renameUser(String userId, String newName);
 }
