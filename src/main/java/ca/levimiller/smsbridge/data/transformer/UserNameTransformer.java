@@ -17,4 +17,13 @@ public interface UserNameTransformer {
     }
     return smsContact.getNumber();
   }
+
+  /**
+   * Strips the SMS prefix from the room name.
+   * @param roomName - room name to format.
+   * @return - formatted name
+   */
+  default String transformFromRoomName(String roomName) {
+    return roomName.replaceAll("^" + RoomNameTransformer.PREFIX, "");
+  }
 }

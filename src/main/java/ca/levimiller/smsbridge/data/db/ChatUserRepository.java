@@ -30,9 +30,9 @@ public interface ChatUserRepository extends JpaRepository<ChatUser, Long>,
 
   /**
    * Checks if the contact is linked to a chat user of the given type.
-   * @param contact = contact to check.
-   * @param userType = user type to match.
-   * @return = true if ChatUser of given type matches contact.
+   * @param contact - contact to check.
+   * @param userType - user type to match.
+   * @return - true if ChatUser of given type matches contact.
    */
   boolean existsByContactAndUserType(Contact contact, ChatUserType userType);
 
@@ -44,4 +44,12 @@ public interface ChatUserRepository extends JpaRepository<ChatUser, Long>,
   default boolean isVirtual(Contact contact) {
     return existsByContactAndUserType(contact, ChatUserType.VIRTUAL_USER);
   }
+
+  /**
+   * Checks if the contact is linked to a chat user of the given type.
+   * @param ownerId - ownerId to check.
+   * @param userType - user type to match.
+   * @return - true if ChatUser of given type matches contact.
+   */
+  boolean existsByOwnerIdAndUserType(String ownerId, ChatUserType userType);
 }

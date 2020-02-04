@@ -76,4 +76,25 @@ class ChatUserRepositoryIT extends AbstractDbIT<ChatUser> {
     // true for VIRTUAL_USER, false for all other types.
     assertEquals(type == ChatUserType.VIRTUAL_USER, result);
   }
+
+
+  @Test
+  void existsByOwnerIdAndUserType_Exists() {
+    ChatUser owner = saveNewEntity();
+
+    boolean result = chatUserRepository.existsByOwnerIdAndUserType(
+        owner.getOwnerId(), owner.getUserType());
+    assertTrue(result);
+  }
+
+  @Test
+  void existsByOwnerIdAndUserType_NotExists() {
+    ChatUser owner = fixture.create();
+    owner.setUserType(ChatUserType.VIRTUAL_USER);
+    repository.save(owner);
+
+    boolean result = chatUserRepository.existsByOwnerIdAndUserType(
+        owner.getOwnerId(), ChatUserType.USER);
+    assertFalse(result);
+  }
 }
