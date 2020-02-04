@@ -9,8 +9,10 @@ import io.github.ma1uta.matrix.application.model.TransactionRequest;
 import io.github.ma1uta.matrix.event.Event;
 import io.github.ma1uta.matrix.event.content.EventContent;
 import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class MatrixApi implements MatrixController {
 
@@ -34,7 +36,13 @@ public class MatrixApi implements MatrixController {
           .build());
 
       // process all events
-      request.getEvents().forEach(eventService::process);
+      request.getEvents().forEach(event -> {
+        try {
+          eventService.process(event);
+        } catch (Exception e) {
+          log.error("Error processing event: ", e);
+        }
+      });
 
       transaction.setCompleted(true);
       return transactionRepository.save(transaction);
