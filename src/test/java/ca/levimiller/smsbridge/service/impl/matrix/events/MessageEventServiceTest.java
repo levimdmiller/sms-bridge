@@ -27,8 +27,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class MessageEventServiceTest {
-  private final MatrixEventService<RoomMessage<RoomMessageContent>,
-      RoomMessageContent> messageEventService;
+  private final MatrixEventService<RoomMessage<RoomMessageContent>> messageEventService;
   @MockBean
   private MatrixRoomMessageTransformer roomMessageTransformer;
   @MockBean
@@ -44,8 +43,7 @@ class MessageEventServiceTest {
   private Contact fromContact;
 
   @Autowired
-  MessageEventServiceTest(MatrixEventService<RoomMessage<RoomMessageContent>,
-      RoomMessageContent> messageEventService) {
+  MessageEventServiceTest(MatrixEventService<RoomMessage<RoomMessageContent>> messageEventService) {
     this.messageEventService = messageEventService;
   }
 

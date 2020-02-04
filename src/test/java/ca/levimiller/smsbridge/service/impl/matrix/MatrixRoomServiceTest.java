@@ -16,6 +16,8 @@ import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
 import ca.levimiller.smsbridge.service.RoomService;
 import ca.levimiller.smsbridge.util.MatrixUtil;
+import ca.levimiller.smsbridge.util.MockLogger;
+import ch.qos.logback.classic.Level;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.client.methods.EventMethods;
 import io.github.ma1uta.matrix.client.methods.RoomMethods;
@@ -29,6 +31,7 @@ import io.github.ma1uta.matrix.impl.exception.MatrixException;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -62,6 +65,7 @@ class MatrixRoomServiceTest {
   private CompletableFuture<RoomId> roomFuture;
   @Mock
   private CompletableFuture<RoomId> joinFuture;
+  private MockLogger mockLogger;
 
   private ChatUser chatUser;
   private ChatUser smsUser;
@@ -108,6 +112,12 @@ class MatrixRoomServiceTest {
     when(matrixClient.userId("smsOwnerId")).thenReturn(userClient);
     when(userClient.room()).thenReturn(roomMethods);
     when(roomMethods.joinByIdOrAlias(roomId.getRoomId())).thenReturn(joinFuture);
+    mockLogger = new MockLogger(MatrixRoomService.class);
+  }
+
+  @AfterEach
+  void tearDown() {
+    mockLogger.teardown();
   }
 
   @Test
@@ -196,22 +206,26 @@ class MatrixRoomServiceTest {
 
   @Test
   void joinRoomError_Cancelled() {
+    CancellationException e = new CancellationException();
     when(roomFuture.join()).thenReturn(roomId);
-    when(joinFuture.join()).thenThrow(new CancellationException());
+    when(joinFuture.join()).thenThrow(e);
     BadRequestException thrown = assertThrows(BadRequestException.class,
         () -> roomService.getRoom(chatUser, smsUser));
     assertEquals("Unable to add virtual user to room: smsOwnerId - " + roomId.getRoomId(),
         thrown.getMessage());
+    mockLogger.verify(Level.ERROR, "Unable to add virtual user to room", e);
   }
 
   @Test
   void joinRoomError_Completed() {
+    CompletionException e = new CompletionException(new Exception());
     when(roomFuture.join()).thenReturn(roomId);
-    when(joinFuture.join()).thenThrow(new CompletionException(new Exception()));
+    when(joinFuture.join()).thenThrow(e);
     BadRequestException thrown = assertThrows(BadRequestException.class,
         () -> roomService.getRoom(chatUser, smsUser));
     assertEquals("Unable to add virtual user to room: smsOwnerId - " + roomId.getRoomId(),
         thrown.getMessage());
+    mockLogger.verify(Level.ERROR, "Unable to add virtual user to room", e);
   }
 
   void verifyJoinRoom() {

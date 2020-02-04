@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @Qualifier("noopEventService")
-public class NoopEventService implements MatrixEventService<Event<EventContent>, EventContent> {
+public class NoopEventService implements MatrixEventService<Event<EventContent>> {
 
   @Override
   public void process(Event<EventContent> event) {

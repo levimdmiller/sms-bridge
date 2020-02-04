@@ -16,6 +16,8 @@ import ca.levimiller.smsbridge.data.transformer.UserNameTransformer;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixUserRegisterTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
 import ca.levimiller.smsbridge.service.UserService;
+import ca.levimiller.smsbridge.util.MockLogger;
+import ch.qos.logback.classic.Level;
 import io.github.ma1uta.matrix.EmptyResponse;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.client.methods.AccountMethods;
@@ -26,6 +28,7 @@ import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -54,6 +57,7 @@ class MatrixUserServiceTest {
   private CompletableFuture<LoginResponse> registerFuture;
   @Mock
   private CompletableFuture<EmptyResponse> displayFuture;
+  private MockLogger mockLogger;
 
   private String userId;
   private String displayName;
@@ -86,6 +90,12 @@ class MatrixUserServiceTest {
     when(matrixClient.userId(userId)).thenReturn(userClient);
     when(userClient.profile()).thenReturn(profileMethods);
     when(profileMethods.setDisplayName(displayName)).thenReturn(displayFuture);
+    mockLogger = new MockLogger(MatrixUserService.class);
+  }
+
+  @AfterEach
+  void tearDown() {
+    mockLogger.teardown();
   }
 
   @Test
@@ -163,16 +173,20 @@ class MatrixUserServiceTest {
 
   @Test
   void renameUser_Cancelled() {
-    when(displayFuture.join()).thenThrow(new CancellationException());
+    CancellationException e = new CancellationException();
+    when(displayFuture.join()).thenThrow(e);
     userService.renameUser(userId, displayName);
     // exception is caught
+    mockLogger.verify(Level.ERROR, "Failed to set user display name", e);
   }
 
   @Test
   void renameUser_CompletionException() {
-    when(displayFuture.join()).thenThrow(new CompletionException(new Exception()));
+    CompletionException e = new CompletionException(new Exception());
+    when(displayFuture.join()).thenThrow(e);
     userService.renameUser(userId, displayName);
     // exception is caught
+    mockLogger.verify(Level.ERROR, "Failed to set user display name", e);
   }
 
   @Test
