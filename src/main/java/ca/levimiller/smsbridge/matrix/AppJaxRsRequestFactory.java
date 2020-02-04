@@ -6,6 +6,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
 public class AppJaxRsRequestFactory extends JaxRsRequestFactory {
+
   public AppJaxRsRequestFactory(String homeserverUrl) {
     super(homeserverUrl);
   }
@@ -16,7 +17,7 @@ public class AppJaxRsRequestFactory extends JaxRsRequestFactory {
 
   protected WebTarget applyQueryParams(RequestParams params, WebTarget path) {
     WebTarget webTarget = super.applyQueryParams(params, path);
-    if(params.getUserId() == null) {
+    if (params.getUserId() == null) {
       return webTarget;
     }
     return webTarget.queryParam("user_id", this.encode(params.getUserId()));

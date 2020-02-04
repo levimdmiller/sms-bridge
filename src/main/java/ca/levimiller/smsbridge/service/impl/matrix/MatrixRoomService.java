@@ -96,6 +96,7 @@ public class MatrixRoomService implements RoomService {
 
   /**
    * Virtual user should just join room, skip invite.
+   *
    * @param virtualUser - virtual user to add to room.
    * @param roomId - room id
    */
@@ -105,7 +106,7 @@ public class MatrixRoomService implements RoomService {
     } catch (CancellationException | CompletionException error) {
       log.error("Unable to add virtual user to room", error);
       throw new BadRequestException("Unable to add virtual user to room: "
-          + virtualUser.getOwnerId() + " - " + roomId, error );
+          + virtualUser.getOwnerId() + " - " + roomId, error);
     }
   }
 }

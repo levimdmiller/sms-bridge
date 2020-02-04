@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class AppJaxRsRequestFactoryTest {
+
   private AppJaxRsRequestFactory appJaxRsRequestFactory;
   private String homeserverUrl;
   private RequestParams requestParams;

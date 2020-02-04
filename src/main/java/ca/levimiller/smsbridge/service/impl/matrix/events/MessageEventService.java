@@ -43,7 +43,7 @@ public class MessageEventService implements
     try {
       Message message = roomMessageTransformer.transform(event);
       // don't send texts for messages from virtual users.
-      if(chatUserRepository.isVirtual(message.getFromContact())) {
+      if (chatUserRepository.isVirtual(message.getFromContact())) {
         return;
       }
       messageService.save(message);
