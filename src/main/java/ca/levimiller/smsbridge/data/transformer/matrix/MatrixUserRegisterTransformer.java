@@ -22,7 +22,7 @@ public class MatrixUserRegisterTransformer {
    */
   public RegisterRequest transform(Contact contact) {
     RegisterRequest registerRequest = new RegisterRequest();
-    registerRequest.setUsername(uuidSource.newUuid().toString());
+    registerRequest.setUsername("sms-" + uuidSource.newUuid().toString());
     registerRequest.setInhibitLogin(true);
     return registerRequest;
   }

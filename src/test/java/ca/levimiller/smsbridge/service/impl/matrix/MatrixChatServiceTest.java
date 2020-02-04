@@ -1,5 +1,6 @@
 package ca.levimiller.smsbridge.service.impl.matrix;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,8 +19,11 @@ import ca.levimiller.smsbridge.service.UserService;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.client.methods.EventMethods;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,6 +44,8 @@ class MatrixChatServiceTest extends ChatServiceTest {
   private AppServiceClient userClient;
   @Mock
   private EventMethods eventMethods;
+  @Mock
+  private CompletableFuture<String> messageFuture;
 
   private Message message;
   private Contact fromContact;
@@ -77,6 +83,7 @@ class MatrixChatServiceTest extends ChatServiceTest {
 
     when(matrixClient.userId("from-user-id")).thenReturn(userClient);
     when(userClient.event()).thenReturn(eventMethods);
+    when(eventMethods.sendMessage("room-id", "body")).thenReturn(messageFuture);
   }
 
   @Test
@@ -93,5 +100,19 @@ class MatrixChatServiceTest extends ChatServiceTest {
     when(chatUserRepository.findDistinctByContact(toContact))
         .thenReturn(Optional.empty());
     assertThrows(NotFoundException.class, () -> chatService.sendMessage(message));
+  }
+
+  @Test
+  void sendMessage_Exception() {
+    Optional<ChatUser> maybeRegistration = Optional.of(toUser);
+    when(chatUserRepository.findDistinctByContact(toContact))
+        .thenReturn(maybeRegistration);
+    chatService.sendMessage(message);
+    ArgumentCaptor<Function<Throwable, String>> argumentCaptor = ArgumentCaptor
+        .forClass(Function.class);
+    verify(messageFuture).exceptionally(argumentCaptor.capture());
+    assertNotNull(argumentCaptor.getValue());
+
+    argumentCaptor.getValue().apply(new Throwable());
   }
 }

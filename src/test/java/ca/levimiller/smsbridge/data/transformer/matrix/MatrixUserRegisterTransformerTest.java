@@ -42,7 +42,7 @@ class MatrixUserRegisterTransformerTest {
   @Test
   void transform() {
     RegisterRequest result = userRegisterTransformer.transform(contact);
-    assertEquals("264ac772-9254-44b9-8e4f-a7310df67813", result.getUsername());
+    assertEquals("sms-264ac772-9254-44b9-8e4f-a7310df67813", result.getUsername());
     assertEquals(true, result.getInhibitLogin());
   }
 }

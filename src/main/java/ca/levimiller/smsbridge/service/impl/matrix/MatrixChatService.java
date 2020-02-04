@@ -46,6 +46,10 @@ public class MatrixChatService implements ChatService {
     // Get room id and user id (ensure created/joined/etc.)
     ChatUser from = userService.getUser(message.getFromContact());
     String roomId = roomService.getRoom(to, from);
-    matrixClient.userId(from.getOwnerId()).event().sendMessage(roomId, message.getBody());
+    matrixClient.userId(from.getOwnerId()).event().sendMessage(roomId, message.getBody())
+        .exceptionally(throwable -> {
+          log.error("Error sending message to matrix: ", throwable);
+          return null;
+        });
   }
 }

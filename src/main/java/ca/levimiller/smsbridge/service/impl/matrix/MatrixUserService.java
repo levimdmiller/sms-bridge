@@ -16,8 +16,10 @@ import java.util.concurrent.CompletionException;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 public class MatrixUserService implements UserService {
 
@@ -40,13 +42,12 @@ public class MatrixUserService implements UserService {
 
   @Override
   public ChatUser getUser(@Valid @NotNull Contact smsContact) {
-    ChatUser user = userRepository.findDistinctByContact(smsContact).orElseGet(
+    return userRepository.findDistinctByContact(smsContact).orElseGet(
         () -> userRepository.save(ChatUser.builder()
             .ownerId(createUser(smsContact))
             .contact(smsContact)
             .userType(ChatUserType.VIRTUAL_USER)
             .build()));
-    return user;
   }
 
   /**
@@ -61,7 +62,11 @@ public class MatrixUserService implements UserService {
       LoginResponse response = matrixClient.account().register(request).join();
       matrixClient.userId(response.getUserId())
           .profile()
-          .setDisplayName(userNameTransformer.transform(smsContact));
+          .setDisplayName(userNameTransformer.transform(smsContact))
+          .exceptionally(t -> {
+            log.error("Failed to set user display name", t);
+            return null;
+          });
       return response.getUserId();
     } catch (CancellationException | CompletionException e) {
       throw new BadRequestException("Failed to create virtual sms user: ", e);

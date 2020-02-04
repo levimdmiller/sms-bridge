@@ -2,9 +2,13 @@ package ca.levimiller.smsbridge.service.impl.matrix.events;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import ca.levimiller.smsbridge.data.db.ChatUserRepository;
+import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.Message;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomMessageTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
@@ -32,8 +36,12 @@ class MessageEventServiceTest {
   private ChatService twilioChatService;
   @MockBean
   private MessageService messageService;
+  @MockBean
+  private ChatUserRepository chatUserRepository;
 
   private RoomMessage<RoomMessageContent> roomMessage;
+  private Message message;
+  private Contact fromContact;
 
   @Autowired
   MessageEventServiceTest(MatrixEventService<RoomMessage<RoomMessageContent>,
@@ -44,6 +52,10 @@ class MessageEventServiceTest {
   @BeforeEach
   void setUp() {
     roomMessage = new RoomMessage<>();
+    message = new Message();
+    message.setFromContact(fromContact = new Contact());
+
+    when(chatUserRepository.isVirtual(fromContact)).thenReturn(false);
   }
 
   @Test
@@ -58,11 +70,19 @@ class MessageEventServiceTest {
 
   @Test
   void process_Success() throws TransformationException {
-    Message message = new Message();
     when(roomMessageTransformer.transform(roomMessage)).thenReturn(message);
     messageEventService.process(roomMessage);
     verify(messageService).save(message);
     verify(twilioChatService).sendMessage(message);
+  }
+
+  @Test
+  void process_VirtualUser() throws TransformationException {
+    when(chatUserRepository.isVirtual(fromContact)).thenReturn(true);
+    when(roomMessageTransformer.transform(roomMessage)).thenReturn(message);
+    messageEventService.process(roomMessage);
+    verify(messageService, times(0)).save(any());
+    verify(twilioChatService, times(0)).sendMessage(any());
   }
 
   @Test

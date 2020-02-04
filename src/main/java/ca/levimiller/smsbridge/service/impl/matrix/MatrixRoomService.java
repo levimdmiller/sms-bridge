@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 
 @Slf4j
 @Service
@@ -56,11 +55,13 @@ public class MatrixRoomService implements RoomService {
           .join();
     } catch (CancellationException | CompletionException error) {
       if (!matrixUtil.causedBy(error, HttpStatus.NOT_FOUND)) {
-        throw new RestClientException("Unable to get or create matrix room. Server error:", error);
+        throw new BadRequestException("Unable to get or create matrix room. Server error:", error);
       }
       // create room if not present
       room = matrixClient.room().create(roomRequest).join();
     }
+
+    joinRoom(smsUser, room.getRoomId());
     return room.getRoomId();
   }
 
@@ -91,5 +92,20 @@ public class MatrixRoomService implements RoomService {
    */
   private String getFullAlias(String baseAlias) {
     return String.format("#%s:%s", baseAlias, matrixConfig.getServerName());
+  }
+
+  /**
+   * Virtual user should just join room, skip invite.
+   * @param virtualUser - virtual user to add to room.
+   * @param roomId - room id
+   */
+  private void joinRoom(ChatUser virtualUser, String roomId) {
+    try {
+      matrixClient.userId(virtualUser.getOwnerId()).room().joinByIdOrAlias(roomId).join();
+    } catch (CancellationException | CompletionException error) {
+      log.error("Unable to add virtual user to room", error);
+      throw new BadRequestException("Unable to add virtual user to room: "
+          + virtualUser.getOwnerId() + " - " + roomId, error );
+    }
   }
 }
