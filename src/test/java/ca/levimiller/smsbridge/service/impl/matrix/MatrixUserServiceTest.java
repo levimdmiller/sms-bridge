@@ -1,7 +1,6 @@
 package ca.levimiller.smsbridge.service.impl.matrix;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -17,6 +16,8 @@ import ca.levimiller.smsbridge.data.transformer.UserNameTransformer;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixUserRegisterTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
 import ca.levimiller.smsbridge.service.UserService;
+import ca.levimiller.smsbridge.util.MockLogger;
+import ch.qos.logback.classic.Level;
 import io.github.ma1uta.matrix.EmptyResponse;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.client.methods.AccountMethods;
@@ -27,10 +28,9 @@ import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-import java.util.function.Function;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,6 +57,7 @@ class MatrixUserServiceTest {
   private CompletableFuture<LoginResponse> registerFuture;
   @Mock
   private CompletableFuture<EmptyResponse> displayFuture;
+  private MockLogger mockLogger;
 
   private String userId;
   private String displayName;
@@ -89,6 +90,12 @@ class MatrixUserServiceTest {
     when(matrixClient.userId(userId)).thenReturn(userClient);
     when(userClient.profile()).thenReturn(profileMethods);
     when(profileMethods.setDisplayName(displayName)).thenReturn(displayFuture);
+    mockLogger = new MockLogger(MatrixUserService.class);
+  }
+
+  @AfterEach
+  void tearDown() {
+    mockLogger.teardown();
   }
 
   @Test
@@ -154,12 +161,6 @@ class MatrixUserServiceTest {
     when(registerFuture.join()).thenReturn(loginResponse);
     when(userRepository.save(any())).thenReturn(chatUser);
     ChatUser result = userService.getUser(contact);
-    ArgumentCaptor<Function<Throwable, EmptyResponse>> argumentCaptor = ArgumentCaptor
-        .forClass(Function.class);
-    verify(displayFuture).exceptionally(argumentCaptor.capture());
-    assertNotNull(argumentCaptor.getValue());
-
-    argumentCaptor.getValue().apply(new Throwable());
 
     assertEquals(chatUser, result);
     verify(userRepository).save(eq(ChatUser.builder()
@@ -170,4 +171,28 @@ class MatrixUserServiceTest {
     verify(profileMethods).setDisplayName(displayName);
   }
 
+  @Test
+  void renameUser_Cancelled() {
+    CancellationException e = new CancellationException();
+    when(displayFuture.join()).thenThrow(e);
+    userService.renameUser(userId, displayName);
+    // exception is caught
+    mockLogger.verify(Level.ERROR, "Failed to set user display name", e);
+  }
+
+  @Test
+  void renameUser_CompletionException() {
+    CompletionException e = new CompletionException(new Exception());
+    when(displayFuture.join()).thenThrow(e);
+    userService.renameUser(userId, displayName);
+    // exception is caught
+    mockLogger.verify(Level.ERROR, "Failed to set user display name", e);
+  }
+
+  @Test
+  void renameUser_Success() {
+    when(displayFuture.join()).thenReturn(new EmptyResponse());
+    userService.renameUser(userId, displayName);
+    verify(profileMethods).setDisplayName(displayName);
+  }
 }

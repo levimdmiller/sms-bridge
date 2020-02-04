@@ -1,6 +1,7 @@
 package ca.levimiller.smsbridge.data.transformer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import ca.levimiller.smsbridge.data.model.Contact;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,8 +29,20 @@ class UserNameTransformerTest {
   }
 
   @Test
+  void transform_Null() {
+    String result = userNameTransformer.transform(null);
+    assertNull(result);
+  }
+
+  @Test
   void transform() {
     String result = userNameTransformer.transform(contact);
     assertEquals("+smsNumber", result);
+  }
+
+  @Test
+  void transformFromRoomName() {
+    String result = userNameTransformer.transformFromRoomName("SMS roomName");
+    assertEquals("roomName", result);
   }
 }

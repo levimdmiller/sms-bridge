@@ -1,6 +1,5 @@
 package ca.levimiller.smsbridge.service.impl.matrix;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -16,11 +15,14 @@ import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.ChatServiceTest;
 import ca.levimiller.smsbridge.service.RoomService;
 import ca.levimiller.smsbridge.service.UserService;
+import ca.levimiller.smsbridge.util.MockLogger;
+import ch.qos.logback.classic.Level;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.client.methods.EventMethods;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -46,6 +48,7 @@ class MatrixChatServiceTest extends ChatServiceTest {
   private EventMethods eventMethods;
   @Mock
   private CompletableFuture<String> messageFuture;
+  private MockLogger mockLogger;
 
   private Message message;
   private Contact fromContact;
@@ -84,6 +87,12 @@ class MatrixChatServiceTest extends ChatServiceTest {
     when(matrixClient.userId("from-user-id")).thenReturn(userClient);
     when(userClient.event()).thenReturn(eventMethods);
     when(eventMethods.sendMessage("room-id", "body")).thenReturn(messageFuture);
+    mockLogger = new MockLogger(MatrixChatService.class);
+  }
+
+  @AfterEach
+  void tearDown() {
+    mockLogger.teardown();
   }
 
   @Test
@@ -100,6 +109,7 @@ class MatrixChatServiceTest extends ChatServiceTest {
     when(chatUserRepository.findDistinctByContact(toContact))
         .thenReturn(Optional.empty());
     assertThrows(NotFoundException.class, () -> chatService.sendMessage(message));
+    mockLogger.verify(Level.ERROR, "Destination number is not registered: " + toContact);
   }
 
   @Test
@@ -108,11 +118,13 @@ class MatrixChatServiceTest extends ChatServiceTest {
     when(chatUserRepository.findDistinctByContact(toContact))
         .thenReturn(maybeRegistration);
     chatService.sendMessage(message);
+
+    // call exceptionally and verify throwable was logged.
     ArgumentCaptor<Function<Throwable, String>> argumentCaptor = ArgumentCaptor
         .forClass(Function.class);
     verify(messageFuture).exceptionally(argumentCaptor.capture());
-    assertNotNull(argumentCaptor.getValue());
-
-    argumentCaptor.getValue().apply(new Throwable());
+    Throwable t = new Throwable();
+    argumentCaptor.getValue().apply(t);
+    mockLogger.verify(Level.ERROR, "Error sending message to matrix: ", t);
   }
 }

@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface RoomNameTransformer {
+  String PREFIX = "SMS ";
 
   /**
    * Returns a human readable name. E.g., SMS +1234567890
@@ -18,7 +19,7 @@ public interface RoomNameTransformer {
    */
   @HumanReadable
   default String transformHumanReadable(ChatUser chatNumber, Contact smsContact) {
-    return "SMS " + smsContact.getNumber();
+    return PREFIX + smsContact.getNumber();
   }
 
   /**

@@ -11,13 +11,17 @@ import static org.mockito.Mockito.when;
 import ca.levimiller.smsbridge.data.db.TransactionRepository;
 import ca.levimiller.smsbridge.data.model.Transaction;
 import ca.levimiller.smsbridge.service.MatrixEventService;
+import ca.levimiller.smsbridge.util.MockLogger;
+import ch.qos.logback.classic.Level;
 import io.github.ma1uta.matrix.EmptyResponse;
 import io.github.ma1uta.matrix.application.model.TransactionRequest;
 import io.github.ma1uta.matrix.event.Event;
 import io.github.ma1uta.matrix.event.RoomAliases;
 import io.github.ma1uta.matrix.event.RoomMessage;
+import io.github.ma1uta.matrix.event.content.EventContent;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +30,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class MatrixApiTest {
+  private final MatrixApi matrixApi;
+
   @MockBean
   private TransactionRepository transactionRepository;
   @MockBean
-  private MatrixEventService eventService;
-
-  private final MatrixApi matrixApi;
+  private MatrixEventService<Event<EventContent>>  eventService;
+  private MockLogger mockLogger;
 
   private String transactionId;
   private Transaction transaction;
@@ -57,6 +62,12 @@ class MatrixApiTest {
     transactionRequest.setEvents(List.of(messageEvent, aliasEvent));
 
     when(transactionRepository.save(any())).thenReturn(transaction);
+    mockLogger = new MockLogger(MatrixApi.class);
+  }
+
+  @AfterEach
+  void tearDown() {
+    mockLogger.teardown();
   }
 
   @Test
@@ -100,12 +111,14 @@ class MatrixApiTest {
 
   @Test
   void testEventError() {
+    RuntimeException e = new RuntimeException();
     when(transactionRepository.findDistinctByTransactionId(transactionId))
       .thenReturn(Optional.empty());
-    doThrow(new RuntimeException()).when(eventService).process(messageEvent);
+    doThrow(e).when(eventService).process(messageEvent);
 
     matrixApi.transaction(transactionId, transactionRequest);
 
+    mockLogger.verify(Level.ERROR, "Error processing event: ", e);
     verify(eventService).process(aliasEvent);
     // saved with completed
     verify(transactionRepository, times(1))

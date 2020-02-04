@@ -17,11 +17,11 @@ import org.springframework.stereotype.Component;
 public class MatrixApi implements MatrixController {
 
   private final TransactionRepository transactionRepository;
-  private final MatrixEventService<Event<EventContent>, EventContent> eventService;
+  private final MatrixEventService<Event<EventContent>> eventService;
 
   @Inject
   public MatrixApi(TransactionRepository transactionRepository,
-      MatrixEventService<Event<EventContent>, EventContent> eventService) {
+      MatrixEventService<Event<EventContent>> eventService) {
     this.transactionRepository = transactionRepository;
     this.eventService = eventService;
   }

@@ -17,8 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class MessageEventService implements
-    MatrixEventService<RoomMessage<RoomMessageContent>, RoomMessageContent> {
+public class MessageEventService implements MatrixEventService<RoomMessage<RoomMessageContent>> {
 
   private final MatrixRoomMessageTransformer roomMessageTransformer;
   private final ChatService twilioChatService;
