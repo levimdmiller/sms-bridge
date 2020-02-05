@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import ca.levimiller.smsbridge.data.db.ChatUserRepository;
 import ca.levimiller.smsbridge.data.model.ChatUserType;
 import ca.levimiller.smsbridge.data.transformer.UserNameTransformer;
-import ca.levimiller.smsbridge.service.MatrixEventService;
+import ca.levimiller.smsbridge.service.matrix.EventService;
 import ca.levimiller.smsbridge.service.UserService;
 import ca.levimiller.smsbridge.util.MockLogger;
 import ch.qos.logback.classic.Level;
@@ -38,7 +38,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 @SpringBootTest
 class RoomCanonicalAliasEventServiceTest {
 
-  private final MatrixEventService<RoomName> eventService;
+  private final EventService<RoomName> eventService;
 
   @MockBean
   private ChatUserRepository chatUserRepository;
@@ -61,7 +61,7 @@ class RoomCanonicalAliasEventServiceTest {
 
   @Autowired
   RoomCanonicalAliasEventServiceTest(
-      MatrixEventService<RoomName> eventService) {
+      EventService<RoomName> eventService) {
     this.eventService = eventService;
   }
 
@@ -136,6 +136,6 @@ class RoomCanonicalAliasEventServiceTest {
 
   @Test
   void testType() {
-    assertEquals(RoomName.TYPE, eventService.getType());
+    assertEquals(RoomName.TYPE, eventService.getIdentifier());
   }
 }

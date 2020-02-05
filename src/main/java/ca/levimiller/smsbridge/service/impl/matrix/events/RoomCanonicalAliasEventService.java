@@ -3,7 +3,7 @@ package ca.levimiller.smsbridge.service.impl.matrix.events;
 import ca.levimiller.smsbridge.data.db.ChatUserRepository;
 import ca.levimiller.smsbridge.data.model.ChatUserType;
 import ca.levimiller.smsbridge.data.transformer.UserNameTransformer;
-import ca.levimiller.smsbridge.service.MatrixEventService;
+import ca.levimiller.smsbridge.service.matrix.EventService;
 import ca.levimiller.smsbridge.service.UserService;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.event.RoomMember;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
-public class RoomCanonicalAliasEventService implements MatrixEventService<RoomName> {
+public class RoomCanonicalAliasEventService implements EventService<RoomName> {
 
   private final ChatUserRepository chatUserRepository;
   private final UserNameTransformer userNameTransformer;
@@ -48,7 +48,7 @@ public class RoomCanonicalAliasEventService implements MatrixEventService<RoomNa
   }
 
   @Override
-  public String getType() {
+  public String getIdentifier() {
     return RoomName.TYPE;
   }
 

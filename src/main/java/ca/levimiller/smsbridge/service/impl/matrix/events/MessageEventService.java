@@ -6,7 +6,7 @@ import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomMessageTransfor
 import ca.levimiller.smsbridge.error.BadRequestException;
 import ca.levimiller.smsbridge.error.TransformationException;
 import ca.levimiller.smsbridge.service.ChatService;
-import ca.levimiller.smsbridge.service.MatrixEventService;
+import ca.levimiller.smsbridge.service.matrix.EventService;
 import ca.levimiller.smsbridge.service.MessageService;
 import io.github.ma1uta.matrix.event.RoomMessage;
 import io.github.ma1uta.matrix.event.content.RoomMessageContent;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class MessageEventService implements MatrixEventService<RoomMessage<RoomMessageContent>> {
+public class MessageEventService implements EventService<RoomMessage<RoomMessageContent>> {
 
   private final MatrixRoomMessageTransformer roomMessageTransformer;
   private final ChatService twilioChatService;
@@ -53,7 +53,7 @@ public class MessageEventService implements MatrixEventService<RoomMessage<RoomM
   }
 
   @Override
-  public String getType() {
+  public String getIdentifier() {
     return "m.room.message";
   }
 }

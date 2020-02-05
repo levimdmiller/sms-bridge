@@ -14,7 +14,7 @@ import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomMessageTransfor
 import ca.levimiller.smsbridge.error.BadRequestException;
 import ca.levimiller.smsbridge.error.TransformationException;
 import ca.levimiller.smsbridge.service.ChatService;
-import ca.levimiller.smsbridge.service.MatrixEventService;
+import ca.levimiller.smsbridge.service.matrix.EventService;
 import ca.levimiller.smsbridge.service.MessageService;
 import io.github.ma1uta.matrix.event.RoomMessage;
 import io.github.ma1uta.matrix.event.content.RoomMessageContent;
@@ -27,7 +27,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class MessageEventServiceTest {
-  private final MatrixEventService<RoomMessage<RoomMessageContent>> messageEventService;
+  private final EventService<RoomMessage<RoomMessageContent>> messageEventService;
   @MockBean
   private MatrixRoomMessageTransformer roomMessageTransformer;
   @MockBean
@@ -43,7 +43,7 @@ class MessageEventServiceTest {
   private Contact fromContact;
 
   @Autowired
-  MessageEventServiceTest(MatrixEventService<RoomMessage<RoomMessageContent>> messageEventService) {
+  MessageEventServiceTest(EventService<RoomMessage<RoomMessageContent>> messageEventService) {
     this.messageEventService = messageEventService;
   }
 
@@ -85,6 +85,6 @@ class MessageEventServiceTest {
 
   @Test
   void getType() {
-    assertEquals("m.room.message", messageEventService.getType());
+    assertEquals("m.room.message", messageEventService.getIdentifier());
   }
 }

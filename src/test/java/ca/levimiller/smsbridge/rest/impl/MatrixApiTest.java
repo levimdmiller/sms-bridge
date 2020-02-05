@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import ca.levimiller.smsbridge.data.db.TransactionRepository;
 import ca.levimiller.smsbridge.data.model.Transaction;
-import ca.levimiller.smsbridge.service.MatrixEventService;
+import ca.levimiller.smsbridge.service.matrix.EventService;
 import ca.levimiller.smsbridge.util.MockLogger;
 import ch.qos.logback.classic.Level;
 import io.github.ma1uta.matrix.EmptyResponse;
@@ -35,7 +35,7 @@ class MatrixApiTest {
   @MockBean
   private TransactionRepository transactionRepository;
   @MockBean
-  private MatrixEventService<Event<EventContent>>  eventService;
+  private EventService<Event<EventContent>> eventService;
   private MockLogger mockLogger;
 
   private String transactionId;

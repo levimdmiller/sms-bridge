@@ -4,11 +4,10 @@ import ca.levimiller.smsbridge.data.db.TransactionRepository;
 import ca.levimiller.smsbridge.data.model.Transaction;
 import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.rest.MatrixController;
-import ca.levimiller.smsbridge.service.MatrixEventService;
+import ca.levimiller.smsbridge.service.matrix.EventService;
+import ca.levimiller.smsbridge.util.service.ServiceFactory;
 import io.github.ma1uta.matrix.EmptyResponse;
 import io.github.ma1uta.matrix.application.model.TransactionRequest;
-import io.github.ma1uta.matrix.event.Event;
-import io.github.ma1uta.matrix.event.content.EventContent;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,13 +17,13 @@ import org.springframework.stereotype.Component;
 public class MatrixApi implements MatrixController {
 
   private final TransactionRepository transactionRepository;
-  private final MatrixEventService<Event<EventContent>> eventService;
+  private final ServiceFactory<EventService> serviceFactory;
 
   @Inject
   public MatrixApi(TransactionRepository transactionRepository,
-      MatrixEventService<Event<EventContent>> eventService) {
+      ServiceFactory<EventService> serviceFactory) {
     this.transactionRepository = transactionRepository;
-    this.eventService = eventService;
+    this.serviceFactory = serviceFactory;
   }
 
   @Override
@@ -39,7 +38,7 @@ public class MatrixApi implements MatrixController {
       // process all events
       request.getEvents().forEach(event -> {
         try {
-          eventService.process(event);
+          serviceFactory.getService(event.getType()).process(event);
         } catch (Exception e) {
           log.error("Error processing event: ", e);
         }

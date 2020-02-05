@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping({"/matrix/_matrix/app/v1", "/matrix"})
 @Api(value = "/_matrix/app/v1/thirdparty", tags = "Api for Matrix 3rd party protocol")
-public interface MatrixProtocolApi {
+public interface MatrixProtocolController {
 
   @GetMapping("/protocol/{protocol}")
   @ApiOperation("Returns information about third party network")
