@@ -2,6 +2,7 @@ package ca.levimiller.smsbridge.rest.impl;
 
 import ca.levimiller.smsbridge.data.db.TransactionRepository;
 import ca.levimiller.smsbridge.data.model.Transaction;
+import ca.levimiller.smsbridge.error.NotFoundException;
 import ca.levimiller.smsbridge.rest.MatrixController;
 import ca.levimiller.smsbridge.service.MatrixEventService;
 import io.github.ma1uta.matrix.EmptyResponse;
@@ -52,11 +53,11 @@ public class MatrixApi implements MatrixController {
 
   @Override
   public EmptyResponse rooms(String roomAlias) {
-    return new EmptyResponse();
+    throw new NotFoundException();
   }
 
   @Override
   public EmptyResponse users(String userId) {
-    return new EmptyResponse();
+    throw new NotFoundException();
   }
 }
