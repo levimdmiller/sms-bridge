@@ -8,6 +8,19 @@ import java.util.List;
 import java.util.Map;
 
 public interface ProtocolService extends IdentifiableService {
+  enum Type {
+    SMS("sms");
+
+    private String id;
+
+    Type(String id) {
+      this.id = id;
+    }
+
+    public String getId() {
+      return id;
+    }
+  }
 
   Protocol protocol();
 
