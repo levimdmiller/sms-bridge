@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping({"/matrix/_matrix/app/v1", "/matrix"})
+@RequestMapping({"/matrix/_matrix/app/v1", "/matrix/_matrix/app/unstable/thirdparty"})
 @Api(value = "/_matrix/app/v1/thirdparty", tags = "Api for Matrix 3rd party protocol")
 public interface MatrixProtocolController {
 
