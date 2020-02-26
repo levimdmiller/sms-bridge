@@ -67,7 +67,7 @@ public class MatrixProtocolApi implements MatrixProtocolController {
     List<ProtocolUser> users = new ArrayList<>();
     for(ProtocolService.Type type : ProtocolService.Type.values()) {
       users.addAll(serviceFactory.getService(type.getId())
-          .userProtocol(Map.of("name", userId)));
+          .userProtocol(Map.of("id", userId)));
     }
     return users;
   }

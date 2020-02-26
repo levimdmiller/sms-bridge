@@ -32,6 +32,10 @@ public interface RoomNameTransformer {
    */
   @Encoded
   default String transformEncoded(ChatUser chatNumber, Contact smsContact) {
-    return "sms-" + smsContact.getNumber().replaceAll("\\+", "");
+    return transformNumber(smsContact.getNumber().replaceAll("\\+", ""));
+  }
+
+  default String transformNumber(String number) {
+    return "sms-" + number;
   }
 }
