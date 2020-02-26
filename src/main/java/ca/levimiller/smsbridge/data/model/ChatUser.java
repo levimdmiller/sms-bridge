@@ -25,19 +25,19 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @SuperBuilder
 @Entity
-@Table(name = "number_registry")
-@SQLDelete(sql = "UPDATE number_registry SET deleted = 1 WHERE id = ?;",
+@Table(name = "chat_user")
+@SQLDelete(sql = "UPDATE chat_user SET deleted = 1 WHERE id = ?;",
     check = ResultCheckStyle.COUNT)
 @Where(clause = "deleted = false")
-public class NumberRegistration extends BaseModel {
+public class ChatUser extends BaseModel {
 
   @Size(max = 255)
   @Column(name = "owner_id")
   private String ownerId;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "registration_type", length = 16)
-  private NumberRegistrationType registrationType;
+  @Column(name = "user_type", length = 16)
+  private ChatUserType userType;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "contact")

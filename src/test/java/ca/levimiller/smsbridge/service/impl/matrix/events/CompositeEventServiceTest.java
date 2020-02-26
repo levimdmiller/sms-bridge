@@ -11,9 +11,8 @@ import io.github.ma1uta.matrix.event.RoomCreate;
 import io.github.ma1uta.matrix.event.RoomMember;
 import io.github.ma1uta.matrix.event.RoomMessage;
 import io.github.ma1uta.matrix.event.content.EventContent;
-import io.github.ma1uta.matrix.event.content.RoomMemberContent;
 import io.github.ma1uta.matrix.event.message.Text;
-import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -22,20 +21,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class CompositeEventServiceTest {
 
-  private MatrixEventService<Event<EventContent>, EventContent> compositeEventService;
+  private MatrixEventService<Event<EventContent>> compositeEventService;
   @Mock
-  private MatrixEventService<Event<EventContent>, EventContent> noopEventService;
+  private MatrixEventService<Event<EventContent>> noopEventService;
   @Mock
-  private MatrixEventService<RoomMessage<Text>, Text> messageEventService;
+  private MatrixEventService<RoomMessage<Text>> messageEventService;
   @Mock
-  private MatrixEventService<RoomMember, RoomMemberContent> roomMemberEventService;
+  private MatrixEventService<RoomMember> roomMemberEventService;
 
   @BeforeEach
   void setUp() {
     when(messageEventService.getType()).thenReturn("m.room.message");
     when(roomMemberEventService.getType()).thenReturn("m.room.member");
     compositeEventService = new CompositeEventService(noopEventService,
-        Arrays.asList(messageEventService, roomMemberEventService));
+        List.of(messageEventService, roomMemberEventService));
   }
 
   @Test

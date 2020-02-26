@@ -12,6 +12,7 @@ public interface SecurityUserRepository extends JpaRepository<SecurityUser, Long
 
   /**
    * Looks up the user by their username.
+   *
    * @param username - user to look up
    * @return - user if they exist.
    */
