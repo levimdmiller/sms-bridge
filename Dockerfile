@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine as build
+FROM openjdk:11-jdk-buster as build
 WORKDIR /workspace/app
 
 COPY mvnw .
@@ -9,7 +9,7 @@ COPY src src
 RUN ./mvnw install -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
-FROM openjdk:8-jdk-alpine
+FROM openjdk:11-jdk-buster
 VOLUME /tmp
 ARG DEPENDENCY=/workspace/app/target/dependency
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
@@ -19,8 +19,6 @@ COPY src/main/resources/application-example.properties application.properties
 EXPOSE 8421
 ENTRYPOINT [\
   "java",\
-  "-XX:+UnlockExperimentalVMOptions",\
-  "-XX:+UseCGroupMemoryLimitForHeap",\
   "-XX:MaxRAMFraction=1",\
   "-XshowSettings:vm",\
   "-cp",\
