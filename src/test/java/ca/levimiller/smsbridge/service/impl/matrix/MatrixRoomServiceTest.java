@@ -14,13 +14,16 @@ import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.transformer.PhoneNumberTransformer;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
+import ca.levimiller.smsbridge.matrixsdk.ExtendedAppServiceClient;
+import ca.levimiller.smsbridge.matrixsdk.ExtendedRoomMethods;
+import ca.levimiller.smsbridge.matrixsdk.SimpleInviteRequest;
 import ca.levimiller.smsbridge.service.RoomService;
 import ca.levimiller.smsbridge.util.MatrixUtil;
 import ca.levimiller.smsbridge.util.MockLogger;
 import ch.qos.logback.classic.Level;
+import io.github.ma1uta.matrix.EmptyResponse;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.client.methods.EventMethods;
-import io.github.ma1uta.matrix.client.methods.RoomMethods;
 import io.github.ma1uta.matrix.client.model.room.CreateRoomRequest;
 import io.github.ma1uta.matrix.client.model.room.RoomId;
 import io.github.ma1uta.matrix.event.RoomCanonicalAlias;
@@ -48,13 +51,13 @@ class MatrixRoomServiceTest {
   @MockBean
   private MatrixRoomTransformer roomTransformer;
   @MockBean
-  private AppServiceClient matrixClient;
+  private ExtendedAppServiceClient matrixClient;
   @MockBean
   private MatrixUtil matrixUtil;
   @MockBean
   private PhoneNumberTransformer phoneNumberTransformer;
   @Mock
-  private RoomMethods roomMethods;
+  private ExtendedRoomMethods roomMethods;
   @Mock
   private AppServiceClient userClient;
   @Mock
@@ -64,12 +67,15 @@ class MatrixRoomServiceTest {
   @Mock
   private CompletableFuture<RoomId> roomFuture;
   @Mock
+  private CompletableFuture<EmptyResponse> inviteFuture;
+  @Mock
   private CompletableFuture<RoomId> joinFuture;
   private MockLogger mockLogger;
 
   private ChatUser chatUser;
   private ChatUser smsUser;
   private CreateRoomRequest createRoomRequest;
+  private SimpleInviteRequest inviteRequest;
   private RoomId roomId;
 
   @Autowired
@@ -97,6 +103,9 @@ class MatrixRoomServiceTest {
     createRoomRequest.setRoomAliasName("alias");
     roomId = new RoomId();
     roomId.setRoomId("roomId");
+    inviteRequest = SimpleInviteRequest.builder()
+        .userId(smsUser.getOwnerId())
+        .build();
 
     when(roomTransformer.transform(chatUser, smsUser)).thenReturn(createRoomRequest);
     when(matrixClient.room()).thenReturn(roomMethods);
@@ -112,6 +121,7 @@ class MatrixRoomServiceTest {
     when(matrixClient.userId("smsOwnerId")).thenReturn(userClient);
     when(userClient.room()).thenReturn(roomMethods);
     when(roomMethods.joinByIdOrAlias(roomId.getRoomId())).thenReturn(joinFuture);
+    when(roomMethods.invite(roomId.getRoomId(), inviteRequest)).thenReturn(inviteFuture);
     mockLogger = new MockLogger(MatrixRoomService.class);
   }
 
@@ -228,7 +238,36 @@ class MatrixRoomServiceTest {
     mockLogger.verify(Level.ERROR, "Unable to add virtual user to room", e);
   }
 
+
+
+  @Test
+  void inviteRoomError_Cancelled() {
+    CancellationException e = new CancellationException();
+    when(roomFuture.join()).thenReturn(roomId);
+    when(inviteFuture.join()).thenThrow(e);
+    BadRequestException thrown = assertThrows(BadRequestException.class,
+        () -> roomService.getRoom(chatUser, smsUser));
+    assertEquals("Unable to add virtual user to room: smsOwnerId - " + roomId.getRoomId(),
+        thrown.getMessage());
+    mockLogger.verify(Level.ERROR, "Unable to add virtual user to room", e);
+    verify(joinFuture, times(0)).join();
+  }
+
+  @Test
+  void inviteRoomError_Completed() {
+    CompletionException e = new CompletionException(new Exception());
+    when(roomFuture.join()).thenReturn(roomId);
+    when(inviteFuture.join()).thenThrow(e);
+    BadRequestException thrown = assertThrows(BadRequestException.class,
+        () -> roomService.getRoom(chatUser, smsUser));
+    assertEquals("Unable to add virtual user to room: smsOwnerId - " + roomId.getRoomId(),
+        thrown.getMessage());
+    mockLogger.verify(Level.ERROR, "Unable to add virtual user to room", e);
+    verify(joinFuture, times(0)).join();
+  }
+
   void verifyJoinRoom() {
+    verify(inviteFuture).join();
     verify(joinFuture).join();
   }
 }

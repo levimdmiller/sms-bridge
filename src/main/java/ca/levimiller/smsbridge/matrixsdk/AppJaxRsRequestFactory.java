@@ -1,4 +1,4 @@
-package ca.levimiller.smsbridge.matrix;
+package ca.levimiller.smsbridge.matrixsdk;
 
 import io.github.ma1uta.matrix.client.RequestParams;
 import io.github.ma1uta.matrix.client.factory.jaxrs.JaxRsRequestFactory;
