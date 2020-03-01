@@ -31,6 +31,8 @@ import io.github.ma1uta.matrix.event.content.EventContent;
 import io.github.ma1uta.matrix.event.content.RoomCanonicalAliasContent;
 import io.github.ma1uta.matrix.event.message.Text;
 import io.github.ma1uta.matrix.impl.exception.MatrixException;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -66,6 +68,8 @@ class MatrixRoomServiceTest {
   private CompletableFuture<EventContent> eventFuture;
   @Mock
   private CompletableFuture<RoomId> roomFuture;
+  @Mock
+  private CompletableFuture<List<String>> joinedRoomsFuture;
   @Mock
   private CompletableFuture<EmptyResponse> inviteFuture;
   @Mock
@@ -120,6 +124,8 @@ class MatrixRoomServiceTest {
 
     when(matrixClient.userId("smsOwnerId")).thenReturn(userClient);
     when(userClient.room()).thenReturn(roomMethods);
+    when(roomMethods.joinedRooms()).thenReturn(joinedRoomsFuture);
+    when(joinedRoomsFuture.join()).thenReturn(Collections.emptyList());
     when(roomMethods.joinByIdOrAlias(roomId.getRoomId())).thenReturn(joinFuture);
     when(roomMethods.invite(roomId.getRoomId(), inviteRequest)).thenReturn(inviteFuture);
     mockLogger = new MockLogger(MatrixRoomService.class);
@@ -212,6 +218,14 @@ class MatrixRoomServiceTest {
     assertEquals(Contact.builder()
         .number("number")
         .build(), result);
+  }
+
+  @Test
+  void userAlreadyJoined() {
+    when(roomFuture.join()).thenReturn(roomId);
+    when(joinedRoomsFuture.join()).thenReturn(List.of(roomId.getRoomId()));
+    verify(inviteFuture, times(0)).join();
+    verify(joinFuture, times(0)).join();
   }
 
   @Test
