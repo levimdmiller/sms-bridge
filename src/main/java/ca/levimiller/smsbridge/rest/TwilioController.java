@@ -1,6 +1,7 @@
 package ca.levimiller.smsbridge.rest;
 
 import ca.levimiller.smsbridge.data.dto.TwilioSmsDto;
+import ca.levimiller.smsbridge.data.dto.TwilioVoiceDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -21,4 +22,11 @@ public interface TwilioController {
       @ApiResponse(code = 201, message = "Created", response = String.class),
       @ApiResponse(code = 400, message = "Request not valid")})
   void createSms(@Valid TwilioSmsDto sms);
+
+  @PostMapping("/voice")
+  @ApiOperation("Start a voice call")
+  @ApiResponses(value = {
+      @ApiResponse(code = 201, message = "Call initiated", response = String.class),
+      @ApiResponse(code = 400, message = "Request not valid")})
+  void voice(@Valid TwilioVoiceDto voice);
 }

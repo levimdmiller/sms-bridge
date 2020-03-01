@@ -1,7 +1,6 @@
 package ca.levimiller.smsbridge.service;
 
 import ca.levimiller.smsbridge.data.model.ChatUser;
-import ca.levimiller.smsbridge.data.model.Contact;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +22,7 @@ public interface RoomService {
    * Gets the sms Contact.
    *
    * @param roomId - room id
-   * @return - sms contact
+   * @return - sms contact number
    */
-  Contact getNumber(@NotNull String roomId);
+  String getNumber(@NotNull String roomId);
 }

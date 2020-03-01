@@ -3,6 +3,7 @@ package ca.levimiller.smsbridge.data.transformer.matrix;
 import ca.levimiller.smsbridge.data.db.ChatUserRepository;
 import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Contact;
+import ca.levimiller.smsbridge.data.transformer.ContactTransformer;
 import ca.levimiller.smsbridge.data.transformer.qualifiers.From;
 import ca.levimiller.smsbridge.data.transformer.qualifiers.To;
 import ca.levimiller.smsbridge.error.TransformationException;
@@ -13,13 +14,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class MatrixContactTransformer {
 
+  private final ContactTransformer contactTransformer;
   private final ChatUserRepository chatUserRepository;
   private final RoomService roomService;
 
   @Inject
   public MatrixContactTransformer(
+      ContactTransformer contactTransformer,
       ChatUserRepository chatUserRepository,
       RoomService roomService) {
+    this.contactTransformer = contactTransformer;
     this.chatUserRepository = chatUserRepository;
     this.roomService = roomService;
   }
@@ -31,8 +35,10 @@ public class MatrixContactTransformer {
    * @return - number associated with room.
    */
   @To
-  public Contact transformTo(String roomId) {
-    return roomService.getNumber(roomId);
+  public Contact transformTo(String roomId) throws TransformationException {
+    return contactTransformer.transform(roomService.getNumber(roomId))
+        .orElseThrow(() -> new TransformationException(
+            "Room isn't linked to a contact: " + roomId));
   }
 
   /**

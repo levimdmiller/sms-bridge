@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ca.levimiller.smsbridge.data.db.ChatUserRepository;
+import ca.levimiller.smsbridge.data.db.MessageRepository;
 import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.model.Message;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomMessageTransformer;
@@ -15,7 +16,6 @@ import ca.levimiller.smsbridge.error.BadRequestException;
 import ca.levimiller.smsbridge.error.TransformationException;
 import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.MatrixEventService;
-import ca.levimiller.smsbridge.service.MessageService;
 import io.github.ma1uta.matrix.event.RoomMessage;
 import io.github.ma1uta.matrix.event.content.RoomMessageContent;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +34,7 @@ class MessageEventServiceTest {
   @Qualifier("twilioChatService")
   private ChatService twilioChatService;
   @MockBean
-  private MessageService messageService;
+  private MessageRepository messageRepository;
   @MockBean
   private ChatUserRepository chatUserRepository;
 
@@ -70,7 +70,7 @@ class MessageEventServiceTest {
   void process_Success() throws TransformationException {
     when(roomMessageTransformer.transform(roomMessage)).thenReturn(message);
     messageEventService.process(roomMessage);
-    verify(messageService).save(message);
+    verify(messageRepository).save(message);
     verify(twilioChatService).sendMessage(message);
   }
 
@@ -79,7 +79,7 @@ class MessageEventServiceTest {
     when(chatUserRepository.isVirtual(fromContact)).thenReturn(true);
     when(roomMessageTransformer.transform(roomMessage)).thenReturn(message);
     messageEventService.process(roomMessage);
-    verify(messageService, times(0)).save(any());
+    verify(messageRepository, times(0)).save(any());
     verify(twilioChatService, times(0)).sendMessage(any());
   }
 

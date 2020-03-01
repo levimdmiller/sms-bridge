@@ -14,16 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ContactTransformerTest {
+class TwilioContactTransformerTest {
 
   private final Fixture<TwilioSmsDto> smsDtoFixture;
-  private final ContactTransformer transformer;
+  private final TwilioContactTransformer transformer;
   private TwilioSmsDto dto;
 
   @Autowired
-  ContactTransformerTest(
+  TwilioContactTransformerTest(
       TwilioSmsDtoFixture smsDtoFixture,
-      ContactTransformer transformer) {
+      TwilioContactTransformer transformer) {
     this.smsDtoFixture = smsDtoFixture;
     this.transformer = transformer;
   }

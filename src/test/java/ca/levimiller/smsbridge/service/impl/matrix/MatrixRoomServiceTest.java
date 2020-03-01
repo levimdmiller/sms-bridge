@@ -214,10 +214,8 @@ class MatrixRoomServiceTest {
     when(eventFuture.join()).thenReturn(content);
     when(phoneNumberTransformer.transform("alias")).thenReturn("number");
 
-    Contact result = roomService.getNumber(roomId.getRoomId());
-    assertEquals(Contact.builder()
-        .number("number")
-        .build(), result);
+    String result = roomService.getNumber(roomId.getRoomId());
+    assertEquals("number", result);
   }
 
   @Test

@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
-class MatrixContactTransformerTest {
+class MatrixTwilioContactTransformerTest {
 
   private final MatrixContactTransformer matrixContactTransformer;
   @MockBean
@@ -30,7 +30,7 @@ class MatrixContactTransformerTest {
   private Contact contact;
 
   @Autowired
-  MatrixContactTransformerTest(
+  MatrixTwilioContactTransformerTest(
       MatrixContactTransformer matrixContactTransformer) {
     this.matrixContactTransformer = matrixContactTransformer;
   }
@@ -43,8 +43,8 @@ class MatrixContactTransformerTest {
   }
 
   @Test
-  void transformTo() {
-    when(roomService.getNumber(roomId)).thenReturn(contact);
+  void transformTo() throws TransformationException {
+    when(roomService.getNumber(roomId)).thenReturn("123455");
     Contact result = matrixContactTransformer.transformTo(roomId);
     assertEquals(contact, result);
   }

@@ -2,7 +2,6 @@ package ca.levimiller.smsbridge.service.impl.matrix;
 
 import ca.levimiller.smsbridge.config.MatrixConfig;
 import ca.levimiller.smsbridge.data.model.ChatUser;
-import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.transformer.PhoneNumberTransformer;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
@@ -69,7 +68,7 @@ public class MatrixRoomService implements RoomService {
   }
 
   @Override
-  public Contact getNumber(String roomId) {
+  public String getNumber(String roomId) {
     try {
       EventContent canonicalAlias = matrixClient.event()
           .eventContent(roomId, RoomCanonicalAlias.TYPE, "").join();
@@ -78,9 +77,7 @@ public class MatrixRoomService implements RoomService {
             + canonicalAlias);
       }
       RoomCanonicalAliasContent aliasContent = (RoomCanonicalAliasContent) canonicalAlias;
-      return Contact.builder()
-          .number(phoneNumberTransformer.transform(aliasContent.getAlias()))
-          .build();
+      return phoneNumberTransformer.transform(aliasContent.getAlias());
     } catch (CancellationException | CompletionException error) {
       throw new BadRequestException("Unable to resolve canonical alias for roomId: " + roomId);
     }

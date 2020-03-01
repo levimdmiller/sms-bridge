@@ -3,12 +3,12 @@ package ca.levimiller.smsbridge.rest.impl;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import ca.levimiller.smsbridge.data.db.MessageRepository;
 import ca.levimiller.smsbridge.data.dto.TwilioSmsDto;
 import ca.levimiller.smsbridge.data.model.Message;
 import ca.levimiller.smsbridge.data.transformer.twilio.MessageTransformer;
 import ca.levimiller.smsbridge.rest.TwilioController;
 import ca.levimiller.smsbridge.service.ChatService;
-import ca.levimiller.smsbridge.service.MessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ class TwilioApiTest {
   @MockBean
   private MessageTransformer messageTransformer;
   @MockBean
-  private MessageService messageService;
+  private MessageRepository messageRepository;
 
   private TwilioSmsDto smsDto;
   private Message message;
@@ -46,7 +46,7 @@ class TwilioApiTest {
   @Test
   void testCreateSms() {
     twilioController.createSms(smsDto);
-    verify(messageService).save(message);
+    verify(messageRepository).save(message);
     verify(chatService).sendMessage(message);
   }
 }

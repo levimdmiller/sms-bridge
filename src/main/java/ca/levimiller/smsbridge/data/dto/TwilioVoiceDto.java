@@ -1,6 +1,5 @@
 package ca.levimiller.smsbridge.data.dto;
 
-import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,34 +10,28 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TwilioSmsDto {
+public class TwilioVoiceDto {
 
-  @NotNull
-
-  String messageSid;
   @NotNull
   String accountSid;
+  @NotNull
+  String callSid;
   @NotNull
   String from;
   @NotNull
   String to;
   @NotNull
-  String body;
-  @NotNull
-  Integer numSegments;
-  @NotNull
-  Integer numMedia;
-  String messagingServiceSid;
+  String direction;
 
-  // Optional
-  List<String> mediaContentTypes;
-  List<String> mediaUrls;
+  String callStatus;
+
   String fromCity;
+  String fromCountry;
   String fromState;
   String fromZip;
-  String fromCountry;
+
   String toCity;
+  String toCountry;
   String toState;
   String toZip;
-  String toCountry;
 }
