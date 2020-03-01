@@ -106,7 +106,7 @@ public class MatrixRoomService implements RoomService {
   private void joinRoom(ChatUser virtualUser, String roomId) {
     List<String> joinedRooms = matrixClient.userId(virtualUser.getOwnerId())
         .room().joinedRooms().join();
-    if(joinedRooms.contains(roomId)) {
+    if (joinedRooms.contains(roomId)) {
       return;
     }
     try {
