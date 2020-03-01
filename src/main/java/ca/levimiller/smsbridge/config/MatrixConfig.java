@@ -1,8 +1,8 @@
 package ca.levimiller.smsbridge.config;
 
-import ca.levimiller.smsbridge.matrix.AppJaxRsRequestFactory;
+import ca.levimiller.smsbridge.matrixsdk.AppJaxRsRequestFactory;
+import ca.levimiller.smsbridge.matrixsdk.ExtendedAppServiceClient;
 import ca.levimiller.smsbridge.util.MatrixUtil;
-import io.github.ma1uta.matrix.client.AppServiceClient;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.annotation.PostConstruct;
@@ -63,8 +63,8 @@ public class MatrixConfig {
   }
 
   @Bean
-  AppServiceClient matrixClient() {
-    return new AppServiceClient.Builder()
+  ExtendedAppServiceClient matrixClient() {
+    return new ExtendedAppServiceClient.Builder()
         .requestFactory(new AppJaxRsRequestFactory(url))
         .accessToken(asToken)
         .build();

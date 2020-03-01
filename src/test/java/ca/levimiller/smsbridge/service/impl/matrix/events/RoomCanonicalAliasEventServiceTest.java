@@ -10,11 +10,11 @@ import static org.mockito.Mockito.when;
 import ca.levimiller.smsbridge.data.db.ChatUserRepository;
 import ca.levimiller.smsbridge.data.model.ChatUserType;
 import ca.levimiller.smsbridge.data.transformer.UserNameTransformer;
+import ca.levimiller.smsbridge.matrixsdk.ExtendedAppServiceClient;
 import ca.levimiller.smsbridge.service.MatrixEventService;
 import ca.levimiller.smsbridge.service.UserService;
 import ca.levimiller.smsbridge.util.MockLogger;
 import ch.qos.logback.classic.Level;
-import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.client.methods.EventMethods;
 import io.github.ma1uta.matrix.client.model.event.MembersResponse;
 import io.github.ma1uta.matrix.event.RoomMember;
@@ -47,7 +47,7 @@ class RoomCanonicalAliasEventServiceTest {
   @MockBean
   private UserService userService;
   @MockBean
-  private AppServiceClient matrixClient;
+  private ExtendedAppServiceClient matrixClient;
   @Mock
   private EventMethods eventMethods;
   @Mock

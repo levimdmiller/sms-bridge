@@ -1,4 +1,4 @@
-package ca.levimiller.smsbridge.matrix;
+package ca.levimiller.smsbridge.matrixsdk;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;

@@ -15,6 +15,7 @@ import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.transformer.UserNameTransformer;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixUserRegisterTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
+import ca.levimiller.smsbridge.matrixsdk.ExtendedAppServiceClient;
 import ca.levimiller.smsbridge.service.UserService;
 import ca.levimiller.smsbridge.util.MockLogger;
 import ch.qos.logback.classic.Level;
@@ -46,7 +47,7 @@ class MatrixUserServiceTest {
   @MockBean
   private UserNameTransformer userNameTransformer;
   @MockBean
-  private AppServiceClient matrixClient;
+  private ExtendedAppServiceClient matrixClient;
   @Mock
   private AppServiceClient userClient;
   @Mock

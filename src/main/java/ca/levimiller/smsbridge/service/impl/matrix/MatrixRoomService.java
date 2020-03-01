@@ -6,14 +6,16 @@ import ca.levimiller.smsbridge.data.model.Contact;
 import ca.levimiller.smsbridge.data.transformer.PhoneNumberTransformer;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
+import ca.levimiller.smsbridge.matrixsdk.ExtendedAppServiceClient;
+import ca.levimiller.smsbridge.matrixsdk.SimpleInviteRequest;
 import ca.levimiller.smsbridge.service.RoomService;
 import ca.levimiller.smsbridge.util.MatrixUtil;
-import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.client.model.room.CreateRoomRequest;
 import io.github.ma1uta.matrix.client.model.room.RoomId;
 import io.github.ma1uta.matrix.event.RoomCanonicalAlias;
 import io.github.ma1uta.matrix.event.content.EventContent;
 import io.github.ma1uta.matrix.event.content.RoomCanonicalAliasContent;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletionException;
 import javax.inject.Inject;
@@ -28,7 +30,7 @@ public class MatrixRoomService implements RoomService {
   private final MatrixConfig matrixConfig;
   private final MatrixRoomTransformer roomTransformer;
   private final PhoneNumberTransformer phoneNumberTransformer;
-  private final AppServiceClient matrixClient;
+  private final ExtendedAppServiceClient matrixClient;
   private final MatrixUtil matrixUtil;
 
   @Inject
@@ -36,7 +38,8 @@ public class MatrixRoomService implements RoomService {
       MatrixConfig matrixConfig,
       MatrixRoomTransformer roomTransformer,
       PhoneNumberTransformer phoneNumberTransformer,
-      AppServiceClient matrixClient, MatrixUtil matrixUtil) {
+      ExtendedAppServiceClient matrixClient,
+      MatrixUtil matrixUtil) {
     this.matrixConfig = matrixConfig;
     this.roomTransformer = roomTransformer;
     this.phoneNumberTransformer = phoneNumberTransformer;
@@ -101,7 +104,15 @@ public class MatrixRoomService implements RoomService {
    * @param roomId - room id
    */
   private void joinRoom(ChatUser virtualUser, String roomId) {
+    List<String> joinedRooms = matrixClient.userId(virtualUser.getOwnerId())
+        .room().joinedRooms().join();
+    if (joinedRooms.contains(roomId)) {
+      return;
+    }
     try {
+      matrixClient.room().invite(roomId, SimpleInviteRequest.builder()
+          .userId(virtualUser.getOwnerId())
+          .build()).join();
       matrixClient.userId(virtualUser.getOwnerId()).room().joinByIdOrAlias(roomId).join();
     } catch (CancellationException | CompletionException error) {
       log.error("Unable to add virtual user to room", error);
