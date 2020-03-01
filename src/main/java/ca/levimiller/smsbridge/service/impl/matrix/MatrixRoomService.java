@@ -15,6 +15,7 @@ import io.github.ma1uta.matrix.client.model.room.RoomId;
 import io.github.ma1uta.matrix.event.RoomCanonicalAlias;
 import io.github.ma1uta.matrix.event.content.EventContent;
 import io.github.ma1uta.matrix.event.content.RoomCanonicalAliasContent;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletionException;
 import javax.inject.Inject;
@@ -103,6 +104,11 @@ public class MatrixRoomService implements RoomService {
    * @param roomId - room id
    */
   private void joinRoom(ChatUser virtualUser, String roomId) {
+    List<String> joinedRooms = matrixClient.userId(virtualUser.getOwnerId())
+        .room().joinedRooms().join();
+    if(joinedRooms.contains(roomId)) {
+      return;
+    }
     try {
       matrixClient.room().invite(roomId, SimpleInviteRequest.builder()
           .userId(virtualUser.getOwnerId())
