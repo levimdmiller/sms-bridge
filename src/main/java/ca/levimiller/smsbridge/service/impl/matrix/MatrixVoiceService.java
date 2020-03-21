@@ -9,9 +9,13 @@ import ca.levimiller.smsbridge.service.UserService;
 import ca.levimiller.smsbridge.service.VoiceService;
 import ca.levimiller.smsbridge.util.UuidSource;
 import io.github.ma1uta.matrix.client.AppServiceClient;
+import io.github.ma1uta.matrix.event.CallCandidates;
 import io.github.ma1uta.matrix.event.CallInvite;
+import io.github.ma1uta.matrix.event.content.CallCandidatesContent;
 import io.github.ma1uta.matrix.event.content.CallInviteContent;
+import io.github.ma1uta.matrix.event.nested.Candidate;
 import io.github.ma1uta.matrix.event.nested.Offer;
+import java.util.List;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -60,5 +64,18 @@ public class MatrixVoiceService implements VoiceService {
     content.setOffer(offer);
     matrixClient.userId(from.getOwnerId()).event()
         .sendEvent(roomId, CallInvite.TYPE, content);
+
+    CallCandidatesContent candidatesContent = new CallCandidatesContent();
+    candidatesContent.setCallId(content.getCallId());
+    candidatesContent.setVersion(0L);
+    Candidate candidate = new Candidate();
+    candidate.setSdpMid("audio");
+    candidate.setSdpMLineIndex(0L);
+    candidate.setCandidate("");
+    candidatesContent.setCandidates(List.of(
+        candidate
+    ));
+    matrixClient.userId(from.getOwnerId()).event()
+        .sendEvent(roomId, CallCandidates.TYPE, candidatesContent);
   }
 }
