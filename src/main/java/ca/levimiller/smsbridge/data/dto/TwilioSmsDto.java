@@ -3,25 +3,20 @@ package ca.levimiller.smsbridge.data.dto;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
-public class TwilioSmsDto {
+public class TwilioSmsDto extends TwilioBaseDto {
 
   @NotNull
-
   String messageSid;
-  @NotNull
-  String accountSid;
-  @NotNull
-  String from;
-  @NotNull
-  String to;
   @NotNull
   String body;
   @NotNull
@@ -33,12 +28,4 @@ public class TwilioSmsDto {
   // Optional
   List<String> mediaContentTypes;
   List<String> mediaUrls;
-  String fromCity;
-  String fromState;
-  String fromZip;
-  String fromCountry;
-  String toCity;
-  String toState;
-  String toZip;
-  String toCountry;
 }

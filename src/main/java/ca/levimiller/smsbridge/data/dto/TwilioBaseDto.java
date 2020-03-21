@@ -3,21 +3,28 @@ package ca.levimiller.smsbridge.data.dto;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
-public class TwilioVoiceDto extends TwilioBaseDto {
-
+public class TwilioBaseDto {
   @NotNull
-  String callSid;
+  String accountSid;
   @NotNull
-  String direction;
+  String from;
+  @NotNull
+  String to;
 
-  String callStatus;
+  String fromCity;
+  String fromCountry;
+  String fromState;
+  String fromZip;
+
+  String toCity;
+  String toCountry;
+  String toState;
+  String toZip;
 }

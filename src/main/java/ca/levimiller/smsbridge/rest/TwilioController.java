@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javax.validation.Valid;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,10 +25,10 @@ public interface TwilioController {
       @ApiResponse(code = 400, message = "Request not valid")})
   void createSms(@Valid TwilioSmsDto sms);
 
-  @PostMapping("/voice")
+  @PostMapping(value = "/voice", produces = MediaType.APPLICATION_XML_VALUE)
   @ApiOperation("Start a voice call")
   @ApiResponses(value = {
       @ApiResponse(code = 201, message = "Call initiated", response = String.class),
       @ApiResponse(code = 400, message = "Request not valid")})
-  void voice(@Valid TwilioVoiceDto voice);
+  ResponseEntity<String> voice(@Valid TwilioVoiceDto voice);
 }
