@@ -64,7 +64,7 @@ GRANT ALL PRIVILEGES ON DATABASE yourdbname TO sms_bridge;
 Register the phone number you want to send/receive messages for with your matrix user:
 ```
 INSERT INTO contact(number) VALUES('+1234567890'); # Can add optional location
-INSERT INTO number_registry(owner_id, registration_type, contact) VALUES('@username:server.ca', 'USER', <id-of-above>);
+INSERT INTO chat_user(owner_id, user_type, contact) VALUES('@username:server.ca', 'USER', <id-of-above>);
 ```
 
 Create a user in the `security_user` table for twilio to auth with 
