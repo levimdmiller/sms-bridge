@@ -1,9 +1,13 @@
 package ca.levimiller.smsbridge.config;
 
+import ca.levimiller.smsbridge.twilio.CapabilityTokenFactory;
 import ca.levimiller.smsbridge.twilio.MessageCreatorFactory;
 import com.twilio.Twilio;
+import com.twilio.jwt.client.ClientCapability;
+import com.twilio.jwt.client.IncomingClientScope;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.security.RequestValidator;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -31,6 +35,8 @@ public class TwilioConfig {
   @NotEmpty
   private String token;
 
+  private String region = "wss://chunderw-vpc-gll.twilio.com/signal";
+
   @Bean
   RequestValidator requestValidator() {
     return new RequestValidator(token);
@@ -44,5 +50,13 @@ public class TwilioConfig {
   @Bean
   public MessageCreatorFactory messageCreatorFactory() {
     return Message::creator;
+  }
+
+  @Bean
+  public CapabilityTokenFactory capabilityTokenFactory() {
+    return clientName -> new ClientCapability.Builder(sid, token)
+        .scopes(List.of(new IncomingClientScope(clientName)))
+        .build()
+        .toJwt();
   }
 }
