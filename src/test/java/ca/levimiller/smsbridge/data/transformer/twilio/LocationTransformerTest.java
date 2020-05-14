@@ -47,4 +47,11 @@ class LocationTransformerTest {
     assertEquals(dto.getFromCountry(), location.getCountry());
     assertEquals(dto.getFromZip(), location.getZip());
   }
+
+  @Test
+  void transformZipWithSpaces() {
+    dto.setFromZip("V1Y 8E7");
+    Location location = transformer.transformFrom(dto);
+    assertEquals("V1Y8E7", location.getZip());
+  }
 }
