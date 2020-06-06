@@ -50,19 +50,15 @@ public class TwilioRegisterService implements SipListenerExt {
   String realm;
   String username;
   String password;
-  String fromUrl;
-  String toUrl;
 
   public TwilioRegisterService() throws UnknownHostException {
-    toUrl = "<sip:levi.test@levimiller-d.sip.us1.twilio.com>";
-    fromUrl = "<sip:levi.test@levimiller-d.sip.us1.twilio.com>";
+    username = "+17787609051";
     password = "Letmein1234567890";
-    username = "twilio-user";
-    realm = "levimiller-d.sip.us1.twilio.com";
+    realm = "levimiller-d.sip.us2.twilio.com";
     protocol = "TCP";
     localPort = 5060;
     localIp = InetAddress.getLocalHost().getHostName();
-    port = 14096;
+    port = 14212;
     ip = "0.tcp.ngrok.io";
 
     userCredentials = new UserCredentials() {
@@ -115,7 +111,7 @@ public class TwilioRegisterService implements SipListenerExt {
     request.addHeader(this.headerFactory.createViaHeader(ip, port, protocol, null));
     request.addHeader(this.headerFactory.createMaxForwardsHeader(70));
     request.addHeader(this.headerFactory.createFromHeader(address, "defg"));
-    request.addHeader(this.headerFactory.createToHeader(address, "abcd"));
+    request.addHeader(this.headerFactory.createToHeader(address, null));
     request.addHeader(this.sipProvider.getNewCallId());
     request.addHeader(this.headerFactory.createCSeqHeader(1L, "REGISTER"));
     request.addHeader(this.headerFactory.createContactHeader());
