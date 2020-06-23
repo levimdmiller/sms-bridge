@@ -1,7 +1,7 @@
-# pstn-bridge
-Matrix PSTN Bridge
+# sms-bridge
+Matrix SMS Bridge
 
-Bridges PSTN to matrix.
+Bridges SMS to matrix.
 
 
 Run App
@@ -52,7 +52,7 @@ app_service_config_files:
   - "/path/to/appservice/registration.yaml"
 ```
 
-### PSTN Bridge Database Setup:
+### SMS Bridge Database Setup:
 Create a database called sms_bridge (with appropriate users/roles if required)
 E.g., in postgres:
 ```
