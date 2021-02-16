@@ -10,6 +10,7 @@ import ca.levimiller.smsbridge.service.RoomService;
 import ca.levimiller.smsbridge.service.UserService;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import javax.inject.Inject;
+import liquibase.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -50,12 +51,14 @@ public class MatrixChatService implements ChatService {
     // Get room id and user id (ensure created/joined/etc.)
     ChatUser from = userService.getUser(message.getFromContact());
     String roomId = roomService.getRoom(to, from);
-    String body = message.getBody() == null ? " " : message.getBody();
-    matrixClient.userId(from.getOwnerId()).event().sendMessage(roomId, body)
-        .exceptionally(throwable -> {
-          log.error("Error sending message to matrix: ", throwable);
-          return null;
-        });
+
+    if(!StringUtils.isEmpty(message.getBody())) {
+      matrixClient.userId(from.getOwnerId()).event().sendMessage(roomId, message.getBody())
+          .exceptionally(throwable -> {
+            log.error("Error sending message to matrix: ", throwable);
+            return null;
+          });
+    }
 
     // send attachments
     if(message.getMedia() != null) {
