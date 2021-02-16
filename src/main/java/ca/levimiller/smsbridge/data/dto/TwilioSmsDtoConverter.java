@@ -1,6 +1,5 @@
 package ca.levimiller.smsbridge.data.dto;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -8,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
-import javax.validation.constraints.NotNull;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
