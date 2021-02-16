@@ -1,5 +1,6 @@
 package ca.levimiller.smsbridge.service.impl.matrix.attachment;
 
+import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Media;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.event.content.EventContent;
@@ -19,10 +20,10 @@ public class ImageAttachmentService extends AbstractAttachmentService {
   }
 
   @Override
-  protected EventContent getContent(Media attachment) {
+  protected EventContent getContent(ChatUser user, Media attachment) {
     Image image = new Image();
     image.setBody("image attachment");
-    image.setUrl(attachment.getUrl());
+    image.setUrl(uploadFileToMatrix(user, attachment));
 
     ImageInfo info = new ImageInfo();
     info.setMimetype(attachment.getContentType());
