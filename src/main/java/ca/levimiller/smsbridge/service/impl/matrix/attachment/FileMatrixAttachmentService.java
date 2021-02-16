@@ -4,33 +4,33 @@ import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Media;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.event.content.EventContent;
-import io.github.ma1uta.matrix.event.message.Audio;
-import io.github.ma1uta.matrix.event.nested.AudioInfo;
+import io.github.ma1uta.matrix.event.message.File;
+import io.github.ma1uta.matrix.event.nested.FileInfo;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AudioAttachmentService extends AbstractAttachmentService {
+public class FileMatrixAttachmentService extends AbstractMatrixAttachmentService {
 
   @Inject
-  public AudioAttachmentService(AppServiceClient matrixClient) {
+  public FileMatrixAttachmentService(AppServiceClient matrixClient) {
     super(matrixClient);
   }
 
   @Override
   protected EventContent getContent(ChatUser user, Media attachment) {
-    Audio audio = new Audio();
-    audio.setBody("audio attachment");
-    audio.setUrl(uploadFileToMatrix(user, attachment));
+    File file = new File();
+    file.setBody("file attachment");
+    file.setUrl(uploadFileToMatrix(user, attachment));
 
-    AudioInfo info = new AudioInfo();
+    FileInfo info = new FileInfo();
     info.setMimetype(attachment.getContentType());
-    audio.setInfo(info);
-    return audio;
+    file.setInfo(info);
+    return file;
   }
 
   @Override
   public boolean supportsType(String contentType) {
-    return contentType.startsWith("audio");
+    return contentType.startsWith("application");
   }
 }

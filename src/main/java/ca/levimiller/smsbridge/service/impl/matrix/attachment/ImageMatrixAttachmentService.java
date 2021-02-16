@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class ImageAttachmentService extends AbstractAttachmentService {
+public class ImageMatrixAttachmentService extends AbstractMatrixAttachmentService {
 
   @Inject
-  public ImageAttachmentService(AppServiceClient matrixClient) {
+  public ImageMatrixAttachmentService(AppServiceClient matrixClient) {
     super(matrixClient);
   }
 

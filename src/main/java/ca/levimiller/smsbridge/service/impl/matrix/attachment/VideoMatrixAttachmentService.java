@@ -4,33 +4,36 @@ import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Media;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.event.content.EventContent;
-import io.github.ma1uta.matrix.event.message.File;
-import io.github.ma1uta.matrix.event.nested.FileInfo;
+import io.github.ma1uta.matrix.event.message.Video;
+import io.github.ma1uta.matrix.event.nested.VideoInfo;
 import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
-public class FileAttachmentService extends AbstractAttachmentService {
+public class VideoMatrixAttachmentService extends AbstractMatrixAttachmentService {
 
   @Inject
-  public FileAttachmentService(AppServiceClient matrixClient) {
+  public VideoMatrixAttachmentService(AppServiceClient matrixClient) {
     super(matrixClient);
   }
 
   @Override
   protected EventContent getContent(ChatUser user, Media attachment) {
-    File file = new File();
-    file.setBody("file attachment");
-    file.setUrl(uploadFileToMatrix(user, attachment));
+    Video video = new Video();
+    video.setBody("video attachment");
+    video.setUrl(uploadFileToMatrix(user, attachment));
 
-    FileInfo info = new FileInfo();
+    VideoInfo info = new VideoInfo();
     info.setMimetype(attachment.getContentType());
-    file.setInfo(info);
-    return file;
+    video.setInfo(info);
+    return video;
   }
+
 
   @Override
   public boolean supportsType(String contentType) {
-    return contentType.startsWith("application");
+    return contentType.startsWith("video");
   }
 }

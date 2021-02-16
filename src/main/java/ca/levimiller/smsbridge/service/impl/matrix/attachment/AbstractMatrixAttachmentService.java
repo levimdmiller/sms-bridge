@@ -2,7 +2,7 @@ package ca.levimiller.smsbridge.service.impl.matrix.attachment;
 
 import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Media;
-import ca.levimiller.smsbridge.service.AttachmentService;
+import ca.levimiller.smsbridge.service.MatrixAttachmentService;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.event.content.EventContent;
 import java.io.IOException;
@@ -19,10 +19,10 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 
 @Slf4j
-public abstract class AbstractAttachmentService implements AttachmentService {
+public abstract class AbstractMatrixAttachmentService implements MatrixAttachmentService {
   protected final AppServiceClient matrixClient;
 
-  public AbstractAttachmentService(AppServiceClient matrixClient) {
+  public AbstractMatrixAttachmentService(AppServiceClient matrixClient) {
     this.matrixClient = matrixClient;
   }
 
