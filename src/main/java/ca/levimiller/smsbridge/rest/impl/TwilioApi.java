@@ -34,6 +34,9 @@ public class TwilioApi implements TwilioController {
   public void createSms(TwilioSmsDto sms) {
     log.debug("Received sms: {}", sms);
     Message message = messageTransformer.transform(sms);
+    if (message.getMedia() != null) {
+      message.getMedia().forEach(media -> media.setMessage(message));
+    }
     messageService.save(message);
     chatService.sendMessage(message);
   }

@@ -1,7 +1,7 @@
 # sms-bridge
-Matrix Sms Bridge
+Matrix SMS Bridge
 
-Bridges the sms service Twilio to matrix, but could be extended to other services/chat servers
+Bridges SMS to matrix.
 
 
 Run App
@@ -52,7 +52,7 @@ app_service_config_files:
   - "/path/to/appservice/registration.yaml"
 ```
 
-### Sms Bridge Database Setup:
+### SMS Bridge Database Setup:
 Create a database called sms_bridge (with appropriate users/roles if required)
 E.g., in postgres:
 ```

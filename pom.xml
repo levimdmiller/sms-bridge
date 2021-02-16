@@ -11,13 +11,13 @@
   </parent>
   <groupId>ca.levimiller</groupId>
   <artifactId>sms-bridge</artifactId>
-  <version>0.0.8-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>sms-bridge</name>
   <description>Sms Bridge for Matrix</description>
 
   <properties>
     <java.version>11</java.version>
-    <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
+    <org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
     <lombok.version>1.18.10</lombok.version>
     <jersey>2.30</jersey>
   </properties>
