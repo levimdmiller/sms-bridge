@@ -4,7 +4,6 @@ import io.github.ma1uta.matrix.client.AbstractClientBuilder;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.client.RequestParams;
 import io.github.ma1uta.matrix.client.factory.RequestFactory;
-import io.github.ma1uta.matrix.client.methods.EventMethods;
 
 public class ExtendedAppServiceClient extends AppServiceClient {
 
