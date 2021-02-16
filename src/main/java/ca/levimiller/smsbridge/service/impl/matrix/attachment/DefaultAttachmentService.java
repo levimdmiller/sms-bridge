@@ -29,9 +29,9 @@ public class DefaultAttachmentService implements AttachmentService {
 
     matrixClient.userId(user.getOwnerId()).event().sendMessage(roomId, messageBody)
         .exceptionally(throwable -> {
-      log.error("Error sending attachment to matrix (DefaultAttachmentService): ", throwable);
-      return null;
-    });
+          log.error("Error sending attachment to matrix (DefaultAttachmentService): ", throwable);
+          return null;
+        });
   }
 
   @Override

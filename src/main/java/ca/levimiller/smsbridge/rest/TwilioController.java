@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 public interface TwilioController {
 
   @PostMapping(
-    value = "/sms",
-    consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+      value = "/sms",
+      consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
   )
   @ApiOperation("Create an sms message")
   @ApiResponses(value = {

@@ -36,7 +36,7 @@ public class CompositeAttachmentService implements AttachmentService {
         });
 
     // If not sent by anything else, send using default
-    if(!hasSupportedService.get()) {
+    if (!hasSupportedService.get()) {
       defaultAttachmentService.sendAttachment(user, roomId, attachment);
     }
   }

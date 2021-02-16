@@ -27,12 +27,12 @@ public class TwilioSmsDtoConverter extends AbstractHttpMessageConverter<TwilioSm
   }
 
   @Override
-  protected boolean supports(Class<?> aClass) {
-    return TwilioSmsDto.class == aClass;
+  protected boolean supports(Class<?> clazz) {
+    return TwilioSmsDto.class == clazz;
   }
 
   @Override
-  protected TwilioSmsDto readInternal(Class<? extends TwilioSmsDto> aClass,
+  protected TwilioSmsDto readInternal(Class<? extends TwilioSmsDto> clazz,
       HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
     Map<String, String> vals = formHttpMessageConverter.read(null, inputMessage).toSingleValueMap();
 

@@ -36,13 +36,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     // disable csrf for twilio as it uses a generated token to verify the server.
     http.csrf()
-        .ignoringAntMatchers("/twilio/**");
-//        .and()
-//        .authorizeRequests()
-//        .antMatchers("/twilio/**")
-//        .authenticated()
-//        .and()
-//        .httpBasic();
+        .ignoringAntMatchers("/twilio/**")
+        .and()
+        .authorizeRequests()
+        .antMatchers("/twilio/**")
+        .authenticated()
+        .and()
+        .httpBasic();
 
     http.csrf()
         .ignoringAntMatchers("/matrix/**");

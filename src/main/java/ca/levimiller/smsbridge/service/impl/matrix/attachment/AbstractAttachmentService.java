@@ -47,7 +47,7 @@ public abstract class AbstractAttachmentService implements AttachmentService {
 
   /**
    * Tries to upload the file at the given url to the matrix homeserver.
-   *
+   *  <p></p>
    * If an exception occurs during the upload, the original url is returned.
    * @param user - user uploading the file
    * @param media - file to upload

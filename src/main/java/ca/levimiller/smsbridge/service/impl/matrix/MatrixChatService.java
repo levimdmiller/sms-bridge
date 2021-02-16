@@ -52,7 +52,7 @@ public class MatrixChatService implements ChatService {
     ChatUser from = userService.getUser(message.getFromContact());
     String roomId = roomService.getRoom(to, from);
 
-    if(!StringUtils.isEmpty(message.getBody())) {
+    if (!StringUtils.isEmpty(message.getBody())) {
       matrixClient.userId(from.getOwnerId()).event().sendMessage(roomId, message.getBody())
           .exceptionally(throwable -> {
             log.error("Error sending message to matrix: ", throwable);
@@ -61,7 +61,7 @@ public class MatrixChatService implements ChatService {
     }
 
     // send attachments
-    if(message.getMedia() != null) {
+    if (message.getMedia() != null) {
       message.getMedia().forEach(media -> {
         attachmentService.sendAttachment(from, roomId, media);
       });

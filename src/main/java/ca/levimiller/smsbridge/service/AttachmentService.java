@@ -6,7 +6,7 @@ import ca.levimiller.smsbridge.data.model.Media;
 public interface AttachmentService {
 
   /**
-   * Sends the given attachment
+   * Sends the given attachment.
    * @param attachment - attachment to send
    */
   void sendAttachment(ChatUser user, String roomId, Media attachment);
