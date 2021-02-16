@@ -7,7 +7,9 @@ import io.github.ma1uta.matrix.event.content.EventContent;
 import io.github.ma1uta.matrix.event.message.Audio;
 import io.github.ma1uta.matrix.event.nested.AudioInfo;
 import javax.inject.Inject;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AudioAttachmentService extends AbstractAttachmentService {
 
   @Inject

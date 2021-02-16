@@ -7,7 +7,9 @@ import io.github.ma1uta.matrix.event.content.EventContent;
 import io.github.ma1uta.matrix.event.message.File;
 import io.github.ma1uta.matrix.event.nested.FileInfo;
 import javax.inject.Inject;
+import org.springframework.stereotype.Service;
 
+@Service
 public class FileAttachmentService extends AbstractAttachmentService {
 
   @Inject
