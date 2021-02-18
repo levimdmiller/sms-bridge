@@ -4,8 +4,8 @@ import ca.levimiller.smsbridge.data.db.ChatUserRepository;
 import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Message;
 import ca.levimiller.smsbridge.error.NotFoundException;
-import ca.levimiller.smsbridge.service.AttachmentService;
 import ca.levimiller.smsbridge.service.ChatService;
+import ca.levimiller.smsbridge.service.MatrixAttachmentService;
 import ca.levimiller.smsbridge.service.RoomService;
 import ca.levimiller.smsbridge.service.UserService;
 import io.github.ma1uta.matrix.client.AppServiceClient;
@@ -24,14 +24,14 @@ public class MatrixChatService implements ChatService {
   private final RoomService roomService;
   private final UserService userService;
   private final AppServiceClient matrixClient;
-  private final AttachmentService attachmentService;
+  private final MatrixAttachmentService attachmentService;
 
   @Inject
   public MatrixChatService(
       ChatUserRepository chatUserRepository,
       RoomService roomService, UserService userService,
       AppServiceClient matrixClient,
-      AttachmentService attachmentService) {
+      MatrixAttachmentService attachmentService) {
     this.chatUserRepository = chatUserRepository;
     this.roomService = roomService;
     this.userService = userService;

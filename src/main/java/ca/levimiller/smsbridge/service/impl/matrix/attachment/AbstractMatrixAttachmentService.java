@@ -2,27 +2,26 @@ package ca.levimiller.smsbridge.service.impl.matrix.attachment;
 
 import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Media;
-import ca.levimiller.smsbridge.service.AttachmentService;
+import ca.levimiller.smsbridge.service.FileService;
+import ca.levimiller.smsbridge.service.MatrixAttachmentService;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.event.content.EventContent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletionException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.LaxRedirectStrategy;
 
 @Slf4j
-public abstract class AbstractAttachmentService implements AttachmentService {
+public abstract class AbstractMatrixAttachmentService implements MatrixAttachmentService {
+  private final FileService fileService;
   protected final AppServiceClient matrixClient;
 
-  public AbstractAttachmentService(AppServiceClient matrixClient) {
+  public AbstractMatrixAttachmentService(
+      FileService fileService,
+      AppServiceClient matrixClient) {
+    this.fileService = fileService;
     this.matrixClient = matrixClient;
   }
 
@@ -58,13 +57,7 @@ public abstract class AbstractAttachmentService implements AttachmentService {
       String fileName = media.getUrl().substring(media.getUrl().lastIndexOf("/") + 1);
 
       // Download file
-      URL url = new URL(media.getUrl());
-      CloseableHttpClient httpclient = HttpClients.custom()
-          .setRedirectStrategy(new LaxRedirectStrategy())
-          .build();
-      HttpGet get = new HttpGet(url.toURI());
-      HttpResponse response = httpclient.execute(get);
-      InputStream source = response.getEntity().getContent();
+      InputStream source = fileService.getFileStream(media.getUrl());
 
       return matrixClient.userId(user.getOwnerId()).content()
           .upload(source, fileName, media.getContentType())

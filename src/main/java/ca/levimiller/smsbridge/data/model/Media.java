@@ -1,11 +1,13 @@
 package ca.levimiller.smsbridge.data.model;
 
 import java.util.Objects;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,9 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted = false")
 public class Media extends BaseModel {
 
+  @Column(name = "uid", unique = true)
+  private UUID uid;
+
   @Size(max = 255)
   @Column(name = "url")
   private String url;
@@ -38,6 +43,16 @@ public class Media extends BaseModel {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "message_id")
   private Message message;
+
+  /**
+   * Auto generate uuid if missing.
+   */
+  @PrePersist
+  public void autofill() {
+    if (uid == null) {
+      uid = UUID.randomUUID();
+    }
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -57,7 +72,8 @@ public class Media extends BaseModel {
     if (message == null) {
       return true;
     }
-    return Objects.equals(url, media.url)
+    return Objects.equals(uid, media.uid)
+        && Objects.equals(url, media.url)
         && Objects.equals(contentType, media.contentType)
         // break infinite loop
         && Objects.equals(message.getId(), media.message.getId());
@@ -65,13 +81,14 @@ public class Media extends BaseModel {
 
   @Override
   public int hashCode() {
-    return Objects.hash(super.hashCode(), url, contentType,
+    return Objects.hash(super.hashCode(), uid, url, contentType,
         message == null ? null : message.getId());
   }
 
   @Override
   public String toString() {
     return "Media{"
+        + "uid='" + uid + '\''
         + "url='" + url + '\''
         + ", contentType='" + contentType + '\''
         + ", message=" + (message == null ? null : message.getId()) // break infinite loop

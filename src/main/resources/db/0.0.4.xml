@@ -1,0 +1,25 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd'>
+
+  <changeSet id="0.0.4-1" author="Levi Miller">
+    <sql dbms="postgresql"
+      endDelimiter="\nGO"
+      splitStatements="true"
+      stripComments="true">
+      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+    </sql>
+    <rollback>
+      DROP EXTENSION IF EXISTS "uuid-ossp";
+    </rollback>
+  </changeSet>
+
+  <changeSet id="0.0.4-2" author="Levi Miller">
+    <addColumn tableName="media">
+      <column name="uid" type="uuid" defaultValueComputed="${uuid_function}">
+        <constraints nullable="false" unique="true" />
+      </column>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>
