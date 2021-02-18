@@ -32,7 +32,7 @@ public class TwilioAttachmentService implements OutgoingAttachmentService {
     try {
       // proxy matrix attachments so twilio has access
       String attachmentUrl = new URIBuilder(hostedUrlService.getBaseUrl())
-          .setPath("/twilio/attachment/" + attachment.getUid())
+          .setPath("/attachment/" + attachment.getUid())
           .toString();
 
       // send attachment
