@@ -1,7 +1,5 @@
 package ca.levimiller.smsbridge.security;
 
-import ca.levimiller.smsbridge.error.ForbiddenException;
-import ca.levimiller.smsbridge.error.UnauthorizedException;
 import com.twilio.security.RequestValidator;
 import java.io.IOException;
 import java.util.Arrays;
@@ -16,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import liquibase.util.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.Ordered;
@@ -44,6 +43,7 @@ public class TwilioAuthenticationFilter extends GenericFilterBean {
     boolean isValidRequest = false;
     if (request instanceof HttpServletRequest) {
       HttpServletRequest httpRequest = (HttpServletRequest) request;
+      HttpServletResponse httpResponse = (HttpServletResponse) response;
 
       // Concatenates the request URL with the query string
       String pathAndQueryUrl = getRequestUrlAndQueryString(httpRequest);
@@ -51,19 +51,23 @@ public class TwilioAuthenticationFilter extends GenericFilterBean {
       Map<String, String> postParams = extractPostParams(httpRequest);
       String signatureHeader = httpRequest.getHeader("X-Twilio-Signature");
       if (StringUtils.isEmpty(signatureHeader)) {
-        throw new UnauthorizedException();
+        httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization header needed");
+        return;
       }
 
       isValidRequest = requestValidator.validate(
           pathAndQueryUrl,
           postParams,
           signatureHeader);
+
+      if (!isValidRequest) {
+        httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Bad Authorization header");
+        return;
+      }
     }
 
     if (isValidRequest) {
       chain.doFilter(request, response);
-    } else {
-      throw new ForbiddenException();
     }
   }
 

@@ -10,6 +10,7 @@ import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -34,18 +35,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    // disable csrf for twilio as it uses a generated token to verify the server.
+    // No need for csrf between back end servers. (no cookies/basic auth)
     http.csrf()
-        .ignoringAntMatchers("/twilio/**")
-        .and()
-        .authorizeRequests()
+        .ignoringAntMatchers("/matrix/**", "/attachment/**", "/twilio/**");
+
+    http.antMatcher("/attachment/**")
+        .antMatcher("/twilio/**")
+        .addFilterAfter(twilioAuthenticationFilter, AnonymousAuthenticationFilter.class);
+
+    http.authorizeRequests()
         .antMatchers("/twilio/**")
         .authenticated()
         .and()
         .httpBasic();
-
-    http.csrf()
-        .ignoringAntMatchers("/matrix/**");
   }
 
   @Bean
