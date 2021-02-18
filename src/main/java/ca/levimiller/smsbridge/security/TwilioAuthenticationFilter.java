@@ -1,7 +1,5 @@
 package ca.levimiller.smsbridge.security;
 
-import ca.levimiller.smsbridge.error.ForbiddenException;
-import ca.levimiller.smsbridge.error.UnauthorizedException;
 import com.twilio.security.RequestValidator;
 import java.io.IOException;
 import java.util.Arrays;
@@ -16,7 +14,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import liquibase.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -26,6 +26,7 @@ import org.springframework.web.filter.GenericFilterBean;
 /**
  * https://www.twilio.com/docs/usage/tutorials/how-to-secure-your-servlet-app-by-validating-incoming-twilio-requests
  */
+@Slf4j
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Qualifier("twilioFilter")
@@ -41,30 +42,34 @@ public class TwilioAuthenticationFilter extends GenericFilterBean {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response,
       FilterChain chain) throws IOException, ServletException {
-    boolean isValidRequest = false;
     if (request instanceof HttpServletRequest) {
       HttpServletRequest httpRequest = (HttpServletRequest) request;
+      HttpServletResponse httpResponse = (HttpServletResponse) response;
 
       // Concatenates the request URL with the query string
       String pathAndQueryUrl = getRequestUrlAndQueryString(httpRequest);
+      log.debug("Authenticating X-Twilio-Signature for request: {}", pathAndQueryUrl);
+
       // Extracts only the POST parameters and converts the parameters Map type
       Map<String, String> postParams = extractPostParams(httpRequest);
       String signatureHeader = httpRequest.getHeader("X-Twilio-Signature");
       if (StringUtils.isEmpty(signatureHeader)) {
-        throw new UnauthorizedException();
+        httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization header needed");
+        return;
       }
 
-      isValidRequest = requestValidator.validate(
+      boolean isValidRequest = requestValidator.validate(
           pathAndQueryUrl,
           postParams,
           signatureHeader);
+
+      if (!isValidRequest) {
+        httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Bad Authorization header");
+        return;
+      }
     }
 
-    if (isValidRequest) {
-      chain.doFilter(request, response);
-    } else {
-      throw new ForbiddenException();
-    }
+    chain.doFilter(request, response);
   }
 
   private Map<String, String> extractPostParams(HttpServletRequest request) {
