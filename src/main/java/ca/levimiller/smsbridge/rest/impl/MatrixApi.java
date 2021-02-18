@@ -29,11 +29,11 @@ public class MatrixApi implements MatrixController {
   @Override
   public EmptyResponse transaction(String txnId, TransactionRequest request) {
     // only process if not started already
-//    transactionRepository.findDistinctByTransactionId(txnId).orElseGet(() -> {
-//      Transaction transaction = transactionRepository.save(Transaction.builder()
-//          .transactionId(txnId)
-//          .completed(false)
-//          .build());
+    transactionRepository.findDistinctByTransactionId(txnId).orElseGet(() -> {
+      Transaction transaction = transactionRepository.save(Transaction.builder()
+          .transactionId(txnId)
+          .completed(false)
+          .build());
 
       // process all events
       request.getEvents().forEach(event -> {
@@ -44,9 +44,9 @@ public class MatrixApi implements MatrixController {
         }
       });
 
-//      transaction.setCompleted(true);
-//      return transactionRepository.save(transaction);
-//    });
+      transaction.setCompleted(true);
+      return transactionRepository.save(transaction);
+    });
     return new EmptyResponse();
   }
 
