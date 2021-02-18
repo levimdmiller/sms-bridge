@@ -40,7 +40,6 @@ public class TwilioAuthenticationFilter extends GenericFilterBean {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response,
       FilterChain chain) throws IOException, ServletException {
-    boolean isValidRequest = false;
     if (request instanceof HttpServletRequest) {
       HttpServletRequest httpRequest = (HttpServletRequest) request;
       HttpServletResponse httpResponse = (HttpServletResponse) response;
@@ -55,7 +54,7 @@ public class TwilioAuthenticationFilter extends GenericFilterBean {
         return;
       }
 
-      isValidRequest = requestValidator.validate(
+      boolean isValidRequest = requestValidator.validate(
           pathAndQueryUrl,
           postParams,
           signatureHeader);
@@ -66,9 +65,7 @@ public class TwilioAuthenticationFilter extends GenericFilterBean {
       }
     }
 
-    if (isValidRequest) {
-      chain.doFilter(request, response);
-    }
+    chain.doFilter(request, response);
   }
 
   private Map<String, String> extractPostParams(HttpServletRequest request) {
