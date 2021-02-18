@@ -16,6 +16,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import liquibase.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -25,6 +26,7 @@ import org.springframework.web.filter.GenericFilterBean;
 /**
  * https://www.twilio.com/docs/usage/tutorials/how-to-secure-your-servlet-app-by-validating-incoming-twilio-requests
  */
+@Slf4j
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Qualifier("twilioFilter")
@@ -46,6 +48,8 @@ public class TwilioAuthenticationFilter extends GenericFilterBean {
 
       // Concatenates the request URL with the query string
       String pathAndQueryUrl = getRequestUrlAndQueryString(httpRequest);
+      log.debug("Authenticating X-Twilio-Signature for request: {}", pathAndQueryUrl);
+
       // Extracts only the POST parameters and converts the parameters Map type
       Map<String, String> postParams = extractPostParams(httpRequest);
       String signatureHeader = httpRequest.getHeader("X-Twilio-Signature");

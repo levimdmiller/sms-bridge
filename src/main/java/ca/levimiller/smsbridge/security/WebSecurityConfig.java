@@ -40,7 +40,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .ignoringAntMatchers("/matrix/**", "/attachment/**", "/twilio/**");
 
     http.antMatcher("/attachment/**")
-        .antMatcher("/twilio/**")
+        .addFilterAfter(twilioAuthenticationFilter, AnonymousAuthenticationFilter.class);
+
+    http.antMatcher("/twilio/**")
         .addFilterAfter(twilioAuthenticationFilter, AnonymousAuthenticationFilter.class);
 
     http.authorizeRequests()
@@ -48,15 +50,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .authenticated()
         .and()
         .httpBasic();
-  }
-
-  @Bean
-  FilterRegistrationBean<Filter> twilioFilterRegistration() {
-    FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
-
-    registrationBean.setFilter(twilioAuthenticationFilter);
-    registrationBean.addUrlPatterns("/twilio/**");
-    registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE); //set precedence
-    return registrationBean;
   }
 }
