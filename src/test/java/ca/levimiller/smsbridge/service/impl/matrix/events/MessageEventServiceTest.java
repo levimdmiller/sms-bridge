@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import ca.levimiller.smsbridge.data.db.ChatUserRepository;
 import ca.levimiller.smsbridge.data.model.Contact;
+import ca.levimiller.smsbridge.data.model.Media;
 import ca.levimiller.smsbridge.data.model.Message;
 import ca.levimiller.smsbridge.data.transformer.matrix.MatrixRoomMessageTransformer;
 import ca.levimiller.smsbridge.error.BadRequestException;
@@ -16,8 +17,10 @@ import ca.levimiller.smsbridge.error.TransformationException;
 import ca.levimiller.smsbridge.service.ChatService;
 import ca.levimiller.smsbridge.service.MatrixEventService;
 import ca.levimiller.smsbridge.service.MessageService;
+import ca.levimiller.smsbridge.service.OutgoingAttachmentService;
 import io.github.ma1uta.matrix.event.RoomMessage;
 import io.github.ma1uta.matrix.event.content.RoomMessageContent;
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +40,13 @@ class MessageEventServiceTest {
   private MessageService messageService;
   @MockBean
   private ChatUserRepository chatUserRepository;
+  @MockBean
+  private OutgoingAttachmentService attachmentService;
+
 
   private RoomMessage<RoomMessageContent> roomMessage;
   private Message message;
+  private Media media;
   private Contact fromContact;
 
   @Autowired
@@ -50,7 +57,10 @@ class MessageEventServiceTest {
   @BeforeEach
   void setUp() {
     roomMessage = new RoomMessage<>();
+
+    media = new Media();
     message = new Message();
+    message.setMedia(Collections.singletonList(media));
     message.setFromContact(fromContact = new Contact());
 
     when(chatUserRepository.isVirtual(fromContact)).thenReturn(false);
