@@ -1,4 +1,4 @@
-package ca.levimiller.smsbridge.service.impl;
+package ca.levimiller.smsbridge.service.impl.matrix;
 
 import ca.levimiller.smsbridge.service.FileService;
 import ca.levimiller.smsbridge.util.MxcUri;
