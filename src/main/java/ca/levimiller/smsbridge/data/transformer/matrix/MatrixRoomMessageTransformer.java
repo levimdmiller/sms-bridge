@@ -9,12 +9,19 @@ import io.github.ma1uta.matrix.event.content.RoomMessageContent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {MatrixContactTransformer.class})
+@Mapper(
+    componentModel = "spring",
+    uses = {
+        MatrixContactTransformer.class,
+        MatrixMediaTransformer.class
+    }
+)
 public interface MatrixRoomMessageTransformer {
 
   @Mapping(source = "eventId", target = "uid")
   @Mapping(source = "content.body", target = "body")
   @Mapping(source = "roomId", target = "toContact", qualifiedBy = To.class)
   @Mapping(source = "sender", target = "fromContact", qualifiedBy = From.class)
+  @Mapping(source = "content", target = "media")
   Message transform(RoomMessage<RoomMessageContent> roomMessage) throws TransformationException;
 }
