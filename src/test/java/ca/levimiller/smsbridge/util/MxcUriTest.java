@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 public class MxcUriTest {
   @Test
-  void null_throwsURISyntaxException() {
+  void null_throwsUriSyntaxException() {
     URISyntaxException thrown = assertThrows(
         URISyntaxException.class,
         () -> MxcUri.of(null),
@@ -20,7 +20,7 @@ public class MxcUriTest {
   }
 
   @Test
-  void badScheme_throwsURISyntaxException() {
+  void badScheme_throwsUriSyntaxException() {
     URISyntaxException thrown = assertThrows(
         URISyntaxException.class,
         () -> MxcUri.of("http://serverName/mediaId"),
@@ -31,25 +31,27 @@ public class MxcUriTest {
   }
 
   @Test
-  void onePart_throwsURISyntaxException() {
+  void onePart_throwsUriSyntaxException() {
     URISyntaxException thrown = assertThrows(
         URISyntaxException.class,
         () -> MxcUri.of("mxc://serverName"),
         "Expected MxcUri.of() to throw an exception"
     );
 
-    assertTrue(thrown.getMessage().contains("Uri string should be exactly 2 parts: <server-name>/<media-id>"));
+    assertTrue(thrown.getMessage()
+        .contains("Uri string should be exactly 2 parts: <server-name>/<media-id>"));
   }
 
   @Test
-  void threePart_throwsURISyntaxException() {
+  void threePart_throwsUriSyntaxException() {
     URISyntaxException thrown = assertThrows(
         URISyntaxException.class,
         () -> MxcUri.of("mxc://serverName/mediaId/junk"),
         "Expected MxcUri.of() to throw an exception"
     );
 
-    assertTrue(thrown.getMessage().contains("Uri string should be exactly 2 parts: <server-name>/<media-id>"));
+    assertTrue(thrown.getMessage()
+        .contains("Uri string should be exactly 2 parts: <server-name>/<media-id>"));
   }
 
   @Test

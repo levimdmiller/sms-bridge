@@ -5,12 +5,12 @@ import ca.levimiller.smsbridge.data.model.Message;
 import ca.levimiller.smsbridge.service.OutgoingAttachmentService;
 import ca.levimiller.smsbridge.service.impl.HostedUrlService;
 import ca.levimiller.smsbridge.twilio.MessageCreatorFactory;
+import com.twilio.type.PhoneNumber;
 import java.net.URISyntaxException;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.stereotype.Service;
-import com.twilio.type.PhoneNumber;
 
 @Slf4j
 @Service
@@ -25,6 +25,7 @@ public class TwilioAttachmentService implements OutgoingAttachmentService {
     this.messageCreatorFactory = messageCreatorFactory;
     this.hostedUrlService = hostedUrlService;
   }
+
   @Override
   public void sendAttachment(Media attachment) {
     Message message = attachment.getMessage();
