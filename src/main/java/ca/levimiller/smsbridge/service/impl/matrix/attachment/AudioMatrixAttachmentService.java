@@ -2,6 +2,7 @@ package ca.levimiller.smsbridge.service.impl.matrix.attachment;
 
 import ca.levimiller.smsbridge.data.model.ChatUser;
 import ca.levimiller.smsbridge.data.model.Media;
+import ca.levimiller.smsbridge.service.FileService;
 import io.github.ma1uta.matrix.client.AppServiceClient;
 import io.github.ma1uta.matrix.event.content.EventContent;
 import io.github.ma1uta.matrix.event.message.Audio;
@@ -13,8 +14,8 @@ import org.springframework.stereotype.Service;
 public class AudioMatrixAttachmentService extends AbstractMatrixAttachmentService {
 
   @Inject
-  public AudioMatrixAttachmentService(AppServiceClient matrixClient) {
-    super(matrixClient);
+  public AudioMatrixAttachmentService(FileService fileService, AppServiceClient matrixClient) {
+    super(fileService, matrixClient);
   }
 
   @Override

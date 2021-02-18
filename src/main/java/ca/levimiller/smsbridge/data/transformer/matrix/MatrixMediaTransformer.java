@@ -1,7 +1,6 @@
 package ca.levimiller.smsbridge.data.transformer.matrix;
 
 import ca.levimiller.smsbridge.data.model.Media;
-import ca.levimiller.smsbridge.error.TransformationException;
 import io.github.ma1uta.matrix.event.content.RoomMessageContent;
 import io.github.ma1uta.matrix.event.message.Audio;
 import io.github.ma1uta.matrix.event.message.File;
@@ -37,7 +36,8 @@ public class MatrixMediaTransformer {
       contentType = video.getInfo().getMimetype();
     }
 
-    return Collections.singletonList(Media.builder()
+    return url == null ? Collections.emptyList()
+      : Collections.singletonList(Media.builder()
         .url(url)
         .contentType(contentType)
         .build());

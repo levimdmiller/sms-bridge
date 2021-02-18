@@ -49,15 +49,14 @@ public class MessageEventService implements MatrixEventService<RoomMessage<RoomM
       if (chatUserRepository.isVirtual(message.getFromContact())) {
         return;
       }
+
+      message.getMedia().forEach(media -> {
+        media.setMessage(message);
+      });
       messageService.save(message);
 
       twilioChatService.sendMessage(message);
-      if (message.getMedia() != null) {
-        message.getMedia().forEach(media -> {
-          media.setMessage(message);
-          attachmentService.sendAttachment(media);
-        });
-      }
+      message.getMedia().forEach(attachmentService::sendAttachment);
     } catch (TransformationException e) {
       throw new BadRequestException("Failed to parse message event: ", e);
     }

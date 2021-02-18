@@ -5,14 +5,17 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -28,7 +31,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted = false")
 public class Media extends BaseModel {
 
-  @Column(name = "uid")
+  @Column(name = "uid", unique = true)
   private UUID uid;
 
   @Size(max = 255)
@@ -42,6 +45,13 @@ public class Media extends BaseModel {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "message_id")
   private Message message;
+
+  @PrePersist
+  public void autofill() {
+    if (uid == null) {
+      uid = UUID.randomUUID();
+    }
+  }
 
   @Override
   public boolean equals(Object o) {
