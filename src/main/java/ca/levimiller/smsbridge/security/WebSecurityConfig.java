@@ -9,10 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 
 @Configuration
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final Filter twilioAuthenticationFilter;
@@ -36,19 +37,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     // No need for csrf between back end servers. (no cookies/basic auth)
+
     http.csrf()
-        .ignoringAntMatchers("/matrix/**", "/attachment/**", "/twilio/**");
-
-    http.antMatcher("/attachment/**")
-        .addFilterAfter(twilioAuthenticationFilter, AnonymousAuthenticationFilter.class);
-
-    http.antMatcher("/twilio/**")
-        .addFilterAfter(twilioAuthenticationFilter, AnonymousAuthenticationFilter.class);
-
-    http.authorizeRequests()
-        .antMatchers("/twilio/**")
-        .authenticated()
+        .ignoringAntMatchers("/matrix/**", "/attachment/**", "/twilio/**")
         .and()
-        .httpBasic();
+        .authorizeRequests()
+        .antMatchers("/matrix/**", "/attachment/**", "/twilio/**")
+        .permitAll();
+  }
+
+  @Bean
+  FilterRegistrationBean<Filter> twilioFilterRegistration() {
+    FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
+    registrationBean.setFilter(twilioAuthenticationFilter);
+    registrationBean.addUrlPatterns("/attachment/*", "/twilio/*");
+    registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE); //set precedence
+    return registrationBean;
   }
 }
