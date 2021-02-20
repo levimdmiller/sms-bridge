@@ -11,7 +11,7 @@
   </parent>
   <groupId>ca.levimiller</groupId>
   <artifactId>sms-bridge</artifactId>
-  <version>0.2.3</version>
+  <version>0.2.4</version>
   <name>sms-bridge</name>
   <description>Sms Bridge for Matrix</description>
 
