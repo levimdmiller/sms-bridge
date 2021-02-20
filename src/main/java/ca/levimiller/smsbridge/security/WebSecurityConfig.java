@@ -52,6 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     registrationBean.setFilter(twilioAuthenticationFilter);
     registrationBean.addUrlPatterns("/twilio/*");
     registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE); //set precedence
+    registrationBean.setEnabled(false);
     return registrationBean;
   }
 }
