@@ -79,6 +79,7 @@ class MessageEventServiceTest {
   @Test
   void process_Success() throws TransformationException {
     when(roomMessageTransformer.transform(roomMessage)).thenReturn(message);
+    message.setMedia(Collections.emptyList());
     messageEventService.process(roomMessage);
     verify(messageService).save(message);
     verify(twilioChatService).sendMessage(message);

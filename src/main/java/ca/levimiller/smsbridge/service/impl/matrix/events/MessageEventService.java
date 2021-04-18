@@ -55,7 +55,10 @@ public class MessageEventService implements MatrixEventService<RoomMessage<RoomM
       });
       messageService.save(message);
 
-      twilioChatService.sendMessage(message);
+      // m.room.message content body is just the file name if there is an attachment.
+      if (message.getMedia().size() == 0) {
+        twilioChatService.sendMessage(message);
+      }
       message.getMedia().forEach(attachmentService::sendAttachment);
     } catch (TransformationException e) {
       throw new BadRequestException("Failed to parse message event: ", e);

@@ -39,7 +39,7 @@ public class TwilioAttachmentService implements OutgoingAttachmentService {
       messageCreatorFactory.getCreator(
           new PhoneNumber(message.getToContact().getNumber()),
           new PhoneNumber(message.getFromContact().getNumber()),
-          ""
+          null
       ).setMediaUrl(attachmentUrl)
        .create();
     } catch (URISyntaxException e) {
